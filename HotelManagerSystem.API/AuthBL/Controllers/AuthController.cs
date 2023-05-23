@@ -41,18 +41,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers
             var response = await _authManager.RefreshToken(tokenModel);
             return response;
         }
-
-        [HttpGet("googleLogin")]
-        public IActionResult GoogleLogin()
-        {
-            return _authManager.GoogleLogin();
-        }
-
-        [HttpPost("googleResponse")]
-        public async Task<Response> GoogleResponse()
-        {
-            return await _authManager.GoogleResponse();
-        }
+        
 
         [HttpGet("getCurrentUser")]
         public async Task<CurrentUserResponse> GetCurrentUser()
