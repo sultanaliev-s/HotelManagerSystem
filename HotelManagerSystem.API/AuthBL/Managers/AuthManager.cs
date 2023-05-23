@@ -109,58 +109,6 @@ namespace HotelManagerSystem.API.AuthBL.Managers
             return new Response(200, true, "Initial user created");
         }
 
-
-            public async Task<Response> GoogleResponse()
-        {
-            ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync() 
-                ?? throw new DException("LogInfo is empty");
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
-                info.ProviderKey, false);
-            if (result.Succeeded)
-                return new Response(200, true, "User successfully logged in");
-            else
-            {
-                var user = new User
-                {
-                    Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
-                    UserName = info.Principal.FindFirst(ClaimTypes.Email).Value
-                };
-
-                IdentityResult identityResult = await _userManager.CreateAsync(user);
-                if (identityResult.Succeeded)
-                {
-                    identityResult = await _userManager.AddLoginAsync(user, info);
-
-                    if (identityResult.Succeeded)
-                    {
-                        await _signInManager.SignInAsync(user, false);
-                        return new Response(200, true, "User successfully logged in");
-                    }
-                    else
-                    {
-                        return new Response(400, false, "Something went wrong");
-                    }
-                }
-                else
-                {
-                    string aggregatedErrorMessages = string.Join("\n", identityResult.Errors
-                          .Select(e => e.Description));
-
-                    if (!string.IsNullOrEmpty(aggregatedErrorMessages))
-                        throw new DException(aggregatedErrorMessages);
-
-                    return new Response(400, false, "Something went wrong");
-                }
-            }
-        }
-
-        public ActionResult GoogleLogin()
-        {
-            var properties = _signInManager
-                .ConfigureExternalAuthenticationProperties("Google", "Auth/googleResponse");
-            return new ChallengeResult("Google", properties);
-        }
-
         public async Task<CurrentUserResponse> GetCurrentUser(ClaimsPrincipal currentUserClaims)
         {
             var user = await _userManager.GetUserAsync(currentUserClaims);
