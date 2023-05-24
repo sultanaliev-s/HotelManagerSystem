@@ -9,8 +9,8 @@ namespace HotelManagerSystem.Models.Entities
 {
     public class Hotel : BaseEntity<int>
     {
-        // public int UserId {get; set;} 
-        // public User User {get; set;}
+        public int UserId { get; set; }
+        public User User { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int ReviewStars { get; set; }

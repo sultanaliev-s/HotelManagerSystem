@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
-using DorgramApi.WebAPI.AuthBL.Models;
-using HotelManagerSystem.API.AuthBL.Models;
+using DorgramApi.WebAPI.AuthBL.CurrentModels;
+using HotelManagerSystem.Models.Entities;
+using HotelManagerSystem.API.AuthBL.CurrentModels;
 using HotelManagerSystem.API.Configs;
 using HotelManagerSystem.API.Handlers;
 using HotelManagerSystem.API.Repositories;

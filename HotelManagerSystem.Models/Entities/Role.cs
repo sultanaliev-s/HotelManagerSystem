@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace HotelManagerSystem.API.AuthBL.Models;
+namespace HotelManagerSystem.Models.Entities;
 
 public class Role : IdentityRole
 {

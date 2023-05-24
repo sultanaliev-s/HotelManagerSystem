@@ -1,5 +1,5 @@
 ﻿using DorgramApi.WebAPI.AuthBL.Models;
-using HotelManagerSystem.API.AuthBL.Models;
+using HotelManagerSystem.API.AuthBL.CurrentModels;
 using HotelManagerSystem.API.Configs;
 using HotelManagerSystem.API.Request.ChangePassword;
 using HotelManagerSystem.API.Responses;

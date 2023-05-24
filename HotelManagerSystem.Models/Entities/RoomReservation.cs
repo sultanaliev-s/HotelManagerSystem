@@ -9,8 +9,8 @@ namespace HotelManagerSystem.Models.Entities
 {
     public class RoomReservation : BaseEntity<int>
     {
-        //public int UserId
-        //public User User 
+        public int UserId { get; set; }
+        public User User { get; set; }
         public decimal Price { get; set; }
         public DateTime ReserveStart { get; set; }
         public DateTime ReserveEnd { get; set; }

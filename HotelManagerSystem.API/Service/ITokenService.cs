@@ -1,4 +1,4 @@
-﻿using HotelManagerSystem.API.AuthBL.Models;
+﻿using HotelManagerSystem.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace HotelManagerSystem.API.Service

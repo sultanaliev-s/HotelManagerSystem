@@ -1,8 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using DorgramApi.WebAPI.AuthBL.Models;
 using HotelManagerSystem.API.AuthBL.Data;
-using HotelManagerSystem.API.AuthBL.Models;
+using HotelManagerSystem.API.AuthBL.CurrentModels;
+using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.API.Configs;
 using HotelManagerSystem.API.Extensions;
 using HotelManagerSystem.API.Request;
@@ -12,6 +12,7 @@ using HotelManagerSystem.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using DorgramApi.WebAPI.AuthBL.CurrentModels;
 
 namespace HotelManagerSystem.API.AuthBL.Managers
 {
