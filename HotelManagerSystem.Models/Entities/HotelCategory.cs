@@ -11,5 +11,7 @@ namespace HotelManagerSystem.Models.Entities
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public int HotelTypeId { get; set; }
+        public HotelType HotelType { get; set; }
     }
 }
