@@ -12,7 +12,6 @@ namespace HotelManagerSystem.Models.Entities
     public class Room : BaseEntity<int>
     {
         public string Name { get; set; }
-
         public int RoomAmount { get; set; }
         public bool Smoke { get; set; }
         public decimal Price { get; set; }

@@ -13,9 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelManagerSystem.Test", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelManagerSystem.BL", "..\HotelManagerSystem.BL\HotelManagerSystem.BL.csproj", "{FC89B479-F56C-45B9-8966-E82BA98D9DD9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelManagerSystem.CMD", "..\HotelManagerSystem.CMD\HotelManagerSystem.CMD.csproj", "{0B8377D1-D73A-428B-8FFE-FFD2824CDA3C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelManagerSystem.DAL", "..\HotelManagerSystem.DAL\HotelManagerSystem.DAL.csproj", "{FD089294-268E-4F3E-8B81-466900473928}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelManagerSystem.DAL", "..\HotelManagerSystem.DAL\HotelManagerSystem.DAL.csproj", "{FD089294-268E-4F3E-8B81-466900473928}"
 	ProjectSection(ProjectDependencies) = postProject
 		{BDAED99A-DFA6-4A45-B718-B5500DCE9B04} = {BDAED99A-DFA6-4A45-B718-B5500DCE9B04}
 	EndProjectSection
@@ -46,10 +44,6 @@ Global
 		{FC89B479-F56C-45B9-8966-E82BA98D9DD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC89B479-F56C-45B9-8966-E82BA98D9DD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC89B479-F56C-45B9-8966-E82BA98D9DD9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0B8377D1-D73A-428B-8FFE-FFD2824CDA3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0B8377D1-D73A-428B-8FFE-FFD2824CDA3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0B8377D1-D73A-428B-8FFE-FFD2824CDA3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0B8377D1-D73A-428B-8FFE-FFD2824CDA3C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FD089294-268E-4F3E-8B81-466900473928}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FD089294-268E-4F3E-8B81-466900473928}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD089294-268E-4F3E-8B81-466900473928}.Release|Any CPU.ActiveCfg = Release|Any CPU

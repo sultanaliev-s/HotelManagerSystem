@@ -1,8 +1,8 @@
-﻿using HotelManagerSystem.Models.Models.Common;
+﻿using HotelManagerSystem.Models.Common;
 
-namespace HotelManagerSystem.Models.Data
+namespace HotelManagerSystem.DAL.Data
 {
-    public interface IRepository<T> where T : BaseEntity
+    public interface IRepository<T>
     {
         public Task<T> AddAsync(T item); // C
         public  Task<List<T>> AddAllAsync(IEnumerable<T> items);

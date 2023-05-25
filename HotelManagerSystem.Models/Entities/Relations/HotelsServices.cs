@@ -1,9 +1,9 @@
 ﻿namespace HotelManagerSystem.Models.Entities.Relations
 {
-    public class HotelsCategories 
+    public class HotelsServices 
     {
         public int Id { get; set; }
-        public int CategoryId { get; set; }
+        public int ServiseId { get; set; }
         public int HotelId { get; set; } 
     }
 }
