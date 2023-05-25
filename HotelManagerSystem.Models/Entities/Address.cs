@@ -1,4 +1,5 @@
 ﻿using HotelManagerSystem.Models.Data;
+using HotelManagerSystem.Models.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;

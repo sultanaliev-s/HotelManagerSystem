@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Identity;
+using HotelManagerSystem.Models.Common;
+
 
 namespace HotelManagerSystem.Models.Entities;
 

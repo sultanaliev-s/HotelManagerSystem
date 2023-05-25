@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using HotelManagerSystem.Models.Common;
 using System.Text;
 
 namespace HotelManagerSystem.Models.Entities

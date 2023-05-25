@@ -1,4 +1,6 @@
 ﻿using HotelManagerSystem.Models.Data;
+using HotelManagerSystem.Models.Common;
+
 
 namespace HotelManagerSystem.Models.Entities
 {

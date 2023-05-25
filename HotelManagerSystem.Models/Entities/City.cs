@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using HotelManagerSystem.Models.Common;
 using System.Threading.Tasks;
 
 namespace HotelManagerSystem.Models.Data
