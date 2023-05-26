@@ -2,12 +2,12 @@
 
 namespace HotelManagerSystem.BL.Directories
 {
-    public class DirectoryServices 
-    {
-        private readonly IRepository<T> _repository;
-
-
-
-
-    }
+    // public class DirectoryServices 
+    // {
+    //     private readonly IRepository<T> _repository;
+    //
+    //
+    //
+    //
+    // }
 }

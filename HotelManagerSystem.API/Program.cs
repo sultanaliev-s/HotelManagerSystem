@@ -1,20 +1,21 @@
-using System.Reflection;
 using System.Text;
 using HotelManagerSystem.API.AuthBL.Data;
 using HotelManagerSystem.API.AuthBL.Managers;
-using HotelManagerSystem.API.AuthBL.Models;
 using HotelManagerSystem.API.Configs;
 using HotelManagerSystem.API.Extensions;
 using HotelManagerSystem.API.Handlers;
 using HotelManagerSystem.API.Repositories;
 using HotelManagerSystem.API.Service;
+using HotelManagerSystem.Models.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
+using HotelManagerSystem.Models.Entities;
+using Microsoft.Extensions.DependencyInjection;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 

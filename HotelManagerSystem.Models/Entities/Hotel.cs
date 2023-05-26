@@ -16,7 +16,10 @@ namespace HotelManagerSystem.Models.Entities
         public string Description { get; set; }
         public int ReviewStars { get; set; }
         public bool IsOne { get; set; }
+        public string CheckingAccount { get; set; }
+        public int FilialCount { get; set; }
         
+
         public int HotelTypeId { get; set; }
         public HotelType Type { get; set; }
         public int HotelCategoryId { get; set; }
