@@ -1,5 +1,4 @@
 ﻿using HotelManagerSystem.Models.Entities;
-using HotelManagerSystem.WebAPI.AuthBL.CurrentModels;
 
 namespace HotelManagerSystem.API.Repositories
 {

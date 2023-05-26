@@ -4,7 +4,6 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using HotelManagerSystem.Models.Entities;
-using HotelManagerSystem.WebAPI.AuthBL.CurrentModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 

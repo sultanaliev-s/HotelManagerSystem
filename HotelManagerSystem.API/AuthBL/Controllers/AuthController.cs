@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using HotelManagerSystem.WebAPI.AuthBL.CurrentModels;
+using DorgramApi.WebAPI.AuthBL.Models;
 using HotelManagerSystem.API.AuthBL.Data;
 using HotelManagerSystem.API.AuthBL.Managers;
 using HotelManagerSystem.API.Request;

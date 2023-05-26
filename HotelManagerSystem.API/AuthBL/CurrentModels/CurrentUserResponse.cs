@@ -1,7 +1,6 @@
-﻿using HotelManagerSystem.API.AuthBL.CurrentModels;
-using HotelManagerSystem.API.Responses;
+﻿using HotelManagerSystem.API.Responses;
 
-namespace HotelManagerSystem.WebAPI.AuthBL.CurrentModels
+namespace HotelManagerSystem.API.AuthBL.CurrentModels
 {
     public class CurrentUserResponse : Response
     {

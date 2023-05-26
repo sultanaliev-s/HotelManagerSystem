@@ -1,6 +1,5 @@
 ﻿
 using HotelManagerSystem.API.AuthBL.Data;
-using HotelManagerSystem.WebAPI.AuthBL.CurrentModels;
 using HotelManagerSystem.Common;
 using HotelManagerSystem.Models.Entities;
 using Microsoft.EntityFrameworkCore;
