@@ -1,6 +1,4 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using DorgramApi.WebAPI.AuthBL.Models;
-using HotelManagerSystem.API.AuthBL.Models;
 using HotelManagerSystem.API.Extensions;
 using HotelManagerSystem.Models.Entities;
 using Microsoft.AspNetCore.Identity;

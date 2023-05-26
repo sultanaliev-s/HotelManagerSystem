@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
-using DorgramApi.WebAPI.AuthBL.Models;
 using HotelManagerSystem.API.AuthBL.Data;
 using HotelManagerSystem.API.AuthBL.Managers;
 using HotelManagerSystem.API.Request;
+using HotelManagerSystem.API.AuthBL.CurrentModels;
 using HotelManagerSystem.API.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

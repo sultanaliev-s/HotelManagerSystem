@@ -1,4 +1,4 @@
-﻿//using HotelManagerSystem.Models.Common;
+﻿using HotelManagerSystem.Models.Common;
 
 
 namespace HotelManagerSystem.Models.EntityDto
@@ -9,8 +9,8 @@ namespace HotelManagerSystem.Models.EntityDto
         public EntityDto(BaseEntity<TKey> entity)
         {
             Id = entity.Id;
-            CreatedUtc = entity.CreatedUtc.ToString(dateFormat);
-            UpdatedUtc = entity.UpdatedUtc.ToString(dateFormat);
+            CreatedUtc = entity.CreatedUtc.ToString();
+            UpdatedUtc = entity.UpdatedUtc.ToString();
         }
         public TKey Id { get; set; }
         public string CreatedUtc { get; set; }
