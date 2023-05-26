@@ -12,7 +12,7 @@ using HotelManagerSystem.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using DorgramApi.WebAPI.AuthBL.CurrentModels;
+using HotelManagerSystem.WebAPI.AuthBL.CurrentModels;
 
 namespace HotelManagerSystem.API.AuthBL.Managers
 {

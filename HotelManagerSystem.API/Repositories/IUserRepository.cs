@@ -1,5 +1,5 @@
-﻿using DorgramApi.WebAPI.AuthBL.Models;
-using HotelManagerSystem.API.AuthBL.Models;
+﻿using HotelManagerSystem.Models.Entities;
+using HotelManagerSystem.WebAPI.AuthBL.CurrentModels;
 
 namespace HotelManagerSystem.API.Repositories
 {
