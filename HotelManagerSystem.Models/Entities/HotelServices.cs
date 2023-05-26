@@ -13,7 +13,5 @@ namespace HotelManagerSystem.Models.Data
     {
         public string Name { get; set; }
         public string Description { get; set; }
-
-        public List<Hotel> Hotels { get; set; } 
     }
 }

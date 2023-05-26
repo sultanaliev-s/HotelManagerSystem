@@ -10,7 +10,7 @@ namespace HotelManagerSystem.Models.Entities
 {
     public class Address : BaseEntity<int>
     {  
-        public int Country { get; set; }
+        public int CountryId { get; set; }
         public Country Countries { get; set; }
         public int CityId { get; set; }
         public City Cities { get; set; }

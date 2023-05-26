@@ -13,6 +13,7 @@ namespace HotelManagerSystem.Models.Data
     {
         public string Name { get; set; }
         public List<HotelCategory> HotelCategories { get; set; }
+        public List<Hotel> Hotels { get; set; }
 
     }
 }

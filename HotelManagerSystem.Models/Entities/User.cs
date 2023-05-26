@@ -10,5 +10,11 @@ namespace HotelManagerSystem.Models.Entities
         public bool IsEmailConfirmed { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime RefreshTokenExpiryTime { get; set; }
+        public string CheckingAccount { get; set; }
+
+
+        public List<ClientReview> clientReviews { get; set; }
+        public List<Hotel> Hotels { get; set; }
+        public List<RoomReservation> roomReservations { get; set; }
     }
 }
