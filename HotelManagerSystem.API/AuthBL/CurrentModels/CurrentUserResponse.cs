@@ -1,6 +1,7 @@
-﻿using HotelManagerSystem.API.Responses;
+﻿using HotelManagerSystem.API.AuthBL.CurrentModels;
+using HotelManagerSystem.API.Responses;
 
-namespace HotelManagerSystem.API.AuthBL.CurrentModels
+namespace DorgramApi.WebAPI.AuthBL.CurrentModels
 {
     public class CurrentUserResponse : Response
     {

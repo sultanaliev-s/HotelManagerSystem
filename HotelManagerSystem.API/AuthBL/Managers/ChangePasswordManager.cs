@@ -1,7 +1,8 @@
-﻿using HotelManagerSystem.API.Configs;
+﻿using DorgramApi.WebAPI.AuthBL.Models;
+using HotelManagerSystem.API.AuthBL.CurrentModels;
+using HotelManagerSystem.API.Configs;
 using HotelManagerSystem.API.Request.ChangePassword;
 using HotelManagerSystem.API.Responses;
-using HotelManagerSystem.Models.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
