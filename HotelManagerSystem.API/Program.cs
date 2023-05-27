@@ -14,7 +14,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
+using HotelManagerSystem.Models.Entities;
+using Microsoft.Extensions.DependencyInjection;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 

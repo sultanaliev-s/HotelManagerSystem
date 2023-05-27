@@ -3,6 +3,7 @@ using DorgramApi.WebAPI.AuthBL.Models;
 using HotelManagerSystem.API.AuthBL.Models;
 using HotelManagerSystem.API.Extensions;
 using Microsoft.AspNetCore.Identity;
+using HotelManagerSystem.Models.Entities;
 
 namespace HotelManagerSystem.API.Service
 {

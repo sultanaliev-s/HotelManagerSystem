@@ -22,7 +22,9 @@ namespace HotelManagerSystem.Models.Entities
         public int HotelId { get; set; }
         public Hotel Hotel { get; set; } 
         public int CouchetteId { get; set; }
-        public Сouchette Couchette { get; set; }
+        public Сouchette Сouchette { get; set; }
+        public int RoomReservationId { get; set; }
+        public RoomReservation Reservation { get; set; }
 
     }
 }
