@@ -4,8 +4,6 @@ using HotelManagerSystem.Models.Data;
 using HotelManagerSystem.Models.Entities.Relations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Identity;
-using System.Reflection.Emit;
 
 namespace HotelManagerSystem.DAL
 {
