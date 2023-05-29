@@ -1,4 +1,7 @@
-﻿
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using HotelManagerSystem.DAL.Responses;
+
+
 namespace HotelManagerSystem.API.Responses
 {
     public class AuthResponse : Response

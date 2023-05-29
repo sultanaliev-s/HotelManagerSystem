@@ -1,4 +1,4 @@
-﻿namespace HotelManagerSystem.API.AuthBL.Data
+﻿namespace HotelManagerSystem.DAL.AuthBL.Data
 {
     public class TokenModel
     {

@@ -1,4 +1,4 @@
-﻿namespace HotelManagerSystem.API.AuthBL.CurrentModels
+﻿namespace HotelManagerSystem.DAL.AuthBL.CurrentModels
 {
     public class UserViewModel
     {

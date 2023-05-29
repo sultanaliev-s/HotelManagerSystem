@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using HotelManagerSystem.Models.Common;
 
 
-namespace HotelManagerSystem.Models.Data
+namespace HotelManagerSystem.Models.Entities
 {
     public class HotelType : BaseEntity<int>
     {

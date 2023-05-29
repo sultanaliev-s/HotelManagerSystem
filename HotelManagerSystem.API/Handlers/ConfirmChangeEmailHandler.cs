@@ -1,6 +1,7 @@
 ﻿using HotelManagerSystem.API.AuthBL.Managers;
 using HotelManagerSystem.API.Request;
 using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.DAL.Responses;
 using MediatR;
 
 namespace HotelManagerSystem.API.Handlers

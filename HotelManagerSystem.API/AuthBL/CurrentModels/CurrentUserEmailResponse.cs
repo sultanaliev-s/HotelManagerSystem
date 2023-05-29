@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.DAL.Responses;
 
 namespace HotelManagerSystem.API.AuthBL.CurrentModels
 {

@@ -1,6 +1,6 @@
 ﻿using HotelManagerSystem.API.Configs;
 using HotelManagerSystem.API.Request.ChangePassword;
-using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;

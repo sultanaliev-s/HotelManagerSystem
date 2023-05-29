@@ -18,7 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HotelManagerSystem.BL\HotelManagerSystem.BL.csproj" />
     <ProjectReference Include="..\HotelManagerSystem.Common\HotelManagerSystem.Common.csproj" />
+    <ProjectReference Include="..\HotelManagerSystem.DAL\HotelManagerSystem.DAL.csproj" />
     <ProjectReference Include="..\HotelManagerSystem.Models\HotelManagerSystem.Models.csproj" />
   </ItemGroup>
 

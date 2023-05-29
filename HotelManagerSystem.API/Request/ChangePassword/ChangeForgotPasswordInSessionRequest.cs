@@ -1,4 +1,5 @@
 ﻿using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.DAL.Responses;
 using MediatR;
 
 namespace HotelManagerSystem.API.Request.ChangePassword;

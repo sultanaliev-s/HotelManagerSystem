@@ -1,4 +1,6 @@
-﻿using HotelManagerSystem.API.Responses;
+﻿using HotelManagerSystem.DAL.Responses;
+using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.DAL.AuthBL.CurrentModels;
 
 namespace HotelManagerSystem.API.AuthBL.CurrentModels
 {

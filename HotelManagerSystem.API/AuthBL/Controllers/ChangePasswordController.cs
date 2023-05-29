@@ -2,7 +2,7 @@
 using HotelManagerSystem.API.Configs;
 using HotelManagerSystem.API.Request;
 using HotelManagerSystem.API.Request.ChangePassword;
-using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.API.Service;
 using HotelManagerSystem.Common;
 using MediatR;

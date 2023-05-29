@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.DAL.Responses;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace HotelManagerSystem.API.Extensions

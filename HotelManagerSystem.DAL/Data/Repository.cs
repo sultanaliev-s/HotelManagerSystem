@@ -3,19 +3,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagerSystem.DAL.Data
 {
-    public class Repository<T> : IRepository<T>
-        where T : BaseEntity<T>
+    public class Repository<T, TKey> : IRepository<T, TKey>
+        where T : BaseEntity<TKey>
     {
         protected readonly HotelContext _context;
         protected readonly DbSet<T> _dbSet;
 
+
         public Repository(HotelContext context)
         {
             _context = context;
+
             _dbSet = _context.Set<T>();
 
             if (_dbSet == default(DbSet<T>))
                 throw new ArgumentNullException(nameof(DbSet<T>));
+
         }
 
         public async Task<T> AddAsync(T item)
@@ -62,6 +65,14 @@ namespace HotelManagerSystem.DAL.Data
             _context.SaveChanges();
         }
 
+        public async Task DeleteById(TKey id)
+        {
+            T entity = await GetByIdAsync(id);
+
+            _dbSet.Remove(entity);
+            _context.SaveChanges();
+        }
+
         public async Task<List<T>> GetAllAsync()
         {
             DbSet<T> dbSet = _context.Set<T>();
@@ -72,7 +83,7 @@ namespace HotelManagerSystem.DAL.Data
             return dbSet.ToList();
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(TKey id)
         {
             DbSet<T> dbSet = _context.Set<T>();
 
@@ -104,6 +115,14 @@ namespace HotelManagerSystem.DAL.Data
 
             dbSet.Update(item);
 
+            _context.SaveChanges();
+        }
+
+        public async Task DeleteByIdAsync(TKey id)
+        {
+            T entity = await GetByIdAsync(id);
+
+            _dbSet.Remove(entity);
             _context.SaveChanges();
         }
     }

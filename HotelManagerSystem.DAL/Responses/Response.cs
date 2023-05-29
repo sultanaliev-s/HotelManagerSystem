@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace HotelManagerSystem.API.Responses
+namespace HotelManagerSystem.DAL.Responses
 {
     public class Response
     {

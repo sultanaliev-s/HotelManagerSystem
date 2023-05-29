@@ -6,12 +6,15 @@ using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.API.Configs;
 using HotelManagerSystem.API.Extensions;
 using HotelManagerSystem.API.Request;
+using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.API.Responses;
 using HotelManagerSystem.API.Service;
 using HotelManagerSystem.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using HotelManagerSystem.DAL.AuthBL.CurrentModels;
+using HotelManagerSystem.DAL.AuthBL.Data;
 
 namespace HotelManagerSystem.API.AuthBL.Managers
 {

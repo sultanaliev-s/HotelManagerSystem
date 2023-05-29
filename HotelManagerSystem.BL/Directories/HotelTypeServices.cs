@@ -1,48 +1,49 @@
 ﻿using HotelManagerSystem.DAL.Data;
-using HotelManagerSystem.Models.Data;
-using HotelManagerSystem.Models.Request;
 using HotelManagerSystem.DAL.Responses;
-
+using HotelManagerSystem.Models.Data;
+using HotelManagerSystem.Models.Entities;
+using HotelManagerSystem.Models.Request;
 
 namespace HotelManagerSystem.BL.Directories
 {
-    public class CountryServices
+    public class HotelTypeServices
     {
-        private readonly IRepository<Country, int> _repository;
+        private readonly IRepository<HotelType, int> _repository;
 
-        public CountryServices( IRepository<Country, int> couontryRepository)
+        public HotelTypeServices(IRepository<HotelType, int> hotelTypeRepository)
         {
-            _repository = couontryRepository;
+            _repository = hotelTypeRepository;
         }
 
-        public async Task<List<Country>> GetAll()
+        public async Task<List<HotelType>> GetAll()
         {
             return await _repository.GetAllAsync();
         }
 
-        public async Task<Country> GetByIdAsync(int id)
+        public async Task<HotelType> GetByIdAsync(int id)
         {
             return await _repository.GetByIdAsync(id);
         }
         public async Task<Response> Update(UpdateNameDirectoryRequest request)
         {
-            Country country = await _repository.GetByIdAsync(request.Id);
-            country.Name = request.Name;
-            _repository.UpdateAsync(country);
+            HotelType hotelType = await _repository.GetByIdAsync(request.Id);
+            hotelType.Name = request.Name;
+            _repository.UpdateAsync(hotelType);
 
-            return new Response(200, true, null );
+            return new Response(200, true, null);
         }
 
         public async Task<Response> Create(CreateNameDirectoryRequest request)
         {
-            Country country =new Country()
+            HotelType hotelType = new HotelType()
             {
                 Name = request.Name,
-                CreatedUtc = DateTime.Now
+                CreatedUtc = DateTime.Now,
+                UpdatedUtc = DateTime.Now
 
             };
 
-            _repository.AddAsync(country);
+            _repository.AddAsync(hotelType);
 
             return new Response(200, true, null);
         }

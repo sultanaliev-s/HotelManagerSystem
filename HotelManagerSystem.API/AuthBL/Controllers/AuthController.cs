@@ -4,8 +4,10 @@ using HotelManagerSystem.API.AuthBL.Managers;
 using HotelManagerSystem.API.Request;
 using HotelManagerSystem.API.AuthBL.CurrentModels;
 using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.DAL.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using HotelManagerSystem.DAL.AuthBL.Data;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers
 {

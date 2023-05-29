@@ -1,48 +1,47 @@
 ﻿using HotelManagerSystem.DAL.Data;
+using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Data;
 using HotelManagerSystem.Models.Request;
-using HotelManagerSystem.DAL.Responses;
-
 
 namespace HotelManagerSystem.BL.Directories
 {
-    public class CountryServices
+    public class CityServices
     {
-        private readonly IRepository<Country, int> _repository;
+        private readonly IRepository<City, int> _repository;
 
-        public CountryServices( IRepository<Country, int> couontryRepository)
+        public CityServices(IRepository<City, int> cityRepository)
         {
-            _repository = couontryRepository;
+            _repository = cityRepository;
         }
 
-        public async Task<List<Country>> GetAll()
+        public async Task<List<City>> GetAll()
         {
             return await _repository.GetAllAsync();
         }
 
-        public async Task<Country> GetByIdAsync(int id)
+        public async Task<City> GetByIdAsync(int id)
         {
             return await _repository.GetByIdAsync(id);
         }
         public async Task<Response> Update(UpdateNameDirectoryRequest request)
         {
-            Country country = await _repository.GetByIdAsync(request.Id);
-            country.Name = request.Name;
-            _repository.UpdateAsync(country);
+            City city = await _repository.GetByIdAsync(request.Id);
+            city.Name = request.Name;
+            _repository.UpdateAsync(city);
 
-            return new Response(200, true, null );
+            return new Response(200, true, null);
         }
 
         public async Task<Response> Create(CreateNameDirectoryRequest request)
         {
-            Country country =new Country()
+            City city = new City()
             {
                 Name = request.Name,
                 CreatedUtc = DateTime.Now
 
             };
 
-            _repository.AddAsync(country);
+            _repository.AddAsync(city);
 
             return new Response(200, true, null);
         }
