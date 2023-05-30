@@ -1,4 +1,4 @@
-﻿namespace HotelManagerSystem.Models.Request
+﻿namespace HotelManagerSystem.Models.Request.CreateRequest
 {
     public class CreateNameDirectoryRequest
     {

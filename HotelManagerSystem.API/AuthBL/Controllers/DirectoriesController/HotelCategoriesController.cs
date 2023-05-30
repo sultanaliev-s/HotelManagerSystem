@@ -2,7 +2,7 @@
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Entities;
-using HotelManagerSystem.Models.Request;
+using HotelManagerSystem.Models.Request.UpdateRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     public class HotelCategoriesController : ControllerBase
     {
@@ -17,19 +18,21 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         private readonly IRepository<HotelCategory, int> _repository;
         private readonly HotelCategoryServices _service;
 
-        public HotelCategoriesController(IRepository<HotelCategory, int> hotelCategoryRepository)
+        public HotelCategoriesController(IRepository<HotelCategory, int> hotelCategoryRepository, HotelCategoryServices service)
         {
             _repository = hotelCategoryRepository;
+            _service = service;
         }
 
         [HttpPost]
         [Route("create")]
-        public async Task<Response> Create([FromBody] string typeName, string typeDescription)
+        public async Task<Response> Create([FromBody] string typeName, string typeDescription, int typeid)
         {
             HotelCategory category = new HotelCategory()
             {
                 Name = typeName,
                 Description = typeDescription,
+                HotelTypeId = typeid,
                 CreatedUtc = DateTime.Now,
                 UpdatedUtc = DateTime.Now
             };

@@ -2,7 +2,8 @@
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Data;
 using HotelManagerSystem.Models.Entities;
-using HotelManagerSystem.Models.Request;
+using HotelManagerSystem.Models.Request.CreateRequest;
+using HotelManagerSystem.Models.Request.UpdateRequest;
 using HotelManagerSystem.Models.Request.UserReview;
 
 namespace HotelManagerSystem.BL.Directories

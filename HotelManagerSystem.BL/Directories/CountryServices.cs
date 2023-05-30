@@ -1,8 +1,8 @@
 ﻿using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.Models.Data;
-using HotelManagerSystem.Models.Request;
 using HotelManagerSystem.DAL.Responses;
-
+using HotelManagerSystem.Models.Request.CreateRequest;
+using HotelManagerSystem.Models.Request.UpdateRequest;
 
 namespace HotelManagerSystem.BL.Directories
 {

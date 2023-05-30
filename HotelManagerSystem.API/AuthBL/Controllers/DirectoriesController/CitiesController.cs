@@ -2,7 +2,8 @@
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Data;
-using HotelManagerSystem.Models.Request;
+using HotelManagerSystem.Models.Request.UpdateRequest;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     public class CitiesController : ControllerBase
     {
@@ -17,18 +19,20 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         private readonly IRepository<City, int> _repository;
         private readonly CityServices _service;
 
-        public CitiesController(IRepository<City, int> cityRepository)
+        public CitiesController(IRepository<City, int> cityRepository, CityServices service)
         {
             _repository = cityRepository;
+            _service = service;
         }
 
         [HttpPost]
         [Route("create")]
-        public async Task<Response> Create([FromBody] string CityName)
+        public async Task<Response> Create([FromBody] string CityName, int countryId)
         {
             City city = new City()
             {
                 Name = CityName,
+                CountryId = countryId,
                 CreatedUtc = DateTime.Now,
                 UpdatedUtc = DateTime.Now
             };
@@ -40,7 +44,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 
         [HttpPut]
         [Route("update")]
-        public async Task<Response> Update(UpdateNameDirectoryRequest request)
+        public async Task<Response> Update(UpdateIdNameDirectoryRequest request)
         {
             return await _service.Update(request);
         }

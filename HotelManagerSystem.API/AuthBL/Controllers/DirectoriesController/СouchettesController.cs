@@ -2,7 +2,7 @@
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Entities;
-using HotelManagerSystem.Models.Request;
+using HotelManagerSystem.Models.Request.UpdateRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +18,10 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         private readonly IRepository<Сouchette, int> _repository;
         private readonly СouchetteServices _service;
 
-        public СouchettesController(IRepository<Сouchette, int> couchetteRepository)
+        public СouchettesController(IRepository<Сouchette, int> couchetteRepository, СouchetteServices service)
         {
             _repository = couchetteRepository;
+            _service = service;
         }
 
         [HttpPost]

@@ -3,7 +3,7 @@ using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Data;
 using HotelManagerSystem.Models.Entities;
-using HotelManagerSystem.Models.Request;
+using HotelManagerSystem.Models.Request.UpdateRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,9 +19,10 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         private readonly IRepository<Country, int> _repository;
         private readonly CountryServices _service;
 
-        public CountriesController(IRepository<Country, int> countryRepository)
+        public CountriesController(IRepository<Country, int> countryRepository, CountryServices service)
         {
             _repository = countryRepository;
+            _service = service;
         }
 
         [HttpPost]

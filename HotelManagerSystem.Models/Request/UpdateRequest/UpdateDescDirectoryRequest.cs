@@ -1,4 +1,4 @@
-﻿namespace HotelManagerSystem.Models.Request
+﻿namespace HotelManagerSystem.Models.Request.UpdateRequest
 {
     public class UpdateDescDirectoryRequest
     {

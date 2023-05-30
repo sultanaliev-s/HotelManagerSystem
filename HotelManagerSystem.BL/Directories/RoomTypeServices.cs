@@ -2,12 +2,13 @@
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.Models.Data;
 using HotelManagerSystem.Models.Entities;
-using HotelManagerSystem.Models.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HotelManagerSystem.Models.Request.CreateRequest;
+using HotelManagerSystem.Models.Request.UpdateRequest;
 
 namespace HotelManagerSystem.BL.Directories
 {

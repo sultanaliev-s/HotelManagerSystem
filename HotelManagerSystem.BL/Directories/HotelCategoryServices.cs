@@ -1,7 +1,8 @@
 ﻿using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Entities;
-using HotelManagerSystem.Models.Request;
+using HotelManagerSystem.Models.Request.CreateRequest;
+using HotelManagerSystem.Models.Request.UpdateRequest;
 using HotelManagerSystem.Models.Request.UserReview;
 
 namespace HotelManagerSystem.BL.Directories
@@ -24,22 +25,24 @@ namespace HotelManagerSystem.BL.Directories
         {
             return await _repository.GetByIdAsync(id);
         }
-        public async Task<Response> Update(UpdateDescDirectoryRequest request)
+        public async Task<Response> Update(UpdateIdDescDirectoryRequest request)
         {
             HotelCategory category = await _repository.GetByIdAsync(request.Id);
             category.Name = request.Name;
             category.Description = request.Description;
+            category.HotelTypeId = request.ParentId;
             _repository.UpdateAsync(category);
 
             return new Response(200, true, null);
         }
 
-        public async Task<Response> Create(CreateDescDirectoryRequest request)
+        public async Task<Response> Create(CreateIdDescDirectoryRequest request)
         {
             HotelCategory category = new HotelCategory()
             {
                 Name = request.Name,
                 Description = request.Description,
+                HotelTypeId = request.ParentId,
                 CreatedUtc = DateTime.Now,
                 UpdatedUtc = DateTime.Now
             };

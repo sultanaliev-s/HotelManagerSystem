@@ -3,9 +3,9 @@ using HotelManagerSystem.Models.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using HotelManagerSystem.BL.Directories;
-using HotelManagerSystem.Models.Request;
 using HotelManagerSystem.DAL.Responses;
 using Microsoft.AspNetCore.Authorization;
+using HotelManagerSystem.Models.Request.UpdateRequest;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 {
@@ -17,9 +17,10 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         private readonly IRepository<RoomType, int> _repository;
         private readonly RoomTypeServices _service;
 
-        public RoomTypesController(IRepository<RoomType, int> roomTypeRepository)
+        public RoomTypesController(IRepository<RoomType, int> roomTypeRepository, RoomTypeServices service)
         {
             _repository = roomTypeRepository;
+            _service = service;
         }
 
         [HttpPost]

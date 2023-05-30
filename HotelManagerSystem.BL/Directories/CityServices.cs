@@ -1,7 +1,8 @@
 ﻿using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Data;
-using HotelManagerSystem.Models.Request;
+using HotelManagerSystem.Models.Request.CreateRequest;
+using HotelManagerSystem.Models.Request.UpdateRequest;
 
 namespace HotelManagerSystem.BL.Directories
 {
@@ -23,22 +24,25 @@ namespace HotelManagerSystem.BL.Directories
         {
             return await _repository.GetByIdAsync(id);
         }
-        public async Task<Response> Update(UpdateNameDirectoryRequest request)
+        public async Task<Response> Update(UpdateIdNameDirectoryRequest request)
         {
             City city = await _repository.GetByIdAsync(request.Id);
             city.Name = request.Name;
+            city.CountryId = request.ParentId;
             _repository.UpdateAsync(city);
 
             return new Response(200, true, null);
         }
 
-        public async Task<Response> Create(CreateNameDirectoryRequest request)
+        public async Task<Response> Create(CreateIdNameDirectoryRequest request)
         {
             City city = new City()
             {
                 Name = request.Name,
-                CreatedUtc = DateTime.Now
-
+                CountryId = request.ParentId,
+                CreatedUtc = DateTime.Now, 
+                UpdatedUtc= DateTime.Now
+                
             };
 
             _repository.AddAsync(city);

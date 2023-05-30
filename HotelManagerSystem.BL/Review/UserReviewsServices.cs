@@ -48,12 +48,13 @@ namespace HotelManagerSystem.BL.Review
 
             return new Response(200, true, null);
         }
-        public async Task<Response> HotelStars(List<ClientReview> reviews)
+        public async Task<Response> HotelStars(List<ClientReview> reviews, int hotelId)
         {
             int starsSum = reviews.Sum(review => review.Stars);
 
             int reviewsCount = reviews.Count();
             
+
 
             return new Response(200, true, null);
 

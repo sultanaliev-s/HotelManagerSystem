@@ -2,22 +2,24 @@
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Entities;
-using HotelManagerSystem.Models.Request;
+using HotelManagerSystem.Models.Request.UpdateRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     public class HotelTypesController : ControllerBase
     {
         private readonly IRepository<HotelType, int> _repository;
         private readonly HotelTypeServices _service;
 
-        public HotelTypesController(IRepository<HotelType, int> hotelTypeRepository)
+        public HotelTypesController(IRepository<HotelType, int> hotelTypeRepository, HotelTypeServices service)
         {
             _repository = hotelTypeRepository;
+            _service = service;
         }
 
         [HttpPost]
