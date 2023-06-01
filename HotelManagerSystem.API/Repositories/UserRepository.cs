@@ -1,7 +1,7 @@
 ﻿
 using HotelManagerSystem.API.AuthBL.Data;
-using HotelManagerSystem.API.AuthBL.Models;
 using HotelManagerSystem.Common;
+using HotelManagerSystem.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagerSystem.API.Repositories

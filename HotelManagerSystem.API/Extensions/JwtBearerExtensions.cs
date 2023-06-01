@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using HotelManagerSystem.API.AuthBL.Models;
+using HotelManagerSystem.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
