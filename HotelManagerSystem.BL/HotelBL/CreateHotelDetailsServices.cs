@@ -45,16 +45,18 @@ namespace HotelManagerSystem.BL.HotelBL
         // не знаю как дальше писать этот пиздец 
 
         public async Task<Response> CreateHotel(CreateHotelRequest request, CreateAddressRequest Addressrequest,
-            CreateRoomRequest roomRequest, ReviewRequest reviewRequest)
+            CreateRoomRequest roomRequest, ReviewRequest reviewRequest, CreateFotoRequest fotoRequest)
         {
             Hotel hotel = new Hotel()
             {
+                UserId= request.UserId,
                 Name = request.Name,
                 Description = request.Description,
                 IsOne = request.IsOne,
                 CheckingAccount = request.CheckingAccount,
                 Addresses = await AddAddress(Addressrequest),
                 Rooms = await AddRoom(roomRequest),
+                Fotos = await AddFoto(fotoRequest),
                 ReviewStars = await _reviewsServices.HotelStars(reviewRequest),
                 ClientReviews = await _reviewsServices.GetAll(),
                 HotelTypeId = request.HotelTypeId,
@@ -106,6 +108,23 @@ namespace HotelManagerSystem.BL.HotelBL
             await _roomReporitory.AddAsync(room);
 
             return rooms;
+        }
+
+        public async Task<List<HotelFoto>> AddFoto(CreateFotoRequest request)
+        {
+            HotelFoto foto = new HotelFoto()
+            {
+                HotelId = request.HotelId,
+                Foto = request.Foto,
+                CreatedUtc = DateTime.UtcNow
+            };
+
+            List<HotelFoto> fotos = new List<HotelFoto>();
+            fotos.Add(foto);
+
+            await _fotoReporitory.AddAsync(foto);
+
+            return fotos;
         }
 
     }

@@ -24,9 +24,9 @@ namespace HotelManagerSystem.Models.Entities
         public HotelType Type { get; set; }
         public int HotelCategoryId { get; set; }
         public HotelCategory Category { get; set; }
-        public List<Address> Addresses { get; set; }
-        public List<Room> Rooms { get; set; }
-        public List<ClientReview> ClientReviews { get; set; }
-        public List<HotelFoto> Fotos { get; set; }
+        public List<Address>? Addresses { get; set; }
+        public List<Room>? Rooms { get; set; }
+        public List<ClientReview>? ClientReviews { get; set; }
+        public List<HotelFoto>? Fotos { get; set; }
     }
 }
