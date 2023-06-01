@@ -70,8 +70,8 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.UserReview
         }
 
         [HttpPost]
-        [Route("deleteById")]
-
+        [Route("addStars")]
+        [Authorize]
         public async Task<int> HotelStars([FromBody]List<ClientReview> Reviews, int Id)
         {
             int result = await _service.HotelStars(Reviews, Id);
