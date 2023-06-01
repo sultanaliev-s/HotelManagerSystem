@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HotelManagerSystem.API.AuthBL.Controllers.UserReview
+namespace HotelManagerSystem.API.AuthBL.Controllers.UserReviewController
 {
     [Route("api/[controller]")]
     [Authorize(Roles = "User")]
