@@ -69,14 +69,14 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.UserReviewController
             return new Response(200, true, null);
         }
 
-        [HttpPost]
-        [Route("addStars")]
-        [Authorize]
-        public async Task<int> HotelStars([FromBody]List<ClientReview> Reviews, int Id)
-        {
-            int result = await _service.HotelStars(Reviews, Id);
+        //[HttpPost]
+        //[Route("addStars")]
+        //[Authorize]
+        //public async Task<int> HotelStars([FromBody]List<ClientReview> Reviews, int Id)
+        //{
+        //    int result = await _service.HotelStars(Reviews);
 
-            return result;
-        }
+        //    return result;
+        //}
     }
 }
