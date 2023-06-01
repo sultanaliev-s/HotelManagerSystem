@@ -6,8 +6,6 @@ using HotelManagerSystem.API.Extensions;
 using HotelManagerSystem.API.Handlers;
 using HotelManagerSystem.API.Repositories;
 using HotelManagerSystem.API.Service;
-using HotelManagerSystem.Models.Entities;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

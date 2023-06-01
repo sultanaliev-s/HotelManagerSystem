@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using HotelManagerSystem.DAL.AuthBL.CurrentModels;
 using HotelManagerSystem.DAL.AuthBL.Data;
+using HotelManagerSystem.API.AuthBL.CurrentModels;
 
 namespace HotelManagerSystem.API.AuthBL.Managers
 {

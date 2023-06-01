@@ -3,7 +3,7 @@ using MediatR;
 
 namespace HotelManagerSystem.API.Handlers;
 
-public class SendEmailCommand : IRequest
+public class SendEmailCommand : IRequest <Unit>
 {
     public EmailRequest EmailRequest { get; }
 

@@ -1,6 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using HotelManagerSystem.API.Extensions;
-using HotelManagerSystem.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using HotelManagerSystem.Models.Entities;
 
