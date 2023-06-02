@@ -16,6 +16,9 @@ using Microsoft.Extensions.Caching.Memory;
 using HotelManagerSystem.DAL.AuthBL.CurrentModels;
 using HotelManagerSystem.DAL.AuthBL.Data;
 using HotelManagerSystem.API.AuthBL.CurrentModels;
+using HotelManagerSystem.DAL;
+using HotelManagerSystem.Models.Request.ReservationRequest;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagerSystem.API.AuthBL.Managers
 {
@@ -30,13 +33,16 @@ namespace HotelManagerSystem.API.AuthBL.Managers
         private readonly IConfiguration _configuration;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly EmailManager _emailManager;
+        private readonly HotelContext _dbContext;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
 
         public AuthManager(
             UserManager<User> userManager,
             SignInManager<User> signInManager, IMemoryCache memoryCache
             , EmailService emailService, Config config, ITokenService tokenService, IConfiguration configuration
             , RoleManager<IdentityRole> roleManager,
-            EmailManager emailManager)
+            EmailManager emailManager, HotelContext dbContext, IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -44,11 +50,14 @@ namespace HotelManagerSystem.API.AuthBL.Managers
             _emailService = emailService;
             _config = config.SMTPConfig;
             _tokenService = tokenService;
-            _configuration = configuration; 
+            _configuration = configuration;
             _roleManager = roleManager;
             _emailManager = emailManager;
+            _dbContext = dbContext;
+            _httpContextAccessor = httpContextAccessor;
 
         }
+
         public async Task<AuthResponse> LoginUser(LoginUserRequest request, CancellationToken token)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
@@ -57,7 +66,7 @@ namespace HotelManagerSystem.API.AuthBL.Managers
                 throw new DException("User not found");
             }
 
-            if(!user.IsEmailConfirmed)
+            if (!user.IsEmailConfirmed)
             {
                 throw new DException("User's email isn't confirmed");
             }
@@ -74,9 +83,11 @@ namespace HotelManagerSystem.API.AuthBL.Managers
                     var role = await _roleManager.FindByNameAsync(roleName);
                     identityRoles.Add(role);
                 }
+
                 var accessToken = _tokenService.CreateToken(user, identityRoles);
                 user.RefreshToken = _configuration.GenerateRefreshToken();
-                user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_configuration.GetSection("Jwt:RefreshTokenValidityInDays").Get<int>());
+                user.RefreshTokenExpiryTime =
+                    DateTime.UtcNow.AddDays(_configuration.GetSection("Jwt:RefreshTokenValidityInDays").Get<int>());
                 await _userManager.UpdateAsync(user);
                 return new AuthResponse(200, true, "Операция успешна!"
                     , user.FullName, accessToken, user.RefreshToken);
@@ -90,7 +101,7 @@ namespace HotelManagerSystem.API.AuthBL.Managers
                 throw new DException("Login Error");
             }
         }
-        
+
 
         public async Task<Response> RegisterUser(RegisterUserRequest request,
             CancellationToken cancellationToken)
@@ -126,6 +137,7 @@ namespace HotelManagerSystem.API.AuthBL.Managers
             {
                 return new CurrentUserResponse(404, false, "Current user not found", null);
             }
+
             var userVm = MapUser(user);
 
             return new CurrentUserResponse(200, true, "User recieved", userVm);
@@ -142,6 +154,7 @@ namespace HotelManagerSystem.API.AuthBL.Managers
                 PhoneNumber = user.PhoneNumber,
             };
         }
+
         private void SetUserProperties(User user, string fullName, string email)
         {
             user.FullName = fullName;
@@ -189,7 +202,85 @@ namespace HotelManagerSystem.API.AuthBL.Managers
             user.RefreshToken = newRefreshToken;
             await _userManager.UpdateAsync(user);
 
-            return new AuthResponse (200, true, "Success!", user.FullName, new JwtSecurityTokenHandler().WriteToken(newAccessToken), newRefreshToken);
+            return new AuthResponse(200, true, "Success!", user.FullName,
+                new JwtSecurityTokenHandler().WriteToken(newAccessToken), newRefreshToken);
+        }
+
+        public async Task<Response> MakeReservation(RoomReservationRequest request)
+        {
+            var user = await _userManager.FindByIdAsync(request.UserId);
+            if (user == null)
+            {
+                throw new DException("User not found");
+            }
+            
+            var room = await _dbContext.Rooms.FindAsync(request.RoomId);
+            if (room == null)
+            {
+                throw new DException("Room not found");
+            }
+            
+            bool isRoomAvailable = await IsRoomAvailable(room, request.StartDate, request.EndDate);
+            if (!isRoomAvailable)
+            {
+                throw new DException("Room is not available for the specified dates");
+            }
+            
+            var reservation = new RoomReservation
+            {
+                UserId = user.Id,
+                User = user,
+                Price = CalculateReservationPrice(room, request.StartDate, request.EndDate),
+                ReserveStart = request.StartDate,
+                ReserveEnd = request.EndDate,
+                Person = request.Person,
+                RoomId = room.Id,
+                Room = room
+            };
+            
+            _dbContext.RoomsReservations.Add(reservation);
+            await _dbContext.SaveChangesAsync();
+
+            return new Response(200, true, "Reservation made successfully");
+        }
+
+        public async Task<Response> CancelReservation(int reservationId)
+        {
+            var reservation = await _dbContext.RoomsReservations.FindAsync(reservationId);
+            if (reservation == null)
+            {
+                throw new DException("Reservation not found");
+            }
+            
+            var claimsPrincipal = _httpContextAccessor.HttpContext?.User;
+            var userId = _userManager.GetUserId(claimsPrincipal);
+
+            if (userId != reservation.UserId)
+            {
+                throw new DException("Unauthorized to cancel this reservation");
+            }
+            
+            _dbContext.RoomsReservations.Remove(reservation);
+            await _dbContext.SaveChangesAsync();
+
+            return new Response(200, true, "Reservation canceled successfully");
+        }
+
+        private async Task<bool> IsRoomAvailable(Room room, DateTime startDate, DateTime endDate)
+        {
+            var existingReservations = await _dbContext.RoomsReservations
+                .Where(r => r.RoomId == room.Id && r.ReserveEnd >= startDate && r.ReserveStart <= endDate)
+                .ToListAsync();
+
+            return !existingReservations.Any();
+        }
+
+        private decimal CalculateReservationPrice(Room room, DateTime startDate, DateTime endDate)
+        {
+            //стоимость = (количество дней) * (цена)
+            int numDays = (int)(endDate - startDate).TotalDays;
+            decimal totalPrice = numDays * room.Price;
+            return totalPrice;
         }
     }
 }
