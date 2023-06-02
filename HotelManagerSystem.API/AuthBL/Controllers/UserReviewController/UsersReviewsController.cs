@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HotelManagerSystem.API.AuthBL.Controllers.UserReview
+namespace HotelManagerSystem.API.AuthBL.Controllers.UserReviewController
 {
     [Route("api/[controller]")]
     [Authorize(Roles = "User")]
@@ -69,14 +69,14 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.UserReview
             return new Response(200, true, null);
         }
 
-        [HttpPost]
-        [Route("addStars")]
-        [Authorize]
-        public async Task<int> HotelStars([FromBody]List<ClientReview> Reviews, int Id)
-        {
-            int result = await _service.HotelStars(Reviews, Id);
+        //[HttpPost]
+        //[Route("addStars")]
+        //[Authorize]
+        //public async Task<int> HotelStars([FromBody]List<ClientReview> Reviews, int Id)
+        //{
+        //    int result = await _service.HotelStars(Reviews);
 
-            return result;
-        }
+        //    return result;
+        //}
     }
 }

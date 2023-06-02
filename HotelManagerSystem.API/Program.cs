@@ -15,6 +15,7 @@ using HotelManagerSystem.Models.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using MediatR;
 using HotelManagerSystem.BL.Directories;
+using HotelManagerSystem.DAL;
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.Models.Data;
 
@@ -23,8 +24,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<Config>(provider => BindConfiguration(provider));
 
-builder.Services.AddDbContext<HotelManagerSystemDb>(); 
+builder.Services.AddDbContext<HotelManagerSystemDb>();
 
+builder.Services.AddDbContext<HotelContext>();
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<HotelManagerSystemDb>()
     .AddDefaultTokenProviders();
