@@ -49,17 +49,17 @@ namespace HotelManagerSystem.BL.Review
 
             return new Response(200, true, null);
         }
-        public async Task<int> HotelStars( ReviewRequest reviewRequest)
+        public async Task<int> HotelStars(ReviewRequest reviewRequest)
         {
             var stars = from r in reviewRequest.Reviews
-                        where r.HotelId == reviewRequest.hotelId
+                        where r.HotelId == reviewRequest.HotelId
                         select r.Stars;
 
             int sum = stars.Sum();
 
             int reviewsCount = reviewRequest.Reviews.Count();
 
-            var hotel = _context.Hotels.FirstOrDefault(h => h.Id == reviewRequest.hotelId);
+            var hotel = _context.Hotels.FirstOrDefault(h => h.Id == reviewRequest.HotelId);
            
             if (sum >= 0)
             {
