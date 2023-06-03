@@ -33,6 +33,7 @@ builder.Services.AddIdentity<User, IdentityRole>()
 builder.Services.AddScoped<RoleManager<IdentityRole>>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ITokenService, TokenService>();
+builder.Services.AddTransient<IHotelRepository, HotelRepository>();
 //builder.Services.AddScoped<IRepository<Country, int>, Repository<Country, int>>();
 //builder.Services.AddTransient<IRepository<City, int>, Repository<City, int>>();
 //builder.Services.AddTransient<IRepository<RoomType, int>, Repository<RoomType, int>>();

@@ -1,6 +1,7 @@
 ﻿
 using HotelManagerSystem.API.AuthBL.Data;
 using HotelManagerSystem.Common;
+using HotelManagerSystem.DAL;
 using HotelManagerSystem.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,11 +11,13 @@ namespace HotelManagerSystem.API.Repositories
     {
         private readonly HotelManagerSystemDb _dbContext;
         private readonly DbSet<User> _set;
+        private readonly HotelContext _context;
 
-        public UserRepository(HotelManagerSystemDb dbContext)
+        public UserRepository(HotelManagerSystemDb dbContext, HotelContext context)
         {
             _dbContext = dbContext;
             _set = _dbContext.Set<User>();
+            _context = context;
 
             if (_set == null)
                 throw new DException($"Table {nameof(User)} doesn't exist");
@@ -63,6 +66,24 @@ namespace HotelManagerSystem.API.Repositories
             _set.Remove(user);
 
             _dbContext.SaveChanges();
+        }
+        
+        public async Task<User> GetUserById(int userId)
+        {
+            return await _context.Users.FindAsync(userId);
+        }
+
+        public async Task<List<User>> GetAllUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
+
+        public async Task UpdateUserBalance(int userId, string newBalance)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            user.CheckingAccount = newBalance;
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
         }
     }
 }
