@@ -4,7 +4,13 @@ namespace HotelManagerSystem.Models.Request
 {
     public class ReviewRequest
     {
+        public int HotelId { get; set; }
         public List<ClientReview> Reviews { get; set; }
-        public int hotelId { get; set; }
+
+        public ReviewRequest(int id, List<ClientReview> reviews)
+        {
+            HotelId = id;
+            Reviews = reviews;
+        }
     }
 }

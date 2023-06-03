@@ -42,10 +42,11 @@ namespace HotelManagerSystem.BL.HotelBL
             return await _hotelReporitory.GetByIdAsync(id);
         }
 
+
+
         // не знаю как дальше писать этот пиздец 
 
-        public async Task<Response> CreateHotel(CreateHotelRequest request, CreateAddressRequest Addressrequest,
-            CreateRoomRequest roomRequest, ReviewRequest reviewRequest, CreateFotoRequest fotoRequest)
+        public async Task<Response> CreateHotel(CreateHotelRequest request)
         {
             Hotel hotel = new Hotel()
             {
@@ -54,29 +55,40 @@ namespace HotelManagerSystem.BL.HotelBL
                 Description = request.Description,
                 IsOne = request.IsOne,
                 CheckingAccount = request.CheckingAccount,
-                Addresses = await AddAddress(Addressrequest),
-                Rooms = await AddRoom(roomRequest),
-                Fotos = await AddFoto(fotoRequest),
-                ReviewStars = await _reviewsServices.HotelStars(reviewRequest),
-                ClientReviews = await _reviewsServices.GetAll(),
                 HotelTypeId = request.HotelTypeId,
                 HotelCategoryId = request.HotelCategoryId,
                 CreatedUtc = request.CreateDate
             };
+
             await _hotelReporitory.AddAsync(hotel);
+
 
             return new Response(200, true, null);
         }
+
+        public async Task<Response> AddLists(int hotelId, CreateAddressRequest Addressrequest,
+            CreateRoomRequest roomRequest, CreateFotoRequest fotoRequest, ReviewRequest reviewRequest)
+        {
+            var hotel = _context.Hotels.FirstOrDefault(h => h.Id == hotelId);
+
+            hotel.Addresses = await AddAddress(Addressrequest);
+            hotel.ClientReviews = await _reviewsServices.GetAll();
+            hotel.Rooms = await AddRoom(roomRequest);
+            hotel.Fotos = await AddFoto(fotoRequest);
+            hotel.ReviewStars = await _reviewsServices.HotelStars(reviewRequest);
+
+            return new Response(200, true, null);
+        } 
 
         public async Task<List<Address>> AddAddress(CreateAddressRequest request)
         {
             Address address = new Address()
             {
-                HotelId = request.HotelId,
                 CountryId = request.CountryId,
                 CityId = request.CityId,
                 Street = request.Street,
-                StreetNumber = request.StreetNumber
+                StreetNumber = request.StreetNumber,
+                CreatedUtc= DateTime.UtcNow
             };
 
             List<Address> HotelAddress = new List<Address>();
@@ -91,7 +103,6 @@ namespace HotelManagerSystem.BL.HotelBL
         {
             Room room = new Room()
             {
-                HotelId = request.HotelId,
                 Name = request.Name,
                 RoomAmount = request.RoomAmount,
                 Smoke = request.Smoke,
@@ -99,7 +110,7 @@ namespace HotelManagerSystem.BL.HotelBL
                 BasePerson = request.BasePerson,
                 RoomTypeId = request.RoomTypeId,
                 CouchetteId = request.CouchetteId,
-                CreatedUtc = request.CreateDate
+                CreatedUtc = DateTime.UtcNow,
             };
 
             List<Room> rooms = new List<Room>();
@@ -114,7 +125,6 @@ namespace HotelManagerSystem.BL.HotelBL
         {
             HotelFoto foto = new HotelFoto()
             {
-                HotelId = request.HotelId,
                 Foto = request.Foto,
                 CreatedUtc = DateTime.UtcNow
             };
