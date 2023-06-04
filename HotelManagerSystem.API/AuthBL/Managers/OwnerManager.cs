@@ -37,14 +37,14 @@ namespace HotelManagerSystem.API.AuthBL.Managers
 
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, RoleConstants.Owner);
+                await _userManager.AddToRoleAsync(user, Role.Owner);
 
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Role, RoleConstants.Owner)
+                    new Claim(ClaimTypes.Role, Role.Owner)
                 };
 
                 var token = claims.CreateJwtToken(_configuration);

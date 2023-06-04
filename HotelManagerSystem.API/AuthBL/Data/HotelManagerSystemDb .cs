@@ -7,9 +7,11 @@ namespace HotelManagerSystem.API.AuthBL.Data;
 
 public class HotelManagerSystemDb : IdentityDbContext<User>
 {
-    public HotelManagerSystemDb(DbContextOptions<HotelManagerSystemDb> options)
+    private readonly IServiceProvider _serviceProvider;
+    public HotelManagerSystemDb(DbContextOptions<HotelManagerSystemDb> options, IServiceProvider serviceProvider)
         : base(options)
     {
+        _serviceProvider = serviceProvider;
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -52,6 +54,22 @@ public class HotelManagerSystemDb : IdentityDbContext<User>
         user.PasswordHash = passwordHasher.HashPassword(user, "Password123!");
 
         builder.Entity<User>().HasData(user);
+        
+        CreateAdminRole().GetAwaiter().GetResult();
+    }
+    
+    private async Task CreateAdminRole()
+    {
+        using (var scope = _serviceProvider.CreateScope())
+        {
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            
+            if (!await roleManager.RoleExistsAsync("Admin"))
+            {
+                var adminRole = new IdentityRole("Admin");
+                await roleManager.CreateAsync(adminRole);
+            }
+        }
     }
 }
 
