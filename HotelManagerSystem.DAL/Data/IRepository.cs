@@ -13,6 +13,7 @@ namespace HotelManagerSystem.DAL.Data
         public Task UpdateAsync(T item); // U
         public Task DeleteAsync(T item); // D
         public Task DeleteByIdAsync(TKey id); // D
-      
+        public IQueryable<T> GetQuery();
+
     }
 }

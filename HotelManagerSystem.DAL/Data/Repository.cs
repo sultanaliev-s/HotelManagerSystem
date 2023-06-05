@@ -125,5 +125,10 @@ namespace HotelManagerSystem.DAL.Data
             _dbSet.Remove(entity);
             _context.SaveChanges();
         }
+
+        public IQueryable<T> GetQuery()
+        {
+            return _dbSet.AsQueryable();
+        }
     }
 }
