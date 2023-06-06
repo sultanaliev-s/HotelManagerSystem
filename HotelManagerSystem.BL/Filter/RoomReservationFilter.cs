@@ -24,30 +24,24 @@ namespace HotelManagerSystem.BL.Filter
             _reservationRepository = reservationRepository;
         }
 
+        //дописать... 
 
         public async Task<List<Hotel>> Filter(FilterRequest request)
         {
-            IQueryable<Hotel> query = _repository.GetQuery();
-
-            var cityList = query.Include(x => x.Addresses).ThenInclude(x => x.CityId).Where(x => x.Id == request.CityId);
-
-            var reservationEnd = query.Include(r => r.Rooms)
-                .ThenInclude(d => d.Reservation).ThenInclude(d => d.ReserveEnd <= request.endDate && d.ReserveStart >= request.startDate);
-
-            var reservationStart = query.Include(r => r.Rooms)
-                .ThenInclude(r => r.Reservation).ThenInclude(r => r.ReserveEnd <= request.endDate);
-
-
-            if (request == null || reservationStart == null || reservationEnd == null || request.Persons == 0 || cityList == null)
+            if (request == null)
             {
                 throw new ArgumentNullException(nameof(request), "Request cannot be null");
-
-                return await _repository.GetAllAsync();
             }
 
-            List<Hotel> result = await query.AsNoTracking().ToListAsync();
-            return result;
-        }
+            IQueryable<Hotel> query = _repository.GetQuery();
 
+
+            var finish = await query.Where(c => c.cityId == request.CityId).Include(r => r.Rooms)
+                .ThenInclude(r => r.Reservation)
+                .Where(r => r.Rooms.Where(r => r.Reservation.ReserveStart >= request.startDate && r.Reservation.ReserveEnd <= request.endDate && r.BasePerson >= request.Persons) !=null)
+                .AsNoTracking().ToListAsync();
+
+            return finish;
+        }
     }
-}
+}   

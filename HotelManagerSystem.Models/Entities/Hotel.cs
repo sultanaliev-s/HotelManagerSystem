@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using HotelManagerSystem.Models.Common;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace HotelManagerSystem.Models.Entities
 {
@@ -19,6 +20,7 @@ namespace HotelManagerSystem.Models.Entities
         public string CheckingAccount { get; set; }
         public int FilialCount { get; set; }
         
+        public int cityId { get; set; }
 
         public int HotelTypeId { get; set; }
         public HotelType Type { get; set; }
