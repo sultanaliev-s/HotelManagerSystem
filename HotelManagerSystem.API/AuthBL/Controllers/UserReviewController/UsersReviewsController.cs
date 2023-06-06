@@ -3,6 +3,7 @@ using HotelManagerSystem.BL.Review;
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Entities;
+using HotelManagerSystem.Models.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -69,14 +70,16 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.UserReviewController
             return new Response(200, true, null);
         }
 
-        //[HttpPost]
-        //[Route("addStars")]
-        //[Authorize]
-        //public async Task<int> HotelStars([FromBody]List<ClientReview> Reviews, int Id)
-        //{
-        //    int result = await _service.HotelStars(Reviews);
+        [HttpPost]
+        [Route("addStars")]
+        [Authorize]
+        public async Task<int> HotelStars([FromBody] List<ClientReview> Reviews, int Id)
+        {
+            ReviewRequest request = new(Id, Reviews);
 
-        //    return result;
-        //}
+            int result = await _service.HotelStars(request);
+
+            return result;
+        }
     }
 }

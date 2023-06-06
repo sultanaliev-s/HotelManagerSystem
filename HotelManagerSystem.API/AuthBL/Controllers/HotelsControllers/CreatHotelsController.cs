@@ -69,6 +69,13 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
             int type, int couchette, string fotos)
         {
             var hotel = _context.Hotels.FirstOrDefault(h => h.Id == hotelId);
+
+            if (hotel == null || hotel.Id == 0)
+            {
+                return throw new ArgumentNullException(nameof(hotelId), "Request cannot be null");
+
+            }
+
             hotel.ClientReviews = await _reviewsServices.GetAll();
 
             CreateAddressRequest address = new(hotelId, countryId, CityId, street, streetNumber);
@@ -78,7 +85,6 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
 
 
             hotel.Addresses = await _services.AddAddress(address);
-
             hotel.Rooms = await _services.AddRoom(room);
             hotel.Fotos = await _services.AddFoto(foto);
             hotel.ReviewStars = await _reviewsServices.HotelStars(review);

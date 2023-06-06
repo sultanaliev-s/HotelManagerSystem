@@ -137,5 +137,34 @@ namespace HotelManagerSystem.BL.HotelBL
             return fotos;
         }
 
+        //public async Task<List<HotelServices>> AddServices(AddHotelServices request)
+        //{
+
+
+        //    if(request == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(request));
+        //    }else 
+        //    {
+        //        var hotel = _context.Hotels.FirstOrDefault(h => h.Id == request.hotelId);
+
+        //        foreach(int item in request.)
+        //        {
+
+
+        //        }
+
+        //    }
+            
+        //    List<Room> rooms = new List<Room>();
+        //    rooms.Add(room);
+
+        //    await _roomReporitory.AddAsync(room);
+
+        //    return rooms;
+        //}
+
+
+
     }
 }
