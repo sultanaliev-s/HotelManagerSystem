@@ -3,6 +3,7 @@ using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Data;
 using HotelManagerSystem.Models.Entities;
+using HotelManagerSystem.Models.Request.CreateRequest;
 using HotelManagerSystem.Models.Request.UpdateRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -27,12 +28,12 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 
         [HttpPost]
         [Route("create")]
-        public async Task<Response> Create([FromBody] string typeName, string typeDescription)
+        public async Task<Response> Create([FromBody] CreateDescDirectoryRequest request)
         {
             HotelServices services = new HotelServices()
             {
-                Name = typeName,
-                Description = typeDescription,
+                Name = request.Name,
+                Description = request.Description,
                 UpdatedDate = DateTime.Now,
                 CreatedDate = DateTime.Now
             };
@@ -61,20 +62,21 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [HttpGet]
         [Route("GetById")]
         [Authorize]
-        public async Task<Response> GetById(int id)
+        public async Task<HotelServicesResponse> GetById(int id)
         {
             HotelServices services = await _service.GetByIdAsync(id);
 
-            return new Response(200, true, null);
+            return new HotelServicesResponse(200, true, null, services);
         }
 
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<Response> GetAll(int id)
+        public async Task<HotelServicesListResponse> GetAll(int id)
         {
-            await _repository.GetAllAsync();
-            return new Response(200, true, null);
+            var list = await _repository.GetAllAsync();
+
+            return new HotelServicesListResponse(200, true, null, list);
         }
     }
 }

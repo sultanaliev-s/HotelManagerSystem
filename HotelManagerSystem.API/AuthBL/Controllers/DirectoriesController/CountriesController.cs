@@ -27,11 +27,11 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 
         [HttpPost]
         [Route("create")]
-        public async Task<Response> Create([FromBody] string CountryName)
+        public async Task<Response> Create([FromBody] UpdateNameDirectoryRequest request)
         {
             Country country = new Country()
             {
-                Name = CountryName,
+                Name = request.Name,
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now
             };
@@ -60,20 +60,21 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [HttpGet]
         [Route("GetById")]
         [Authorize]
-        public async Task<Response> GetById(int id)
+        public async Task<CountryResponse> GetById(int id)
         {
             Country country = await _service.GetByIdAsync(id);
 
-            return new Response(200, true, null);
+            return new CountryResponse(200, true, null, country);
         }
 
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<Response> GetAll(int id)
+        public async Task<CountryListRespose> GetAll(int id)
         {
-            await _repository.GetAllAsync();
-            return new Response(200, true, null);
+            var list = await _repository.GetAllAsync();
+
+            return new CountryListRespose(200, true, null, list);
         }
     }
 }
