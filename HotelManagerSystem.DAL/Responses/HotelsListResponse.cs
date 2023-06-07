@@ -5,7 +5,7 @@ namespace HotelManagerSystem.DAL.Responses
 {
     public class HotelsListResponse : Response
     {
-        public HotelsListResponse(int statusCode, string message, bool success, List<Hotel> hotels)
+        public HotelsListResponse(int statusCode, bool success , string message, List<Hotel> hotels)
             : base(statusCode, success, message)
         {
             Departments = hotels.Select(dep => new HotelDto(dep)).ToList();

@@ -44,21 +44,22 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.UserReviewController
         [HttpGet]
         [Route("GetById")]
         [Authorize]
-        public async Task<Response> GetById(int id)
+        public async Task<UserReviewsResponse> GetById(int id)
         {
             ClientReview review = await _service.GetByIdAsync(id);
 
-            return new Response(200, true, null);
+            return new UserReviewsResponse(200, true, null, review);
         }
 
 
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<Response> GetAll(int id)
+        public async Task<UserReviewsListResponse> GetAll(int id)
         {
-            await _repository.GetAllAsync();
-            return new Response(200, true, null);
+            var list = await _repository.GetAllAsync();
+
+            return new UserReviewsListResponse(200, true, null , list);
         }
 
         [HttpDelete]
@@ -73,10 +74,8 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.UserReviewController
         [HttpPost]
         [Route("addStars")]
         [Authorize]
-        public async Task<int> HotelStars([FromBody] List<ClientReview> Reviews, int Id)
+        public async Task<int> HotelStars([FromBody] ReviewRequest request)
         {
-            ReviewRequest request = new(Id, Reviews);
-
             int result = await _service.HotelStars(request);
 
             return result;
