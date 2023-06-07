@@ -2,6 +2,7 @@
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Data;
+using HotelManagerSystem.Models.Request.CreateRequest;
 using HotelManagerSystem.Models.Request.UpdateRequest;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -27,19 +28,19 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 
         [HttpPost]
         [Route("create")]
-        public async Task<Response> Create([FromBody] string CityName, int countryId)
+        public async Task<CityResponse> Create([FromBody] CreateIdNameDirectoryRequest request)
         {
             City city = new City()
             {
-                Name = CityName,
-                CountryId = countryId,
+                Name = request.Name,
+                CountryId = request.ParentId,
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now
             };
 
             city = await _repository.AddAsync(city);
 
-            return new Response(200, true, null);
+            return new CityResponse(200, true, null, city);
         }
 
         [HttpPut]
@@ -60,21 +61,22 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 
         [HttpGet]
         [Route("GetById")]
-        [Authorize]
-        public async Task<Response> GetById(int id)
+        [Authorize]   
+        public async Task<CityResponse> GetById(int id)
         {
             City city = await _service.GetByIdAsync(id);
 
-            return new Response(200, true, null);
+            return new CityResponse(200, true, null, city);
         }
 
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<Response> GetAll(int id)
+        public async Task<CityListResponse> GetAll(int id)
         {
-            await _repository.GetAllAsync();
-            return new Response(200, true, null);
+            var list = await _repository.GetAllAsync();
+
+            return new CityListResponse(200, true, null, list);
         }
     }
 }
