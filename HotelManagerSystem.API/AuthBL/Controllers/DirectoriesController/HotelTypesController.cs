@@ -2,6 +2,7 @@
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Entities;
+using HotelManagerSystem.Models.Request.CreateRequest;
 using HotelManagerSystem.Models.Request.UpdateRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,11 +25,11 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 
         [HttpPost]
         [Route("create")]
-        public async Task<Response> Create([FromBody] string typeName)
+        public async Task<Response> Create([FromBody] CreateNameDirectoryRequest request)
         {
             HotelType hotelType = new HotelType()
             {
-                Name = typeName,
+                Name = request.Name,
                 UpdatedDate = DateTime.Now,
                 CreatedDate = DateTime.Now
             };
@@ -57,20 +58,21 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [HttpGet]
         [Route("GetById")]
         [Authorize]
-        public async Task<Response> GetById(int id)
+        public async Task<HotelTypeResponse> GetById(int id)
         {
             HotelType hotelType = await _service.GetByIdAsync(id);
 
-            return new Response(200, true, null);
+            return new HotelTypeResponse(200, true, null, hotelType);
         }
 
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<Response> GetAll(int id)
+        public async Task<HotelTypesListResponse> GetAll(int id)
         {
-            await _repository.GetAllAsync();
-            return new Response(200, true, null);
+            var list = await _repository.GetAllAsync();
+
+            return new HotelTypesListResponse(200, true, null, list);
         }
     }
 }

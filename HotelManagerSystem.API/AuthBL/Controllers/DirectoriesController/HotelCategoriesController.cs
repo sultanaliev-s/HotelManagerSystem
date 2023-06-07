@@ -2,6 +2,7 @@
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Entities;
+using HotelManagerSystem.Models.Request.CreateRequest;
 using HotelManagerSystem.Models.Request.UpdateRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -26,13 +27,13 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 
         [HttpPost]
         [Route("create")]
-        public async Task<Response> Create([FromBody] string typeName, string typeDescription, int typeid)
+        public async Task<Response> Create([FromBody] CreateIdDescDirectoryRequest request)
         {
             HotelCategory category = new HotelCategory()
             {
-                Name = typeName,
-                Description = typeDescription,
-                HotelTypeId = typeid,
+                Name = request.Name,
+                Description = request.Description,
+                HotelTypeId = request.ParentId,
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now
             };
@@ -61,20 +62,21 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [HttpGet]
         [Route("GetById")]
         [Authorize]
-        public async Task<Response> GetById(int id)
+        public async Task<HotelCategoryResponse> GetById(int id)
         {
             HotelCategory category = await _service.GetByIdAsync(id);
 
-            return new Response(200, true, null);
+            return new HotelCategoryResponse(200, true, null , category);
         }
 
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<Response> GetAll(int id)
+        public async Task<HotelsCategoryListResponse> GetAll(int id)
         {
-            await _repository.GetAllAsync();
-            return new Response(200, true, null);
+            var list = await _repository.GetAllAsync();
+
+            return new HotelsCategoryListResponse(200, true, null, list);
         }
     }
 }

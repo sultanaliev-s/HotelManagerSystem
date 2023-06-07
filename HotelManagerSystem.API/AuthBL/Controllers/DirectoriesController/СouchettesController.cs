@@ -2,6 +2,7 @@
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Entities;
+using HotelManagerSystem.Models.Request.CreateRequest;
 using HotelManagerSystem.Models.Request.UpdateRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -26,11 +27,11 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 
         [HttpPost]
         [Route("create")]
-        public async Task<Response> Create([FromBody] string typeName )
+        public async Task<Response> Create([FromBody] CreateNameDirectoryRequest request )
         {
             Сouchette couchette = new Сouchette()
             {
-                Name = typeName,
+                Name = request.Name,
                 UpdatedDate = DateTime.Now,
                 CreatedDate = DateTime.Now
             };
@@ -59,20 +60,21 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [HttpGet]
         [Route("GetById")]
         [Authorize]
-        public async Task<Response> GetById(int id)
+        public async Task<СouchetteResponse> GetById(int id)
         {
             Сouchette couchette = await _service.GetByIdAsync(id);
 
-            return new Response(200, true, null);
+            return new СouchetteResponse(200, true, null, couchette);
         }
 
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<Response> GetAll(int id)
+        public async Task<СouchetteListResponse> GetAll(int id)
         {
-            await _repository.GetAllAsync();
-            return new Response(200, true, null);
+            var list = await _repository.GetAllAsync();
+
+            return new СouchetteListResponse(200, true, null, list);
         }
     }
 }

@@ -10,6 +10,6 @@ namespace HotelManagerSystem.DAL.Responses
         {
             Hotel = new HotelDto(hotel);
         }
-        public HotelDto Hotel { get; set;}
+        public HotelDto Hotel { get; set; }
     }
 }
