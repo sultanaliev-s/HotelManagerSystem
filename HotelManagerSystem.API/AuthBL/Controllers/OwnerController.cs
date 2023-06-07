@@ -1,7 +1,11 @@
+using HotelManagerSystem.API.AuthBL.Managers;
 using HotelManagerSystem.API.Request;
+using HotelManagerSystem.Models.Entities;
+using HotelManagerSystem.Models.Entities.ModelOwner;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers
 {
@@ -10,10 +14,12 @@ namespace HotelManagerSystem.API.AuthBL.Controllers
     public class OwnerController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly OwnerManager _ownerManager;
 
-        public OwnerController(IMediator mediator)
+        public OwnerController(IMediator mediator, OwnerManager ownerManager)
         {
             _mediator = mediator;
+            _ownerManager = ownerManager;
         }
 
         [HttpPost("register")]
@@ -64,6 +70,21 @@ namespace HotelManagerSystem.API.AuthBL.Controllers
                 return NotFound();
 
             return NoContent();
+        }
+        
+        [Authorize(Roles = "Admin")]
+        [HttpGet("getallowners")]
+        public async Task<IActionResult> GetAllOwners()
+        {
+            try
+            {
+                List<OwnerViewModel> owners = await _ownerManager.GetAllOwners();
+                return Ok(owners);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
     }
 }

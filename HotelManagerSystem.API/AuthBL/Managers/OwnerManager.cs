@@ -142,5 +142,19 @@ namespace HotelManagerSystem.API.AuthBL.Managers
 
             return true;
         }
+        
+        public async Task<List<OwnerViewModel>> GetAllOwners()
+        {
+            var owners = await _userManager.GetUsersInRoleAsync(Role.Owner);
+
+            var ownerViewModels = owners.Select(owner => new OwnerViewModel
+            {
+                Id = (int.Parse(owner.Id)),
+                FullName = owner.FullName,
+                Email = owner.Email
+            }).ToList();
+
+            return ownerViewModels;
+        }
     }
 }
