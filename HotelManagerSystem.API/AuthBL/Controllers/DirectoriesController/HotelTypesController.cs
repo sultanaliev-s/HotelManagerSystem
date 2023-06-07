@@ -29,8 +29,8 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
             HotelType hotelType = new HotelType()
             {
                 Name = typeName,
-                CreatedUtc = DateTime.Now,
-                UpdatedUtc = DateTime.Now
+                UpdatedDate = DateTime.Now,
+                CreatedDate = DateTime.Now
             };
 
             hotelType = await _repository.AddAsync(hotelType);

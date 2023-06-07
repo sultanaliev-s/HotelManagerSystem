@@ -40,8 +40,8 @@ namespace HotelManagerSystem.BL.Directories
             {
                 Name = request.Name,
                 CountryId = request.ParentId,
-                CreatedUtc = DateTime.Now, 
-                UpdatedUtc= DateTime.Now
+                CreatedDate = DateTime.Now, 
+                UpdatedDate = DateTime.Now
                 
             };
 

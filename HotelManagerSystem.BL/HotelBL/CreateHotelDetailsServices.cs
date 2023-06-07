@@ -42,10 +42,6 @@ namespace HotelManagerSystem.BL.HotelBL
             return await _hotelReporitory.GetByIdAsync(id);
         }
 
-
-
-        // не знаю как дальше писать этот пиздец 
-
         public async Task<Response> CreateHotel(CreateHotelRequest request)
         {
             Hotel hotel = new Hotel()
@@ -57,7 +53,7 @@ namespace HotelManagerSystem.BL.HotelBL
                 CheckingAccount = request.CheckingAccount,
                 HotelTypeId = request.HotelTypeId,
                 HotelCategoryId = request.HotelCategoryId,
-                CreatedUtc = request.CreateDate
+                CreatedDate = request.CreateDate
             };
 
             await _hotelReporitory.AddAsync(hotel);
@@ -88,7 +84,7 @@ namespace HotelManagerSystem.BL.HotelBL
                 CityId = request.CityId,
                 Street = request.Street,
                 StreetNumber = request.StreetNumber,
-                CreatedUtc= DateTime.UtcNow
+                CreatedDate= DateTime.UtcNow
             };
 
             List<Address> HotelAddress = new List<Address>();
@@ -110,7 +106,7 @@ namespace HotelManagerSystem.BL.HotelBL
                 BasePerson = request.BasePerson,
                 RoomTypeId = request.RoomTypeId,
                 CouchetteId = request.CouchetteId,
-                CreatedUtc = DateTime.UtcNow,
+                CreatedDate = DateTime.UtcNow,
             };
 
             List<Room> rooms = new List<Room>();
@@ -126,7 +122,7 @@ namespace HotelManagerSystem.BL.HotelBL
             HotelFoto foto = new HotelFoto()
             {
                 Foto = request.Foto,
-                CreatedUtc = DateTime.UtcNow
+                CreatedDate = DateTime.UtcNow
             };
 
             List<HotelFoto> fotos = new List<HotelFoto>();

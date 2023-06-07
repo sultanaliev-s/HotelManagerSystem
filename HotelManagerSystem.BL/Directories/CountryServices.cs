@@ -38,7 +38,7 @@ namespace HotelManagerSystem.BL.Directories
             Country country =new Country()
             {
                 Name = request.Name,
-                CreatedUtc = DateTime.Now
+                CreatedDate = DateTime.Now
 
             };
 

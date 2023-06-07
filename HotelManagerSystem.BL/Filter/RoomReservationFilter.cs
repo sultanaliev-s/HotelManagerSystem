@@ -11,20 +11,11 @@ namespace HotelManagerSystem.BL.Filter
     public class RoomReservationFilter
     {
         private readonly IRepository<Hotel, int> _repository;
-        private readonly IRepository<City, int> _cityRepository;
-        private readonly IRepository<Address, int> _addressRepository;
-        private readonly IRepository<RoomReservation, int> _reservationRepository;
 
-        public RoomReservationFilter(IRepository<Hotel, int> repository,
-            IRepository<City, int> cityRepository, IRepository<RoomReservation, int> reservationRepository, IRepository<Address, int> addressRepository)
+        public RoomReservationFilter(IRepository<Hotel, int> repository)
         {
             _repository = repository;
-            _cityRepository = cityRepository;
-            _addressRepository = addressRepository;
-            _reservationRepository = reservationRepository;
         }
-
-        //дописать... 
 
         public async Task<List<Hotel>> Filter(FilterRequest request)
         {
@@ -38,7 +29,8 @@ namespace HotelManagerSystem.BL.Filter
 
             var finish = await query.Where(c => c.cityId == request.CityId).Include(r => r.Rooms)
                 .ThenInclude(r => r.Reservation)
-                .Where(r => r.Rooms.Where(r => r.Reservation.ReserveStart >= request.startDate && r.Reservation.ReserveEnd <= request.endDate && r.BasePerson >= request.Persons) !=null)
+                .Where(r => r.Rooms.Where(r => r.Reservation.ReserveStart >= request.startDate 
+                            && r.Reservation.ReserveEnd <= request.endDate && r.BasePerson >= request.Persons) !=null)
                 .AsNoTracking().ToListAsync();
 
             return finish;

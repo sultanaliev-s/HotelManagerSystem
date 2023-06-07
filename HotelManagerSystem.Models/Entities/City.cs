@@ -15,6 +15,8 @@ namespace HotelManagerSystem.Models.Data
         public int CountryId { get; set; }
         public Country Country { get; set; }
         public List<Address> Addresses { get; set; }
+        public int HotelId { get; set; }
+        public Hotel Hotel { get; set; }
 
     }
 }

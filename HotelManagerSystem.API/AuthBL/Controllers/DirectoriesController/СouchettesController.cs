@@ -31,8 +31,8 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
             Сouchette couchette = new Сouchette()
             {
                 Name = typeName,
-                CreatedUtc = DateTime.Now,
-                UpdatedUtc = DateTime.Now
+                UpdatedDate = DateTime.Now,
+                CreatedDate = DateTime.Now
             };
 
             couchette = await _repository.AddAsync(couchette);

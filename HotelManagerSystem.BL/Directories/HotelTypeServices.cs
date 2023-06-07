@@ -39,8 +39,8 @@ namespace HotelManagerSystem.BL.Directories
             HotelType hotelType = new HotelType()
             {
                 Name = request.Name,
-                CreatedUtc = DateTime.Now,
-                UpdatedUtc = DateTime.Now
+                CreatedDate = DateTime.Now,
+                UpdatedDate = DateTime.Now
 
             };
 

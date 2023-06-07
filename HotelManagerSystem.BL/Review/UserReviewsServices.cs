@@ -34,8 +34,8 @@ namespace HotelManagerSystem.BL.Review
             {
                 Stars = request.Stars,
                 Comment = request.Comment,
-                CreatedUtc = DateTime.Now,
-                UpdatedUtc= DateTime.Now
+                UpdatedDate = DateTime.Now,
+                CreatedDate = DateTime.Now
             };
 
             _repository.AddAsync(review);

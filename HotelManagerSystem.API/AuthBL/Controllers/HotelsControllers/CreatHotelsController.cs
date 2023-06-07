@@ -54,7 +54,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
                 CheckingAccount = checkingAccount,
                 HotelTypeId = hotelTypeId,
                 HotelCategoryId = hotelCategoryId,
-                CreatedUtc = createDate
+                CreatedDate = createDate
             };
             await _hotelReporitory.AddAsync(hotel);
 
@@ -72,7 +72,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
 
             if (hotel == null || hotel.Id == 0)
             {
-                return throw new ArgumentNullException(nameof(hotelId), "Request cannot be null");
+                throw new ArgumentNullException(nameof(hotelId), "Request cannot be null");
 
             }
 
@@ -120,7 +120,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
             HotelFoto foto = new HotelFoto()
             {
                 Foto = fotos,
-                CreatedUtc = DateTime.UtcNow
+                CreatedDate = DateTime.UtcNow
             };
 
             await _fotoReporitory.AddAsync(foto);
@@ -142,7 +142,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
                 BasePerson = person,
                 RoomTypeId = type,
                 CouchetteId = couchette,
-                CreatedUtc = DateTime.UtcNow,
+                CreatedDate = DateTime.UtcNow
             };
 
             await _roomReporitory.AddAsync(room);

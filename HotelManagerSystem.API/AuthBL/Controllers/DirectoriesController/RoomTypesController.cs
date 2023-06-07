@@ -30,8 +30,8 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
             RoomType roomType = new RoomType()
             {
                 Name = typeName,
-                CreatedUtc = DateTime.Now,
-                UpdatedUtc = DateTime.Now
+                UpdatedDate = DateTime.Now,
+                CreatedDate = DateTime.Now
             };
 
             roomType = await _repository.AddAsync(roomType);

@@ -43,8 +43,8 @@ namespace HotelManagerSystem.BL.Directories
                 Name = request.Name,
                 Description = request.Description,
                 HotelTypeId = request.ParentId,
-                CreatedUtc = DateTime.Now,
-                UpdatedUtc = DateTime.Now
+                CreatedDate = DateTime.Now,
+                UpdatedDate = DateTime.Now
             };
 
             _repository.AddAsync(category);

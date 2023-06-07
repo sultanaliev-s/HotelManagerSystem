@@ -33,8 +33,8 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
             {
                 Name = typeName,
                 Description = typeDescription,
-                CreatedUtc = DateTime.Now,
-                UpdatedUtc = DateTime.Now
+                UpdatedDate = DateTime.Now,
+                CreatedDate = DateTime.Now
             };
 
             services = await _repository.AddAsync(services);

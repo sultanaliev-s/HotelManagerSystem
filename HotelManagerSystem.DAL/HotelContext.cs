@@ -57,6 +57,12 @@ namespace HotelManagerSystem.DAL
                 .HasForeignKey<Сouchette>(c => c.RoomId)
                 .IsRequired();
 
+            modelBuilder.Entity<Hotel>()
+                .HasOne(c => c.city)
+                .WithOne(c => c.Hotel)
+                .HasForeignKey<City>(c => c.HotelId)
+                .IsRequired();
+
             modelBuilder.Entity<Room>()
              .HasOne(c => c.Reservation)
              .WithOne(c => c.Room)

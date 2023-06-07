@@ -38,8 +38,8 @@ namespace HotelManagerSystem.BL.Directories
             Сouchette сouchette = new Сouchette()
             {
                 Name = request.Name,
-                CreatedUtc = DateTime.Now,
-                UpdatedUtc = DateTime.Now
+                CreatedDate = DateTime.Now,
+                UpdatedDate = DateTime.Now
 
             };
 

@@ -32,8 +32,8 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
             Country country = new Country()
             {
                 Name = CountryName,
-                CreatedUtc = DateTime.Now,
-                UpdatedUtc = DateTime.Now
+                CreatedDate = DateTime.Now,
+                UpdatedDate = DateTime.Now
             };
 
             country = await _repository.AddAsync(country);

@@ -32,8 +32,8 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.UserReviewController
             {
                 Stars = stars,
                 Comment = comment,
-                CreatedUtc = DateTime.Now,
-                UpdatedUtc = DateTime.Now
+                CreatedDate = DateTime.Now,
+                UpdatedDate = DateTime.Now
             };
 
             review = await _repository.AddAsync(review);

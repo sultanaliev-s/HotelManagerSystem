@@ -10,8 +10,8 @@ namespace HotelManagerSystem.Models.Common
     {
         public TKey Id { get; set; }
         public DateTime? DeletedUtc { get; set; }
-        public DateTime? UpdatedUtc { get; set; }
-        public DateTime CreatedUtc { get; set; }
+        public DateTime UpdatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
     }
 }

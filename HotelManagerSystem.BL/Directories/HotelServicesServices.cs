@@ -42,8 +42,8 @@ namespace HotelManagerSystem.BL.Directories
             {
                 Name = request.Name,
                 Description = request.Description,
-                CreatedUtc = DateTime.Now,
-                UpdatedUtc = DateTime.Now
+                CreatedDate = DateTime.Now,
+                UpdatedDate = DateTime.Now
 
             };
 

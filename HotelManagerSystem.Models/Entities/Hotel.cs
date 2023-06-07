@@ -21,6 +21,7 @@ namespace HotelManagerSystem.Models.Entities
         public int FilialCount { get; set; }
         
         public int cityId { get; set; }
+        public City city { get; set; }
 
         public int HotelTypeId { get; set; }
         public HotelType Type { get; set; }
