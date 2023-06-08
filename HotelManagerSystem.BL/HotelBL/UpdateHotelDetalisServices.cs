@@ -5,6 +5,8 @@ using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.DTOs;
 using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Entities.Relations;
+using HotelManagerSystem.Models.Request.CreateRequest.HotelRequest;
+using System.Xml.Linq;
 
 namespace HotelManagerSystem.BL.HotelBL
 {
@@ -20,9 +22,25 @@ namespace HotelManagerSystem.BL.HotelBL
             _hotelsServicesReporitory = hotelsServicesReporitory;
         }
 
+        public async Task<Response> UpdateHotel(CreateHotelRequest request)
+        {
+            Hotel hotel = await _hotelReporitory.GetByIdAsync(request.Id);
+           
+            hotel.UserId = request.UserId;
+            hotel.Name = request.Name;
+            hotel.Description = request.Description;
+            hotel.IsOne = request.IsOne;
+            hotel.CheckingAccount = request.CheckingAccount;
+            hotel.HotelTypeId = request.HotelTypeId;
+            hotel.HotelCategoryId = request.HotelCategoryId;
+            hotel.ReviewStars = request.ReviewStars;
 
+            _hotelReporitory.UpdateAsync(hotel);
 
-        public async Task<Response> UpdateHotel(int id, HotelDto dto)
+            return new Response(200, true, null);
+        }
+
+        public async Task<Response> UpdateHotelServices(int id, HotelDto dto)
         {
             var hotel = await _hotelReporitory.GetByIdAsync(id);
 

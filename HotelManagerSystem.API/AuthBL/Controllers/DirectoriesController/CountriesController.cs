@@ -3,6 +3,7 @@ using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Data;
 using HotelManagerSystem.Models.Entities;
+using HotelManagerSystem.Models.Request.CreateRequest;
 using HotelManagerSystem.Models.Request.UpdateRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,27 +17,27 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
     public class CountriesController : ControllerBase
     {
 
-        private readonly IRepository<Country, int> _repository;
+        private readonly ILogger<CitiesController> _logger;
         private readonly CountryServices _service;
 
-        public CountriesController(IRepository<Country, int> countryRepository, CountryServices service)
+        public CountriesController(ILogger<CitiesController> logger, CountryServices service)
         {
-            _repository = countryRepository;
+            _logger = logger;
             _service = service;
         }
 
         [HttpPost]
         [Route("create")]
-        public async Task<Response> Create([FromBody] UpdateNameDirectoryRequest request)
+        public async Task<Response> Create([FromBody] CreateNameDirectoryRequest request)
         {
-            Country country = new Country()
+            try
             {
-                Name = request.Name,
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now
-            };
-
-            country = await _repository.AddAsync(country);
+                await _service.Create(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing request from {Country}", request);
+            }
 
             return new Response(200, true, null);
         }
@@ -45,7 +46,14 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Route("update")]
         public async Task<Response> Update(UpdateNameDirectoryRequest request)
         {
-            await _service.Update(request); 
+            try
+            {
+                await _service.Update(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing request from {Country}", request);
+            }
 
             return new Response(200, true, null);
         }
@@ -54,7 +62,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Route("deleteById")]
         public async Task<Response> Delete(int id)
         {
-            _repository.DeleteByIdAsync(id);
+            await _service.Delete(id);
 
             return new Response(200, true, null);
         }
@@ -72,9 +80,9 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<CountryListRespose> GetAll(int id)
+        public async Task<CountryListRespose> GetAll()
         {
-            var list = await _repository.GetAllAsync();
+            var list = await _service.GetAll();
 
             return new CountryListRespose(200, true, null, list);
         }

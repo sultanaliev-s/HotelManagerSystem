@@ -14,12 +14,12 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
     [ApiController]
     public class HotelTypesController : ControllerBase
     {
-        private readonly IRepository<HotelType, int> _repository;
+        private readonly ILogger<CitiesController> _logger;
         private readonly HotelTypeServices _service;
 
-        public HotelTypesController(IRepository<HotelType, int> hotelTypeRepository, HotelTypeServices service)
+        public HotelTypesController(ILogger<CitiesController> logger, HotelTypeServices service)
         {
-            _repository = hotelTypeRepository;
+            _logger = logger;
             _service = service;
         }
 
@@ -27,14 +27,14 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Route("create")]
         public async Task<Response> Create([FromBody] CreateNameDirectoryRequest request)
         {
-            HotelType hotelType = new HotelType()
+            try
             {
-                Name = request.Name,
-                UpdatedDate = DateTime.Now,
-                CreatedDate = DateTime.Now
-            };
-
-            hotelType = await _repository.AddAsync(hotelType);
+                await _service.Create(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing request from {Hotel Types}", request);
+            }
 
             return new Response(200, true, null);
         }
@@ -43,7 +43,14 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Route("update")]
         public async Task<Response> Update(UpdateNameDirectoryRequest request)
         {
-            await _service.Update(request);
+            try
+            {
+                await _service.Update(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing request from {Hotel Types}", request);
+            }
 
             return new Response(200, true, null);
         }
@@ -52,7 +59,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Route("deleteById")]
         public async Task<Response> Delete(int id)
         {
-            _repository.DeleteByIdAsync(id);
+            await _service.Delete(id);
 
             return new Response(200, true, null);
         }
@@ -72,7 +79,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Authorize]
         public async Task<HotelTypesListResponse> GetAll()
         {
-            var list = await _repository.GetAllAsync();
+            var list = await _service.GetAll();
 
             return new HotelTypesListResponse(200, true, null, list);
         }

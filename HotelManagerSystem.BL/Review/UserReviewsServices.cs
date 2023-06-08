@@ -63,7 +63,7 @@ namespace HotelManagerSystem.BL.Review
            
             if (sum >= 0)
             {
-                hotel.ReviewStars = 0;
+                return hotel.ReviewStars = 0;
             }
 
             hotel.ReviewStars = (sum / reviewsCount);

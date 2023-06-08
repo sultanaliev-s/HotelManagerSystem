@@ -2,12 +2,15 @@
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Data;
+using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Request.CreateRequest;
 using HotelManagerSystem.Models.Request.UpdateRequest;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 {
@@ -17,37 +20,45 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
     public class CitiesController : ControllerBase
     {
 
-        private readonly IRepository<City, int> _repository;
+        private readonly ILogger<CitiesController> _logger;
         private readonly CityServices _service;
 
-        public CitiesController(IRepository<City, int> cityRepository, CityServices service)
+        public CitiesController(ILogger<CitiesController> logger, CityServices service)
         {
-            _repository = cityRepository;
+            _logger = logger;
             _service = service;
         }
 
         [HttpPost]
         [Route("create")]
-        public async Task<CityResponse> Create([FromBody] CreateIdNameDirectoryRequest request)
+        public async Task<Response> Create([FromBody] CreateIdNameDirectoryRequest request)
         {
-            City city = new City()
+            try
             {
-                Name = request.Name,
-                CountryId = request.ParentId,
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now
-            };
 
-            city = await _repository.AddAsync(city);
+                await _service.Create(request);
 
-            return new CityResponse(200, true, null, city);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing request from {City}", request);
+            }
+
+            return new Response(200, true, null);
         }
 
         [HttpPut]
         [Route("update")]
         public async Task<Response> Update(UpdateIdNameDirectoryRequest request)
         {
-            await _service.Update(request);
+            try
+            {
+                await _service.Update(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing request from {City}", request);
+            }
 
             return new Response(200, true, null);
         }
@@ -56,14 +67,14 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Route("deleteById")]
         public async Task<Response> Delete(int id)
         {
-            _repository.DeleteByIdAsync(id);
+            await _service.Delete(id);
 
             return new Response(200, true, null);
         }
 
         [HttpGet]
         [Route("GetById")]
-        [Authorize]   
+        [Authorize]
         public async Task<CityResponse> GetById(int id)
         {
             City city = await _service.GetByIdAsync(id);
@@ -76,7 +87,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Authorize]
         public async Task<CityListResponse> GetAll()
         {
-            var list = await _repository.GetAllAsync();
+            var list = await _service.GetAll();
 
             return new CityListResponse(200, true, null, list);
         }

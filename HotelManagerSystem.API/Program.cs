@@ -18,6 +18,7 @@ using HotelManagerSystem.BL.Directories;
 using HotelManagerSystem.DAL;
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.Models.Data;
+using HotelManagerSystem.BL.DbLogger;
 
 var builder = WebApplication.CreateBuilder(args);
 

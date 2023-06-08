@@ -17,12 +17,12 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
     public class HotelServicesController : ControllerBase
     {
 
-        private readonly IRepository<HotelServices, int> _repository;
+        private readonly ILogger<CitiesController> _logger;
         private readonly HotelServicesServices _service;
 
-        public HotelServicesController(IRepository<HotelServices, int> hotelServicesRepository, HotelServicesServices service)
+        public HotelServicesController(ILogger<CitiesController> logger, HotelServicesServices service)
         {
-            _repository = hotelServicesRepository;
+            _logger = logger;
             _service = service;
         }
 
@@ -30,15 +30,14 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Route("create")]
         public async Task<Response> Create([FromBody] CreateDescDirectoryRequest request)
         {
-            HotelServices services = new HotelServices()
+            try
             {
-                Name = request.Name,
-                Description = request.Description,
-                UpdatedDate = DateTime.Now,
-                CreatedDate = DateTime.Now
-            };
-
-            services = await _repository.AddAsync(services);
+                await _service.Create(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing request from {Hotel Services}", request);
+            }
 
             return new Response(200, true, null);
         }
@@ -47,7 +46,14 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Route("update")]
         public async Task<Response> Update(UpdateDescDirectoryRequest request)
         {
-            await _service.Update(request);
+            try
+            {
+                await _service.Update(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing request from {Hotel Services}", request);
+            }
 
             return new Response(200, true, null);
         }
@@ -56,7 +62,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Route("deleteById")]
         public async Task<Response> Delete(int id)
         {
-            _repository.DeleteByIdAsync(id);
+            await _service.Delete(id);
 
             return new Response(200, true, null);
         }
@@ -74,9 +80,9 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<HotelServicesListResponse> GetAll(int id)
+        public async Task<HotelServicesListResponse> GetAll()
         {
-            var list = await _repository.GetAllAsync();
+            var list = await _service.GetAll();
 
             return new HotelServicesListResponse(200, true, null, list);
         }

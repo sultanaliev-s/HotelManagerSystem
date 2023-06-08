@@ -16,12 +16,12 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
     public class HotelCategoriesController : ControllerBase
     {
 
-        private readonly IRepository<HotelCategory, int> _repository;
+        private readonly ILogger<CitiesController> _logger;
         private readonly HotelCategoryServices _service;
 
-        public HotelCategoriesController(IRepository<HotelCategory, int> hotelCategoryRepository, HotelCategoryServices service)
+        public HotelCategoriesController(ILogger<CitiesController> logger, HotelCategoryServices service)
         {
-            _repository = hotelCategoryRepository;
+            _logger = logger;
             _service = service;
         }
 
@@ -29,16 +29,14 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Route("create")]
         public async Task<Response> Create([FromBody] CreateIdDescDirectoryRequest request)
         {
-            HotelCategory category = new HotelCategory()
+            try
             {
-                Name = request.Name,
-                Description = request.Description,
-                HotelTypeId = request.ParentId,
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now
-            };
-
-            category = await _repository.AddAsync(category);
+                await _service.Create(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing request from {Hotel Category}", request);
+            }
 
             return new Response(200, true, null);
         }
@@ -47,7 +45,14 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Route("update")]
         public async Task<Response> Update(UpdateIdDescDirectoryRequest request)
         {
-            await _service.Update(request);
+            try
+            {
+              await _service.Update(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing request from {Hotel Category}", request);
+            }
 
             return new Response(200, true, null);
         }
@@ -56,7 +61,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Route("deleteById")]
         public async Task<Response> Delete(int id)
         {
-            _repository.DeleteByIdAsync(id);
+           await _service.Delete(id);
 
             return new Response(200, true, null);
         }
@@ -74,9 +79,9 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<HotelsCategoryListResponse> GetAll(int id)
+        public async Task<HotelsCategoryListResponse> GetAll()
         {
-            var list = await _repository.GetAllAsync();
+            var list = await _service.GetAll();
 
             return new HotelsCategoryListResponse(200, true, null, list);
         }

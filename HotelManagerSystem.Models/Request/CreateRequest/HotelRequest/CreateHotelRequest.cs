@@ -4,6 +4,7 @@ namespace HotelManagerSystem.Models.Request.CreateRequest.HotelRequest
 {
     public class CreateHotelRequest
     {
+        public int Id { get; set; }
         public string UserId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -12,7 +13,7 @@ namespace HotelManagerSystem.Models.Request.CreateRequest.HotelRequest
         public int FilialCount { get; set; }
         public int HotelTypeId { get; set; }
         public int HotelCategoryId { get; set; }
-        public List<HotelFoto> Fotos { get; set; }
+        public int ReviewStars { get; set; }
         public DateTime CreateDate { get; set; }
     }
 }

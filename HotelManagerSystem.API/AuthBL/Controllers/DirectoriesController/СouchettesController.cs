@@ -16,27 +16,27 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
     public class СouchettesController : ControllerBase
     {
 
-        private readonly IRepository<Сouchette, int> _repository;
+        private readonly ILogger<CitiesController> _logger;
         private readonly СouchetteServices _service;
 
-        public СouchettesController(IRepository<Сouchette, int> couchetteRepository, СouchetteServices service)
+        public СouchettesController( СouchetteServices service, ILogger<CitiesController> logger)
         {
-            _repository = couchetteRepository;
             _service = service;
+            _logger = logger;
         }
 
         [HttpPost]
         [Route("create")]
         public async Task<Response> Create([FromBody] CreateNameDirectoryRequest request)
         {
-            Сouchette couchette = new Сouchette()
+            try
             {
-                Name = request.Name,
-                UpdatedDate = DateTime.Now,
-                CreatedDate = DateTime.Now
-            };
-
-            couchette = await _repository.AddAsync(couchette);
+                await _service.Create(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing request from {Сouchette}", request);
+            }
 
             return new Response(200, true, null);
         }
@@ -45,7 +45,14 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Route("update")]
         public async Task<Response> Update(UpdateNameDirectoryRequest request)
         {
-            await _service.Update(request);
+            try
+            {
+                await _service.Update(request);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing request from {Сouchette}", request);
+            }
 
             return new Response(200, true, null);
         }
@@ -54,7 +61,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Route("deleteById")]
         public async Task<Response> Delete(int id)
         {
-            _repository.DeleteByIdAsync(id);
+            await _service.Delete(id);
 
             return new Response(200, true, null);
         }
@@ -74,7 +81,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Authorize]
         public async Task<СouchetteListResponse> GetAll()
         {
-            var list = await _repository.GetAllAsync();
+            var list = await _service.GetAll();
 
             return new СouchetteListResponse(200, true, null, list);
         }

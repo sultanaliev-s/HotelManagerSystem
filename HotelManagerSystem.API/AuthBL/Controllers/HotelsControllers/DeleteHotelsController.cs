@@ -14,24 +14,10 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
     [ApiController]
     public class DeleteHotelsController : ControllerBase
     {
-        private readonly IRepository<Hotel, int> _hotelReporitory;
-        private readonly IRepository<Room, int> _roomReporitory;
-        private readonly IRepository<Address, int> _addressReporitory;
-        private readonly IRepository<HotelFoto, int> _fotoReporitory;
-        private readonly UserReviewsServices _reviewsServices;
-        private readonly HotelContext _context;
-        private readonly CreateHotelDetailsServices _services;
+        private readonly DaleteHotelDetailsServices _services;
 
-        public DeleteHotelsController(IRepository<Hotel, int> hotelReporitory,
-            IRepository<Room, int> roomReporitory, IRepository<Address, int> addressReporitory,
-            IRepository<HotelFoto, int> fotoReporitory, UserReviewsServices reviewsServices,
-            CreateHotelDetailsServices services)
+        public DeleteHotelsController(DaleteHotelDetailsServices services)
         {
-            _hotelReporitory = hotelReporitory;
-            _roomReporitory = roomReporitory;
-            _addressReporitory = addressReporitory;
-            _fotoReporitory = fotoReporitory;
-            _reviewsServices = reviewsServices;
             _services = services;
         }
 
@@ -41,7 +27,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
         [Authorize(Roles = "Admin")]
         public async Task<Response> DeleteHotel(int id)
         {
-            _hotelReporitory.DeleteByIdAsync(id);
+            await _services.DeleteHotel(id);
 
             return new Response(200, true, null);
         }
@@ -52,7 +38,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
         [Authorize(Roles = "Owner")]
         public async Task<Response> DeleteRoom(int id)
         {
-            _roomReporitory.DeleteByIdAsync(id);
+            await _services.DeleteRoom(id);
 
             return new Response(200, true, null);
         }
@@ -62,20 +48,9 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
         [Authorize(Roles = "Owner")]
         public async Task<Response> DeleteAddress(int id)
         {
-            _addressReporitory.DeleteByIdAsync(id);
+            await _services.DeleteAddress(id);
 
             return new Response(200, true, null);
         }
-
-        [HttpDelete]
-        [Route("deleteFotoById")]
-        [Authorize(Roles = "Owner")]
-        public async Task<Response> DeleteFoto(int id)
-        {
-            _fotoReporitory.DeleteByIdAsync(id);
-
-            return new Response(200, true, null);
-        }
-
     }
 }

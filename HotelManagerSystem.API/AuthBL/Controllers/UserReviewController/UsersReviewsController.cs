@@ -55,7 +55,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.UserReviewController
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<UserReviewsListResponse> GetAll(int id)
+        public async Task<UserReviewsListResponse> GetAll()
         {
             var list = await _repository.GetAllAsync();
 

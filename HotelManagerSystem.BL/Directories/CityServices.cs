@@ -29,7 +29,8 @@ namespace HotelManagerSystem.BL.Directories
             City city = await _repository.GetByIdAsync(request.Id);
             city.Name = request.Name;
             city.CountryId = request.ParentId;
-            _repository.UpdateAsync(city);
+
+            await _repository.UpdateAsync(city);
 
             return new Response(200, true, null);
         }
@@ -45,7 +46,7 @@ namespace HotelManagerSystem.BL.Directories
                 
             };
 
-            _repository.AddAsync(city);
+            await _repository.AddAsync(city);
 
             return new Response(200, true, null);
         }

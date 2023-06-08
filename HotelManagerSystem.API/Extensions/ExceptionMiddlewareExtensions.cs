@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.BL.DbLogger;
 using HotelManagerSystem.DAL.Responses;
 using Microsoft.AspNetCore.Diagnostics;
 
@@ -28,6 +29,12 @@ namespace HotelManagerSystem.API.Extensions
                     }
                 });
             });
+        }
+        public static ILoggingBuilder AddDbLogger(this ILoggingBuilder builder, Action<DbLoggerOptions> configure)
+        {
+            builder.Services.AddSingleton<ILoggerProvider, DbLoggerProvider>();
+            builder.Services.Configure(configure);
+            return builder;
         }
     }
 }
