@@ -23,6 +23,6 @@ namespace HotelManagerSystem.Models.DTOs
         public string CheckingAccount { get; set; }
         public int FilialCount { get; set; }
 
-
+        public List<int> ServicesIds { get; set; }
     }
 }

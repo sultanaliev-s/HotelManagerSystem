@@ -12,6 +12,8 @@ using MediatR;
 using System.Xml.Linq;
 using HotelManagerSystem.Models.Request.CreateRequest.HotelRequest;
 using System.Runtime.CompilerServices;
+using HotelManagerSystem.Models.DTOs;
+using HotelManagerSystem.Models.Entities.Relations;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
 {
@@ -20,6 +22,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
     public class CreatHotelsController : ControllerBase
     {
         private readonly IRepository<Hotel, int> _hotelReporitory;
+        private readonly IRepository<HotelsServices, int> _hotelsServicesReporitory;
         private readonly IRepository<Room, int> _roomReporitory;
         private readonly IRepository<Address, int> _addressReporitory;
         private readonly IRepository<HotelFoto, int> _fotoReporitory;

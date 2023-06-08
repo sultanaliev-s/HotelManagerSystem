@@ -31,5 +31,6 @@ namespace HotelManagerSystem.Models.Entities
         public List<Room>? Rooms { get; set; }
         public List<ClientReview>? ClientReviews { get; set; }
         public List<HotelFoto>? Fotos { get; set; }
+        public List<HotelServices> Services { get; set; }
     }
 }

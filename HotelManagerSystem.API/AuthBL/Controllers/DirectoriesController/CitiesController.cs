@@ -47,7 +47,9 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Route("update")]
         public async Task<Response> Update(UpdateIdNameDirectoryRequest request)
         {
-            return await _service.Update(request);
+            await _service.Update(request);
+
+            return new Response(200, true, null);
         }
 
         [HttpDelete]
@@ -72,7 +74,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<CityListResponse> GetAll(int id)
+        public async Task<CityListResponse> GetAll()
         {
             var list = await _repository.GetAllAsync();
 

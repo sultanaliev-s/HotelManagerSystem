@@ -1,8 +1,9 @@
-﻿namespace HotelManagerSystem.Models.Entities.Relations
+﻿using HotelManagerSystem.Models.Common;
+
+namespace HotelManagerSystem.Models.Entities.Relations
 {
-    public class HotelsServices 
+    public class HotelsServices : BaseEntity<int> 
     {
-        public int Id { get; set; }
         public int ServiceId { get; set; }
         public int HotelId { get; set; } 
     }

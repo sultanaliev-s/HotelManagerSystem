@@ -47,7 +47,9 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Route("update")]
         public async Task<Response> Update(UpdateDescDirectoryRequest request)
         {
-            return await _service.Update(request);
+            await _service.Update(request);
+
+            return new Response(200, true, null);
         }
 
         [HttpDelete]
