@@ -34,20 +34,8 @@ builder.Services.AddScoped<RoleManager<IdentityRole>>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IHotelRepository, HotelRepository>();
-//builder.Services.AddScoped<IRepository<Country, int>, Repository<Country, int>>();
-//builder.Services.AddTransient<IRepository<City, int>, Repository<City, int>>();
-//builder.Services.AddTransient<IRepository<RoomType, int>, Repository<RoomType, int>>();
-//builder.Services.AddTransient<IRepository<HotelCategory, int>, Repository<HotelCategory, int>>();
-//builder.Services.AddTransient<IRepository<HotelType, int>, Repository<HotelType, int>>();
-//builder.Services.AddTransient<IRepository<HotelServices, int>, Repository<HotelServices, int>>();
-//builder.Services.AddTransient<IRepository<Ñouchette, int>, Repository<Ñouchette, int>>();
-//builder.Services.AddTransient<RoomTypeServices>();
-//builder.Services.AddTransient<CountryServices>();
-//builder.Services.AddTransient<CityServices>();
-//builder.Services.AddTransient<HotelTypeServices>();
-//builder.Services.AddTransient<HotelServicesServices>();
-//builder.Services.AddTransient<HotelCategoryServices>();
-//builder.Services.AddTransient<ÑouchetteServices>();
+builder.Services.AddTransient<IRepository<ErrorLog, int>, Repository<ErrorLog, int>>();
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -63,6 +51,12 @@ builder.Services.AddMediatR(typeof(Program));
 builder.Services.AddTransient<RegisterUserHandler>();
 builder.Services.AddTransient<CheckCodeHandler>();
 builder.Services.AddTransient<LoginUserHandler>();
+
+
+builder.Logging.AddDbLogger(options =>
+{
+    builder.Configuration.GetSection("Logging").GetSection("Database").GetSection("Options").Bind(options);
+});
 
 builder.Services.AddAuthentication(opt => {
         opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
