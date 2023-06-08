@@ -1,27 +1,32 @@
 using HotelManagerSystem.API.Service;
 using HotelManagerSystem.DAL.Responses;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
+using HotelManagerSystem.Models.Request;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers
 {
-    public class FotoController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class PhotoController : ControllerBase
     {
         private readonly FotoService fotoService;
 
-        public FotoController(FotoService fotoService)
+        public PhotoController(FotoService fotoService)
         {
             this.fotoService = fotoService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddFoto(string folder, string encodedContent, string fileName)
+        public async Task<IActionResult> AddFoto([FromBody] FotoRequest request)
         {
             var response = new FotoResponse();
 
             try
             {
-                var savedFileName = await fotoService.SaveFotoAsync(folder, encodedContent, fileName);
-                var filePath = $"/{folder}/{savedFileName}";
+                var savedFileName = await fotoService.SaveFotoAsync(request.Folder, request.EncodedContent, request.FileName);
+                var filePath = $"/{request.Folder}/{savedFileName}";
 
                 response.FileName = savedFileName;
                 response.FilePath = filePath;
@@ -37,13 +42,14 @@ namespace HotelManagerSystem.API.AuthBL.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteFoto(string folder, string fileName)
+        [Route("delete")]
+        public IActionResult DeleteFoto([FromBody] FotoRequest request)
         {
             var response = new FotoResponse();
 
             try
             {
-                fotoService.DeleteFoto(folder, fileName);
+                fotoService.DeleteFoto(request.Folder, request.FileName);
                 response.IsSuccess = true;
             }
             catch (Exception e)
