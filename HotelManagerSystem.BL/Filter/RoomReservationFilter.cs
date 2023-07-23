@@ -1,10 +1,7 @@
-﻿using HotelManagerSystem.DAL;
-using HotelManagerSystem.DAL.Data;
-using HotelManagerSystem.Models.Data;
+﻿using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Request.Search;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace HotelManagerSystem.BL.Filter
 {
@@ -26,14 +23,20 @@ namespace HotelManagerSystem.BL.Filter
 
             IQueryable<Hotel> query = _repository.GetQuery();
 
-
-            var finish = await query.Where(c => c.cityId == request.CityId).Include(r => r.Rooms)
-                .ThenInclude(r => r.Reservation)
-                .Where(r => r.Rooms.Where(r => r.Reservation.ReserveStart >= request.startDate 
-                            && r.Reservation.ReserveEnd <= request.endDate && r.BasePerson >= request.Persons) !=null)
-                .AsNoTracking().ToListAsync();
+            var finish = await query
+                .Include(x => x.Rooms)
+                .ThenInclude(x => x.Reservations)
+                .Where(x => x.cityId == request.CityId && x.Rooms
+                    .Where(room => room.Reservations
+                        .Where(x => x.ReserveStart >= request.startDate
+                            && x.ReserveEnd <= request.endDate
+                            && room.BasePerson >= request.Persons)
+                        .Any())
+                    .Any())
+                .AsNoTracking()
+                .ToListAsync();
 
             return finish;
         }
     }
-}   
+}

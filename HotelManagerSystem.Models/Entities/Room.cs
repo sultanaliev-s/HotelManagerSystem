@@ -1,11 +1,4 @@
-﻿using HotelManagerSystem.Models.Data;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using HotelManagerSystem.Models.Common;
-using System.Text;
+﻿using HotelManagerSystem.Models.Common;
 
 namespace HotelManagerSystem.Models.Entities
 {
@@ -20,11 +13,10 @@ namespace HotelManagerSystem.Models.Entities
         public int RoomTypeId { get; set; }
         public RoomType RoomType { get; set; }
         public int HotelId { get; set; }
-        public Hotel Hotel { get; set; } 
+        public Hotel Hotel { get; set; }
         public int CouchetteId { get; set; }
         public Сouchette Сouchette { get; set; }
-        public int RoomReservationId { get; set; }
-        public RoomReservation Reservation { get; set; }
+        public List<RoomReservation> Reservations { get; set; }
 
     }
 }

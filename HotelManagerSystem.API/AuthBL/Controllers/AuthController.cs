@@ -1,13 +1,12 @@
 ﻿using System.Security.Claims;
 using HotelManagerSystem.API.AuthBL.CurrentModels;
-using HotelManagerSystem.API.AuthBL.Data;
 using HotelManagerSystem.API.AuthBL.Managers;
 using HotelManagerSystem.API.Request;
 using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.DAL.AuthBL.Data;
 using HotelManagerSystem.DAL.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using HotelManagerSystem.DAL.AuthBL.Data;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers
 {
@@ -43,7 +42,6 @@ namespace HotelManagerSystem.API.AuthBL.Controllers
             var response = await _authManager.RefreshToken(tokenModel);
             return response;
         }
-        
 
         [HttpGet("getCurrentUser")]
         public async Task<CurrentUserResponse> GetCurrentUser()

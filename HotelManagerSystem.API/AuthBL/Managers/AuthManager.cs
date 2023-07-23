@@ -1,24 +1,21 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using HotelManagerSystem.API.AuthBL.Data;
 using HotelManagerSystem.API.AuthBL.CurrentModels;
-using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.API.Configs;
 using HotelManagerSystem.API.Extensions;
 using HotelManagerSystem.API.Request;
-using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.API.Responses;
 using HotelManagerSystem.API.Service;
 using HotelManagerSystem.Common;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
+using HotelManagerSystem.DAL;
 using HotelManagerSystem.DAL.AuthBL.CurrentModels;
 using HotelManagerSystem.DAL.AuthBL.Data;
-using HotelManagerSystem.API.AuthBL.CurrentModels;
-using HotelManagerSystem.DAL;
+using HotelManagerSystem.DAL.Responses;
+using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Request.ReservationRequest;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace HotelManagerSystem.API.AuthBL.Managers
 {
@@ -160,6 +157,7 @@ namespace HotelManagerSystem.API.AuthBL.Managers
             user.FullName = fullName;
             user.Email = email;
             user.UserName = email;
+            user.CheckingAccount = "";
         }
 
         private async Task<IdentityResult> RegisterUser(RegisterUserRequest request)
@@ -213,19 +211,19 @@ namespace HotelManagerSystem.API.AuthBL.Managers
             {
                 throw new DException("User not found");
             }
-            
+
             var room = await _dbContext.Rooms.FindAsync(request.RoomId);
             if (room == null)
             {
                 throw new DException("Room not found");
             }
-            
+
             bool isRoomAvailable = await IsRoomAvailable(room, request.StartDate, request.EndDate);
             if (!isRoomAvailable)
             {
                 throw new DException("Room is not available for the specified dates");
             }
-            
+
             var reservation = new RoomReservation
             {
                 UserId = user.Id,
@@ -237,7 +235,7 @@ namespace HotelManagerSystem.API.AuthBL.Managers
                 RoomId = room.Id,
                 Room = room
             };
-            
+
             _dbContext.RoomsReservations.Add(reservation);
             await _dbContext.SaveChangesAsync();
 
@@ -251,7 +249,7 @@ namespace HotelManagerSystem.API.AuthBL.Managers
             {
                 throw new DException("Reservation not found");
             }
-            
+
             var claimsPrincipal = _httpContextAccessor.HttpContext?.User;
             var userId = _userManager.GetUserId(claimsPrincipal);
 
@@ -259,7 +257,7 @@ namespace HotelManagerSystem.API.AuthBL.Managers
             {
                 throw new DException("Unauthorized to cancel this reservation");
             }
-            
+
             _dbContext.RoomsReservations.Remove(reservation);
             await _dbContext.SaveChangesAsync();
 

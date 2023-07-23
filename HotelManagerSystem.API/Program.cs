@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using HotelManagerSystem.API.AuthBL.Data;
 using HotelManagerSystem.API.AuthBL.Managers;
@@ -6,19 +7,16 @@ using HotelManagerSystem.API.Extensions;
 using HotelManagerSystem.API.Handlers;
 using HotelManagerSystem.API.Repositories;
 using HotelManagerSystem.API.Service;
+using HotelManagerSystem.BL.Directories;
+using HotelManagerSystem.DAL;
+using HotelManagerSystem.DAL.Data;
+using HotelManagerSystem.Models.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using HotelManagerSystem.Models.Entities;
-using Microsoft.Extensions.DependencyInjection;
-using MediatR;
-using HotelManagerSystem.BL.Directories;
-using HotelManagerSystem.DAL;
-using HotelManagerSystem.DAL.Data;
-using HotelManagerSystem.Models.Data;
-using HotelManagerSystem.BL.DbLogger;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,14 +26,18 @@ builder.Services.AddSingleton<Config>(provider => BindConfiguration(provider));
 builder.Services.AddDbContext<HotelManagerSystemDb>();
 
 builder.Services.AddDbContext<HotelContext>();
+
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+
 builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<HotelManagerSystemDb>()
+    .AddEntityFrameworkStores<HotelContext>()
     .AddDefaultTokenProviders();
 builder.Services.AddScoped<RoleManager<IdentityRole>>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IHotelRepository, HotelRepository>();
 builder.Services.AddTransient<IRepository<ErrorLog, int>, Repository<ErrorLog, int>>();
+builder.Services.AddTransient<IRepository<HotelCategory, int>, Repository<HotelCategory, int>>();
 
 // Add services to the container.
 
@@ -52,6 +54,7 @@ builder.Services.AddMediatR(typeof(Program));
 builder.Services.AddTransient<RegisterUserHandler>();
 builder.Services.AddTransient<CheckCodeHandler>();
 builder.Services.AddTransient<LoginUserHandler>();
+builder.Services.AddTransient<HotelCategoryServices>();
 
 
 builder.Logging.AddDbLogger(options =>
@@ -59,10 +62,11 @@ builder.Logging.AddDbLogger(options =>
     builder.Configuration.GetSection("Logging").GetSection("Database").GetSection("Options").Bind(options);
 });
 
-builder.Services.AddAuthentication(opt => {
-        opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
+builder.Services.AddAuthentication(opt =>
+{
+    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -125,7 +129,7 @@ builder.Services.AddSwaggerGen(options =>
             new string[]{}
         }
     });
-    
+
 });
 builder.Services.AddCors(options =>
 {
@@ -139,6 +143,17 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    string role = "Admin";
+    if (!(await roleManager.RoleExistsAsync(role)))
+    {
+        await roleManager.CreateAsync(new IdentityRole(role));
+    }
+}
 
 //if (app.Environment.IsDevelopment())
 //{

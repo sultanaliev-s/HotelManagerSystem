@@ -1,5 +1,4 @@
 ﻿using HotelManagerSystem.BL.Directories;
-using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Request.CreateRequest;

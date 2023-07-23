@@ -1,5 +1,4 @@
 ﻿using HotelManagerSystem.Models.Data;
-using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.EntityDto;
 
 namespace HotelManagerSystem.Models.DTOs
@@ -10,12 +9,10 @@ namespace HotelManagerSystem.Models.DTOs
         {
             Name = entity.Name;
             CountryId = entity.CountryId;
-            HotelId = entity.HotelId;
         }
 
         public string Name { get; set; }
         public int CountryId { get; set; }
-        public int HotelId { get; set; }
 
     }
 }

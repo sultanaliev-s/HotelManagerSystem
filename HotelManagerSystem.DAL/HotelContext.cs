@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HotelManagerSystem.Models.Data;
 using HotelManagerSystem.Models.Entities;
-using HotelManagerSystem.Models.Data;
 using HotelManagerSystem.Models.Entities.Relations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace HotelManagerSystem.DAL
@@ -34,9 +34,8 @@ namespace HotelManagerSystem.DAL
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            var connectionString = config.GetConnectionString("PgDbContextConnection")
-                ?? throw new InvalidOperationException(
-                    "Connection string 'PgDbContextConnection' not found.");
+            var connectionString = config.GetConnectionString("HotelManagerSystemDbConnection")
+                ?? throw new InvalidOperationException("Connection string 'HotelManagerSystemDbConnection' not found.");
 
             optionsBuilder.UseNpgsql(connectionString, builder =>
             {
@@ -48,42 +47,36 @@ namespace HotelManagerSystem.DAL
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<HotelsServices>()
-                .HasKey(hs => new { hs.HotelId, hs.ServiceId });
-
-            modelBuilder.Entity<Room>()
-                .HasOne(c => c.Сouchette)
-                .WithOne(c => c.Room)
-                .HasForeignKey<Сouchette>(c => c.RoomId)
-                .IsRequired();
-
-            modelBuilder.Entity<Hotel>()
-                .HasOne(c => c.city)
-                .WithOne(c => c.Hotel)
-                .HasForeignKey<City>(c => c.HotelId)
-                .IsRequired();
-
-            modelBuilder.Entity<Room>()
-             .HasOne(c => c.Reservation)
-             .WithOne(c => c.Room)
-             .HasForeignKey<RoomReservation>(c => c.RoomId)
-             .IsRequired();
-
-            modelBuilder.Entity<Room>()
-                .HasOne(c => c.RoomType)
-                .WithMany(c => c.Rooms)
-                .HasForeignKey(c => c.RoomTypeId)
+            modelBuilder.Entity<Address>()
+                .HasOne(a => a.Cities)
+                .WithMany(y => y.Addresses)
+                .HasForeignKey(a => a.CityId)
                 .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<RoomType>()
-               .HasMany(c => c.Rooms)
-               .WithOne(a => a.RoomType)
-               .OnDelete(DeleteBehavior.SetNull);
-
             modelBuilder.Entity<Address>()
                 .HasOne(a => a.Countries)
                 .WithMany(c => c.Address)
                 .HasForeignKey(a => a.CountryId)
+                .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<Address>()
+                .HasOne(a => a.Hotel)
+                .WithMany(y => y.Addresses)
+                .HasForeignKey(a => a.HotelId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<City>()
+                .HasMany(y => y.Addresses)
+                .WithOne(a => a.Cities)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<ClientReview>()
+                .HasOne(a => a.Hotel)
+                .WithMany(y => y.ClientReviews)
+                .HasForeignKey(a => a.HotelId)
+                .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<ClientReview>()
+                .HasOne(a => a.User)
+                .WithMany(y => y.clientReviews)
+                .HasForeignKey(a => a.UserId)
                 .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Country>()
@@ -91,104 +84,47 @@ namespace HotelManagerSystem.DAL
                 .WithOne(a => a.Countries)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            modelBuilder.Entity<Address>()
-                .HasOne(a => a.Cities)
-                .WithMany(y => y.Addresses)
-                .HasForeignKey(a => a.CityId)
-                .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<City>()
-               .HasMany(y => y.Addresses)
-               .WithOne(a => a.Cities)
-               .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<ClientReview>()
-                .HasOne(a => a.User)
-                .WithMany(y => y.clientReviews)
-                .HasForeignKey(a => a.UserId)
-                .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<User>()
-               .HasMany(y => y.clientReviews)
-               .WithOne(a => a.User)
-               .OnDelete(DeleteBehavior.SetNull);
-
             modelBuilder.Entity<Hotel>()
-                .HasOne(a => a.User)
-                .WithMany(y => y.Hotels)
-                .HasForeignKey(a => a.UserId)
+                .HasMany(y => y.Addresses)
+                .WithOne(a => a.Hotel)
                 .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<User>()
-               .HasMany(y => y.Hotels)
-               .WithOne(a => a.User)
-               .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<RoomReservation>()
-                .HasOne(a => a.User)
-                .WithMany(y => y.roomReservations)
-                .HasForeignKey(a => a.UserId)
-                .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<User>()
-               .HasMany(y => y.roomReservations)
-               .WithOne(a => a.User)
-               .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<ClientReview>()
-                .HasOne(a => a.Hotel)
-                .WithMany(y => y.ClientReviews)
-                .HasForeignKey(a => a.HotelId)
-                .OnDelete(DeleteBehavior.SetNull);
-
             modelBuilder.Entity<Hotel>()
-               .HasMany(y => y.ClientReviews)
-               .WithOne(a => a.Hotel)
-               .OnDelete(DeleteBehavior.SetNull);
-
+                .HasMany(y => y.ClientReviews)
+                .WithOne(a => a.Hotel)
+                .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<Hotel>()
+                .HasMany(y => y.Fotos)
+                .WithOne(a => a.Hotel)
+                .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<Hotel>()
+                .HasMany(y => y.Rooms)
+                .WithOne(a => a.Hotel)
+                .OnDelete(DeleteBehavior.SetNull);
             modelBuilder.Entity<Hotel>()
                 .HasOne(a => a.Category)
                 .WithMany(y => y.Hotels)
                 .HasForeignKey(a => a.HotelCategoryId)
                 .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<HotelCategory>()
-               .HasMany(y => y.Hotels)
-               .WithOne(a => a.Category)
-               .OnDelete(DeleteBehavior.SetNull);
-
             modelBuilder.Entity<Hotel>()
                 .HasOne(a => a.Type)
                 .WithMany(y => y.Hotels)
                 .HasForeignKey(a => a.HotelTypeId)
                 .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<HotelType>()
-               .HasMany(y => y.Hotels)
-               .WithOne(a => a.Type)
-               .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<Address>()
-                .HasOne(a => a.Hotel)
-                .WithMany(y => y.Addresses)
-                .HasForeignKey(a => a.HotelId)
-                .OnDelete(DeleteBehavior.SetNull);
-
             modelBuilder.Entity<Hotel>()
-               .HasMany(y => y.Addresses)
-               .WithOne(a => a.Hotel)
-               .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<Room>()
-                .HasOne(a => a.Hotel)
-                .WithMany(y => y.Rooms)
-                .HasForeignKey(a => a.HotelId)
+                .HasOne(a => a.User)
+                .WithMany(y => y.Hotels)
+                .HasForeignKey(a => a.UserId)
                 .OnDelete(DeleteBehavior.SetNull);
-
             modelBuilder.Entity<Hotel>()
-               .HasMany(y => y.Rooms)
-               .WithOne(a => a.Hotel)
-               .OnDelete(DeleteBehavior.SetNull);
+                .HasOne(h => h.city)
+                .WithMany(c => c.Hotels)
+                .HasForeignKey(h => h.cityId)
+                .IsRequired();
+
+            modelBuilder.Entity<HotelCategory>()
+                .HasMany(y => y.Hotels)
+                .WithOne(a => a.Category)
+                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<HotelFoto>()
                 .HasOne(a => a.Hotel)
@@ -196,10 +132,58 @@ namespace HotelManagerSystem.DAL
                 .HasForeignKey(a => a.HotelId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            modelBuilder.Entity<Hotel>()
-               .HasMany(y => y.Fotos)
-               .WithOne(a => a.Hotel)
-               .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<HotelsServices>()
+                .HasKey(hs => new { hs.HotelId, hs.ServiceId });
+
+            modelBuilder.Entity<HotelType>()
+                .HasMany(y => y.Hotels)
+                .WithOne(a => a.Type)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Room>()
+                .HasOne(a => a.Hotel)
+                .WithMany(y => y.Rooms)
+                .HasForeignKey(a => a.HotelId)
+                .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<Room>()
+                .HasOne(c => c.RoomType)
+                .WithMany(c => c.Rooms)
+                .HasForeignKey(c => c.RoomTypeId)
+                .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<Room>()
+                .HasOne(c => c.Сouchette)
+                .WithOne(c => c.Room)
+                .HasForeignKey<Сouchette>(c => c.RoomId)
+                .IsRequired();
+
+            modelBuilder.Entity<RoomReservation>()
+                .HasOne(a => a.User)
+                .WithMany(y => y.roomReservations)
+                .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<RoomReservation>()
+                .HasOne(x => x.Room)
+                .WithMany(y => y.Reservations)
+                .HasForeignKey(a => a.RoomId)
+                .IsRequired();
+
+            modelBuilder.Entity<RoomType>()
+                .HasMany(c => c.Rooms)
+                .WithOne(a => a.RoomType)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<User>()
+                .HasMany(y => y.clientReviews)
+                .WithOne(a => a.User)
+                .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<User>()
+                .HasMany(y => y.Hotels)
+                .WithOne(a => a.User)
+                .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<User>()
+                .HasMany(y => y.roomReservations)
+                .WithOne(a => a.User)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

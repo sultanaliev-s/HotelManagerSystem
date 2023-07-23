@@ -1,11 +1,5 @@
-﻿using HotelManagerSystem.Models.Data;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using HotelManagerSystem.Models.Common;
-using System.Text;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+﻿using HotelManagerSystem.Models.Common;
+using HotelManagerSystem.Models.Data;
 
 namespace HotelManagerSystem.Models.Entities
 {
@@ -19,7 +13,7 @@ namespace HotelManagerSystem.Models.Entities
         public bool IsOne { get; set; }
         public string CheckingAccount { get; set; }
         public int FilialCount { get; set; }
-        
+
         public int cityId { get; set; }
         public City city { get; set; }
 
@@ -28,7 +22,7 @@ namespace HotelManagerSystem.Models.Entities
         public int HotelCategoryId { get; set; }
         public HotelCategory Category { get; set; }
         public List<Address>? Addresses { get; set; }
-        public List<Room>? Rooms { get; set; }
+        public List<Room> Rooms { get; set; }
         public List<ClientReview>? ClientReviews { get; set; }
         public List<HotelFoto>? Fotos { get; set; }
         public List<HotelServices> Services { get; set; }

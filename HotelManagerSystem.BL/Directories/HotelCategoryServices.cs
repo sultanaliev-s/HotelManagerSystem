@@ -3,7 +3,6 @@ using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Request.CreateRequest;
 using HotelManagerSystem.Models.Request.UpdateRequest;
-using HotelManagerSystem.Models.Request.UserReview;
 
 namespace HotelManagerSystem.BL.Directories
 {
@@ -42,7 +41,7 @@ namespace HotelManagerSystem.BL.Directories
             {
                 Name = request.Name,
                 Description = request.Description,
-                HotelTypeId = request.ParentId,
+                HotelTypeId = request.HotelTypeId,
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now
             };
