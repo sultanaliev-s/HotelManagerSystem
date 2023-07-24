@@ -24,38 +24,34 @@ namespace HotelManagerSystem.BL.Directories
         {
             return await _repository.GetByIdAsync(id);
         }
-        public async Task<Response> Update(UpdateIdDescDirectoryRequest request)
+        public async Task Update(UpdateIdDescDirectoryRequest request)
         {
             HotelCategory category = await _repository.GetByIdAsync(request.Id);
             category.Name = request.Name;
             category.Description = request.Description;
             category.HotelTypeId = request.ParentId;
-            _repository.UpdateAsync(category);
-
-            return new Response(200, true, null);
+            await _repository.UpdateAsync(category);
         }
 
-        public async Task<Response> Create(CreateIdDescDirectoryRequest request)
+        public async Task<int> Create(CreateIdDescDirectoryRequest request)
         {
             HotelCategory category = new HotelCategory()
             {
                 Name = request.Name,
                 Description = request.Description,
                 HotelTypeId = request.HotelTypeId,
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow
             };
 
-            _repository.AddAsync(category);
+            var createdHotelCategory = await _repository.AddAsync(category);
 
-            return new Response(200, true, null);
+            return createdHotelCategory.Id;
         }
 
-        public async Task<Response> Delete(int id)
+        public async Task Delete(int id)
         {
-            _repository.DeleteByIdAsync(id);
-
-            return new Response(200, true, null);
+            await _repository.DeleteByIdAsync(id);
         }
     }
 }

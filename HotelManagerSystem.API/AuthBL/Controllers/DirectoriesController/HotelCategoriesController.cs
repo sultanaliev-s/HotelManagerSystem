@@ -1,10 +1,16 @@
-﻿using HotelManagerSystem.BL.Directories;
+﻿using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.BL.Directories;
+using HotelManagerSystem.BL.Exceptions;
 using HotelManagerSystem.DAL.Responses;
+using HotelManagerSystem.Models.Data;
+using HotelManagerSystem.Models.DTOs;
 using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Request.CreateRequest;
 using HotelManagerSystem.Models.Request.UpdateRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.Metrics;
+using System.Linq;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 {
@@ -25,63 +31,72 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 
         [HttpPost]
         [Route("create")]
-        public async Task<Response> Create([FromBody] CreateIdDescDirectoryRequest request)
+        public async Task<ActionResult> Create([FromBody] CreateIdDescDirectoryRequest request)
         {
             try
             {
-                await _service.Create(request);
+                var country = await _service.Create(request);
+                return Created("", country);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while processing request from {Hotel Category}", request);
+                return BadRequest(new ErrorResponse(ex.Message));
             }
-
-            return new Response(200, true, null);
         }
 
         [HttpPut]
         [Route("update")]
-        public async Task<Response> Update(UpdateIdDescDirectoryRequest request)
+        public async Task<ActionResult> Update(UpdateIdDescDirectoryRequest request)
         {
             try
             {
                 await _service.Update(request);
             }
+            catch (EntityNotFoundException<HotelCategory> ex)
+            {
+                return NotFound(new ErrorResponse(ex.Message));
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while processing request from {Hotel Category}", request);
+                return BadRequest(new ErrorResponse(ex.Message));
             }
 
-            return new Response(200, true, null);
+            return Ok();
         }
 
         [HttpDelete]
         [Route("deleteById")]
-        public async Task<Response> Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
+            HotelCategory hotelCategory = await _service.GetByIdAsync(id);
+            if (hotelCategory == null)
+                return NotFound(new ErrorResponse("Hotel Category not found"));
             await _service.Delete(id);
 
-            return new Response(200, true, null);
+            return NoContent();
         }
 
         [HttpGet]
         [Route("GetById")]
         [Authorize]
-        public async Task<HotelCategoryResponse> GetById(int id)
+        public async Task<ActionResult> GetById(int id)
         {
-            HotelCategory category = await _service.GetByIdAsync(id);
-
-            return new HotelCategoryResponse(200, true, null, category);
+            HotelCategory hotelCategory = await _service.GetByIdAsync(id);
+            if (hotelCategory == null)
+                return NotFound(new ErrorResponse("Hotel Category not found"));
+            return Ok(new HotelCategoryDto(hotelCategory));
         }
 
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<HotelsCategoryListResponse> GetAll()
+        public async Task<ActionResult<List<HotelCategoryDto>>> GetAll()
         {
             var list = await _service.GetAll();
 
-            return new HotelsCategoryListResponse(200, true, null, list);
+            return Ok(list.Select(dep => new HotelCategoryDto(dep)).ToList());
         }
     }
 }
