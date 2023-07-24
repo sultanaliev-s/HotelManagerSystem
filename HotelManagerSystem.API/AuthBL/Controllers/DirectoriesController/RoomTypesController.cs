@@ -7,6 +7,12 @@ using HotelManagerSystem.DAL.Responses;
 using Microsoft.AspNetCore.Authorization;
 using HotelManagerSystem.Models.Request.UpdateRequest;
 using HotelManagerSystem.Models.Request.CreateRequest;
+using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.BL.Exceptions;
+using HotelManagerSystem.Models.Data;
+using HotelManagerSystem.Models.DTOs;
+using System.Diagnostics.Metrics;
+using System.Linq;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 {
@@ -27,63 +33,72 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 
         [HttpPost]
         [Route("create")]
-        public async Task<Response> Create([FromBody] CreateNameDirectoryRequest request)
+        public async Task<ActionResult> Create([FromBody] CreateNameDirectoryRequest request)
         {
             try
             {
-                await _service.Create(request);
+                var type = await _service.Create(request);
+                return Created("", type);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while processing request from { Room Type}", request);
+                _logger.LogError(ex, "Error while processing request from {Room Type}", request);
+                return BadRequest(new ErrorResponse(ex.Message));
             }
-
-            return new Response(200,true, null);
         }
 
         [HttpPut]
         [Route("update")]
-        public async Task<Response> Update(UpdateNameDirectoryRequest request)
+        public async Task<ActionResult> Update(UpdateNameDirectoryRequest request)
         {
             try
             {
                 await _service.Update(request);
             }
+            catch (EntityNotFoundException<RoomType> ex)
+            {
+                return NotFound(new ErrorResponse(ex.Message));
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while processing request from {Room Type}", request);
+                return BadRequest(new ErrorResponse(ex.Message));
             }
 
-            return new Response(200, true, null);
+            return Ok();
         }
 
         [HttpDelete]
         [Route("deleteById")]
-        public async Task<Response> Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
+            RoomType roomType = await _service.GetByIdAsync(id);
+            if (roomType == null)
+                return NotFound(new ErrorResponse("Room Type not found"));
             await _service.Delete(id);
 
-            return new Response(200, true, null);
+            return NoContent();
         }
 
         [HttpGet]
         [Route("GetById")]
         [Authorize]
-        public async Task<RoomTypeResponse> GetById(int id)
+        public async Task<ActionResult<RoomTypeDto>> GetById(int id)
         {
             RoomType roomType = await _service.GetByIdAsync(id);
-
-            return new RoomTypeResponse(200, true, null, roomType); 
+            if (roomType == null)
+                return NotFound(new ErrorResponse("Room Type not found"));
+            return Ok(new RoomTypeDto(roomType));
         }
 
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<RoomTypesListresponse> GetAll()
+        public async Task<ActionResult<List<RoomTypeDto>>> GetAll()
         {
             var list = await _service.GetAll();
 
-            return new RoomTypesListresponse(200, true, null, list); 
+            return Ok(list.Select(dep => new RoomTypeDto(dep)).ToList());
         }
     }
 }

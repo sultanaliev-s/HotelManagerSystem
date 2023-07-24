@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HotelManagerSystem.Models.Request.CreateRequest;
 using HotelManagerSystem.Models.Request.UpdateRequest;
+using HotelManagerSystem.BL.Exceptions;
 
 namespace HotelManagerSystem.BL.Directories
 {
@@ -30,35 +31,33 @@ namespace HotelManagerSystem.BL.Directories
         {
             return await _repository.GetByIdAsync(id);
         }
-        public async Task<Response> Update(UpdateNameDirectoryRequest request)
+        public async Task Update(UpdateNameDirectoryRequest request)
         {
             RoomType roomType = await _repository.GetByIdAsync(request.Id);
+            if (roomType == null)
+                throw new EntityNotFoundException<RoomType>();
             roomType.Name = request.Name;
-            _repository.UpdateAsync(roomType);
-
-            return new Response(200, true, null);
+            await _repository.UpdateAsync(roomType);
         }
 
-        public async Task<Response> Create(CreateNameDirectoryRequest request)
+        public async Task<int> Create(CreateNameDirectoryRequest request)
         {
             RoomType roomType = new RoomType()
             {
                 Name = request.Name,
-                CreatedDate = DateTime.Now, 
-                UpdatedDate = DateTime.Now
+                CreatedDate = DateTime.UtcNow, 
+                UpdatedDate = DateTime.UtcNow
 
             };
 
-            _repository.AddAsync(roomType);
+            var createdType = await _repository.AddAsync(roomType);
 
-            return new Response(200, true, null);
+            return createdType.Id;
         }
 
-        public async Task<Response> Delete(int id)
+        public async Task Delete(int id)
         {
-            _repository.DeleteByIdAsync(id);
-
-            return new Response(200, true, null);
+            await _repository.DeleteByIdAsync(id);
         }
     }
 }
