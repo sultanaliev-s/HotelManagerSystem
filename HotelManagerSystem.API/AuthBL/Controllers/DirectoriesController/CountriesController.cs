@@ -94,7 +94,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<ActionResult<CountryListRespose>> GetAll()
+        public async Task<ActionResult<List<CountryDto>>> GetAll()
         {
             var list = await _service.GetAll();
 

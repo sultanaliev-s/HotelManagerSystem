@@ -40,6 +40,7 @@ builder.Services.AddTransient<IHotelRepository, HotelRepository>();
 builder.Services.AddTransient<IRepository<ErrorLog, int>, Repository<ErrorLog, int>>();
 builder.Services.AddTransient<IRepository<HotelCategory, int>, Repository<HotelCategory, int>>();
 builder.Services.AddTransient<IRepository<Country, int>, Repository<Country, int>>();
+builder.Services.AddTransient<IRepository<City, int>, Repository<City, int>>();
 
 // Add services to the container.
 
@@ -58,6 +59,7 @@ builder.Services.AddTransient<CheckCodeHandler>();
 builder.Services.AddTransient<LoginUserHandler>();
 builder.Services.AddTransient<HotelCategoryServices>();
 builder.Services.AddTransient<CountryServices>();
+builder.Services.AddTransient<CityServices>();
 
 
 builder.Logging.AddDbLogger(options =>

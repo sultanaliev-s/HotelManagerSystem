@@ -1,7 +1,10 @@
-﻿using HotelManagerSystem.BL.Directories;
+﻿using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.BL.Directories;
+using HotelManagerSystem.BL.Exceptions;
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Data;
+using HotelManagerSystem.Models.DTOs;
 using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Request.CreateRequest;
 using HotelManagerSystem.Models.Request.UpdateRequest;
@@ -11,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics.Metrics;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 {
@@ -31,65 +35,75 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 
         [HttpPost]
         [Route("create")]
-        public async Task<Response> Create([FromBody] CreateIdNameDirectoryRequest request)
+        public async Task<ActionResult> Create([FromBody] CreateIdNameDirectoryRequest request)
         {
             try
             {
 
-                await _service.Create(request);
+                var city = await _service.Create(request);
+                return Created("", city);
 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while processing request from {City}", request);
+                return BadRequest(new ErrorResponse(ex.Message));
             }
-
-            return new Response(200, true, null);
         }
 
         [HttpPut]
         [Route("update")]
-        public async Task<Response> Update(UpdateIdNameDirectoryRequest request)
+        public async Task<ActionResult> Update(UpdateIdNameDirectoryRequest request)
         {
             try
             {
                 await _service.Update(request);
             }
+            catch (EntityNotFoundException<City> ex)
+            {
+                return NotFound(new ErrorResponse(ex.Message));
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while processing request from {City}", request);
+                return BadRequest(new ErrorResponse(ex.Message));
             }
 
-            return new Response(200, true, null);
+            return Ok();
         }
 
         [HttpDelete]
         [Route("deleteById")]
-        public async Task<Response> Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
+            City city = await _service.GetByIdAsync(id);
+            if (city == null)
+                return NotFound(new ErrorResponse("City not found"));
             await _service.Delete(id);
 
-            return new Response(200, true, null);
+            return NoContent();
         }
 
         [HttpGet]
         [Route("GetById")]
         [Authorize]
-        public async Task<CityResponse> GetById(int id)
+        public async Task<ActionResult<CityDto>> GetById(int id)
         {
             City city = await _service.GetByIdAsync(id);
 
-            return new CityResponse(200, true, null, city);
+            if (city == null)
+                return NotFound(new ErrorResponse("Country not found"));
+            return Ok(new CityDto(city));
         }
 
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<CityListResponse> GetAll()
+        public async Task<ActionResult<List<CityDto>>> GetAll()
         {
             var list = await _service.GetAll();
 
-            return new CityListResponse(200, true, null, list);
+            return Ok(list.Select(dep => new CityDto(dep)).ToList());
         }
     }
 }

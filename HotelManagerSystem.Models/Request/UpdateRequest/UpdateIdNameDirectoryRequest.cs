@@ -1,4 +1,6 @@
-﻿namespace HotelManagerSystem.Models.Request.UpdateRequest
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HotelManagerSystem.Models.Request.UpdateRequest
 {
     public class UpdateIdNameDirectoryRequest
     {
