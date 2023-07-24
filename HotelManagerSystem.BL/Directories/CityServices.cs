@@ -54,7 +54,7 @@ namespace HotelManagerSystem.BL.Directories
 
         public async Task<Response> Delete(int id)
         {
-            _repository.DeleteByIdAsync(id);
+            await _repository.DeleteByIdAsync(id);
 
             return new Response(200, true, null);
         }

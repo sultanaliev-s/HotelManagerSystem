@@ -41,6 +41,7 @@ builder.Services.AddTransient<IRepository<ErrorLog, int>, Repository<ErrorLog, i
 builder.Services.AddTransient<IRepository<HotelCategory, int>, Repository<HotelCategory, int>>();
 builder.Services.AddTransient<IRepository<Country, int>, Repository<Country, int>>();
 builder.Services.AddTransient<IRepository<City, int>, Repository<City, int>>();
+builder.Services.AddTransient<IRepository<HotelType, int>, Repository<HotelType, int>>();
 
 // Add services to the container.
 
@@ -60,7 +61,7 @@ builder.Services.AddTransient<LoginUserHandler>();
 builder.Services.AddTransient<HotelCategoryServices>();
 builder.Services.AddTransient<CountryServices>();
 builder.Services.AddTransient<CityServices>();
-
+builder.Services.AddTransient<HotelTypeServices>();
 
 builder.Logging.AddDbLogger(options =>
 {
