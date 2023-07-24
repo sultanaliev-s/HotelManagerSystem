@@ -1,4 +1,5 @@
-﻿using HotelManagerSystem.DAL.Data;
+﻿using HotelManagerSystem.BL.Exceptions;
+using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Data;
 using HotelManagerSystem.Models.Entities;
@@ -26,37 +27,35 @@ namespace HotelManagerSystem.BL.Directories
         {
             return await _repository.GetByIdAsync(id);
         }
-        public async Task<Response> Update(UpdateDescDirectoryRequest request)
+        public async Task Update(UpdateDescDirectoryRequest request)
         {
             HotelServices services = await _repository.GetByIdAsync(request.Id);
+            if (services == null)
+                throw new EntityNotFoundException<HotelServices>();
             services.Name = request.Name;
             services.Description = request.Description;
-            _repository.UpdateAsync(services);
-
-            return new Response(200, true, null);
+            await _repository.UpdateAsync(services);
         }
 
-        public async Task<Response> Create(CreateDescDirectoryRequest request)
+        public async Task<int> Create(CreateDescDirectoryRequest request)
         {
             HotelServices services = new HotelServices()
             {
                 Name = request.Name,
                 Description = request.Description,
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow
 
             };
 
-            _repository.AddAsync(services);
+            var createdService = await _repository.AddAsync(services);
 
-            return new Response(200, true, null);
+            return createdService.Id;
         }
 
-        public async Task<Response> Delete(int id)
+        public async Task Delete(int id)
         {
-            _repository.DeleteByIdAsync(id);
-
-            return new Response(200, true, null);
+            await _repository.DeleteByIdAsync(id);
         }
     }
 }

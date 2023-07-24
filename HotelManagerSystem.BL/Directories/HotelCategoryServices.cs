@@ -1,4 +1,5 @@
-﻿using HotelManagerSystem.DAL.Data;
+﻿using HotelManagerSystem.BL.Exceptions;
+using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Request.CreateRequest;
@@ -27,6 +28,8 @@ namespace HotelManagerSystem.BL.Directories
         public async Task Update(UpdateIdDescDirectoryRequest request)
         {
             HotelCategory category = await _repository.GetByIdAsync(request.Id);
+            if (category == null)
+                throw new EntityNotFoundException<HotelCategory>();
             category.Name = request.Name;
             category.Description = request.Description;
             category.HotelTypeId = request.ParentId;
