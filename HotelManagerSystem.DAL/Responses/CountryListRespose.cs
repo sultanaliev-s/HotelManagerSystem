@@ -3,10 +3,9 @@ using HotelManagerSystem.Models.DTOs;
 
 namespace HotelManagerSystem.DAL.Responses
 {
-    public class CountryListRespose : Response
+    public class CountryListRespose
     {
-        public CountryListRespose(int statusCode, bool success, string message, List<Country> countries)
-            : base(statusCode, success, message)
+        public CountryListRespose(List<Country> countries)
         {
             Countries = countries.Select(dep => new CountryDto(dep)).ToList();
         }

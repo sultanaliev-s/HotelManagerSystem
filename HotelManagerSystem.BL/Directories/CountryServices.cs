@@ -3,6 +3,7 @@ using HotelManagerSystem.Models.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Request.CreateRequest;
 using HotelManagerSystem.Models.Request.UpdateRequest;
+using HotelManagerSystem.BL.Exceptions;
 
 namespace HotelManagerSystem.BL.Directories
 {
@@ -24,34 +25,32 @@ namespace HotelManagerSystem.BL.Directories
         {
             return await _repository.GetByIdAsync(id);
         }
-        public async Task<Response> Update(UpdateNameDirectoryRequest request)
+        public async Task Update(UpdateNameDirectoryRequest request)
         {
             Country country = await _repository.GetByIdAsync(request.Id);
+            if (country == null)
+                throw new EntityNotFoundException<Country>();
             country.Name = request.Name;
-            _repository.UpdateAsync(country);
-
-            return new Response(200, true, null );
+            await _repository.UpdateAsync(country);
         }
 
-        public async Task<Response> Create(CreateNameDirectoryRequest request)
+        public async Task<int> Create(CreateNameDirectoryRequest request)
         {
             Country country =new Country()
             {
                 Name = request.Name,
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.UtcNow
 
             };
 
-            _repository.AddAsync(country);
+            var createdCountry = await _repository.AddAsync(country);
 
-            return new Response(200, true, null);
+            return createdCountry.Id;
         }
 
-        public async Task<Response> Delete(int id)
+        public async Task Delete(int id)
         {
-            _repository.DeleteByIdAsync(id);
-
-            return new Response(200, true, null);
+            await _repository.DeleteByIdAsync(id);
         }
     }
 }

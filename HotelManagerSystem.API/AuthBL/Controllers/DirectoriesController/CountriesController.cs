@@ -1,4 +1,6 @@
-﻿using HotelManagerSystem.BL.Directories;
+﻿using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.BL.Directories;
+using HotelManagerSystem.BL.Exceptions;
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Data;
@@ -8,6 +10,9 @@ using HotelManagerSystem.Models.Request.UpdateRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using HotelManagerSystem.Models.DTOs;
+using NuGet.Protocol;
+using System.Diagnostics.Metrics;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 {
@@ -28,63 +33,72 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 
         [HttpPost]
         [Route("create")]
-        public async Task<Response> Create([FromBody] CreateNameDirectoryRequest request)
+        public async Task<ActionResult> Create([FromBody] CreateNameDirectoryRequest request)
         {
             try
             {
-                await _service.Create(request);
+                var country = await _service.Create(request);
+                return Created("", country);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while processing request from {Country}", request);
+                return BadRequest(new ErrorResponse(ex.Message));
             }
-
-            return new Response(200, true, null);
         }
 
         [HttpPut]
         [Route("update")]
-        public async Task<Response> Update(UpdateNameDirectoryRequest request)
+        public async Task<ActionResult> Update(UpdateNameDirectoryRequest request)
         {
             try
             {
                 await _service.Update(request);
             }
+            catch (EntityNotFoundException<Country> ex)
+            {
+                return NotFound(new ErrorResponse(ex.Message));
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while processing request from {Country}", request);
+                return BadRequest(new ErrorResponse(ex.Message));
             }
 
-            return new Response(200, true, null);
+            return Ok();
         }
 
         [HttpDelete]
         [Route("deleteById")]
-        public async Task<Response> Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
+            Country country = await _service.GetByIdAsync(id);
+            if (country == null)
+                return NotFound(new ErrorResponse("Country not found"));
             await _service.Delete(id);
 
-            return new Response(200, true, null);
+            return NoContent();
         }
 
         [HttpGet]
         [Route("GetById")]
         [Authorize]
-        public async Task<CountryResponse> GetById(int id)
+        public async Task<ActionResult<CountryResponse>> GetById(int id)
         {
             Country country = await _service.GetByIdAsync(id);
-
-            return new CountryResponse(200, true, null, country);
+            if(country == null)
+                return NotFound(new ErrorResponse("Country not found"));
+            return Ok(new CountryDto(country));
         }
 
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<CountryListRespose> GetAll()
+        public async Task<ActionResult<CountryListRespose>> GetAll()
         {
             var list = await _service.GetAll();
 
-            return new CountryListRespose(200, true, null, list);
+            return Ok(list.Select(dep => new CountryDto(dep)).ToList());
         }
     }
 }

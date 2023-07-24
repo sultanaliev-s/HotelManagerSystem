@@ -10,6 +10,7 @@ using HotelManagerSystem.API.Service;
 using HotelManagerSystem.BL.Directories;
 using HotelManagerSystem.DAL;
 using HotelManagerSystem.DAL.Data;
+using HotelManagerSystem.Models.Data;
 using HotelManagerSystem.Models.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -38,6 +39,7 @@ builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IHotelRepository, HotelRepository>();
 builder.Services.AddTransient<IRepository<ErrorLog, int>, Repository<ErrorLog, int>>();
 builder.Services.AddTransient<IRepository<HotelCategory, int>, Repository<HotelCategory, int>>();
+builder.Services.AddTransient<IRepository<Country, int>, Repository<Country, int>>();
 
 // Add services to the container.
 
@@ -55,6 +57,7 @@ builder.Services.AddTransient<RegisterUserHandler>();
 builder.Services.AddTransient<CheckCodeHandler>();
 builder.Services.AddTransient<LoginUserHandler>();
 builder.Services.AddTransient<HotelCategoryServices>();
+builder.Services.AddTransient<CountryServices>();
 
 
 builder.Logging.AddDbLogger(options =>
