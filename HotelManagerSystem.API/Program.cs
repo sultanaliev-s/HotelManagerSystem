@@ -8,6 +8,7 @@ using HotelManagerSystem.API.Handlers;
 using HotelManagerSystem.API.Repositories;
 using HotelManagerSystem.API.Service;
 using HotelManagerSystem.BL.Directories;
+using HotelManagerSystem.BL.Filter;
 using HotelManagerSystem.DAL;
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.Models.Data;
@@ -45,6 +46,7 @@ builder.Services.AddTransient<IRepository<HotelType, int>, Repository<HotelType,
 builder.Services.AddTransient<IRepository<HotelCategory, int>, Repository<HotelCategory, int>>();
 builder.Services.AddTransient<IRepository<HotelServices, int>, Repository<HotelServices, int>>();
 builder.Services.AddTransient<IRepository<RoomType, int>, Repository<RoomType, int>>();
+builder.Services.AddTransient<IRepository<Hotel, int>, Repository<Hotel, int>>();
 
 // Add services to the container.
 
@@ -68,6 +70,7 @@ builder.Services.AddTransient<HotelTypeServices>();
 builder.Services.AddTransient<HotelCategoryServices>();
 builder.Services.AddTransient<HotelServicesServices>();
 builder.Services.AddTransient<RoomTypeServices>();
+builder.Services.AddTransient<RoomReservationFilter>();
 
 builder.Logging.AddDbLogger(options =>
 {

@@ -1,4 +1,6 @@
-﻿using HotelManagerSystem.DAL.Data;
+﻿using HotelManagerSystem.BL.Exceptions;
+using HotelManagerSystem.Common;
+using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Request.Search;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +16,15 @@ namespace HotelManagerSystem.BL.Filter
             _repository = repository;
         }
 
-        public async Task<List<Hotel>> Filter(FilterRequest request)
+        public async Task<List<Hotel>> Filter(FilterRequest? request)
         {
             if (request == null)
             {
-                throw new ArgumentNullException(nameof(request), "Request cannot be null");
+                throw new BadRequestException("Request cannot be null");
             }
+
+            request.startDate = request.startDate.SetKindUtc();
+            request.endDate = request.endDate.SetKindUtc();
 
             IQueryable<Hotel> query = _repository.GetQuery();
 
