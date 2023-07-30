@@ -1,9 +1,7 @@
-﻿using HotelManagerSystem.DAL;
+﻿using HotelManagerSystem.BL.Exceptions;
 using HotelManagerSystem.DAL.Data;
-using HotelManagerSystem.DAL.Responses;
-using HotelManagerSystem.Models.Data;
+using HotelManagerSystem.Models.DTOs;
 using HotelManagerSystem.Models.Entities;
-using HotelManagerSystem.Models.Request;
 using HotelManagerSystem.Models.Request.UserReview;
 
 namespace HotelManagerSystem.BL.Review
@@ -11,65 +9,65 @@ namespace HotelManagerSystem.BL.Review
     public class UserReviewsServices
     {
         private readonly IRepository<ClientReview, int> _repository;
-        private readonly HotelContext _context;
-        public UserReviewsServices(IRepository<ClientReview, int> userReviewRepository, HotelContext context)
+        public UserReviewsServices(IRepository<ClientReview, int> userReviewRepository)
         {
             _repository = userReviewRepository;
-            _context = context;
         }
 
-        public async Task<List<ClientReview>> GetAll()
+        public async Task<List<ReviewDto>> GetAllForHotel(int hotelId)
         {
-            return await _repository.GetAllAsync();
+            var reviews = await _repository.GetByPredicate(x => x.HotelId == hotelId);
+            return reviews
+                .Select(x => new ReviewDto(x))
+                .ToList();
         }
 
-        public async Task<ClientReview> GetByIdAsync(int id)
+        public async Task<ReviewDto> GetByIdAsync(int id)
         {
-            return await _repository.GetByIdAsync(id);
-        }
-
-        public async Task<Response> Create(CreateUserReviewRequest request)
-        {
-            ClientReview review = new ClientReview()
+            var review = await _repository.GetByIdAsync(id);
+            if (review == null)
             {
-                Stars = request.Stars,
-                Comment = request.Comment,
-                UpdatedDate = DateTime.Now,
-                CreatedDate = DateTime.Now
-            };
-
-            _repository.AddAsync(review);
-
-            return new Response(200, true, null);
+                throw new EntityNotFoundException<ClientReview>();
+            }
+            return new ReviewDto(review);
         }
 
-        public async Task<Response> Delete(int id)
+        public async Task<int> Create(CreateUserReviewRequest request, string userId)
         {
-            _repository.DeleteByIdAsync(id);
-
-            return new Response(200, true, null);
-        }
-        public async Task<int> HotelStars(ReviewRequest reviewRequest)
-        {
-            var stars = from r in reviewRequest.Reviews
-                        where r.HotelId == reviewRequest.HotelId
-                        select r.Stars;
-
-            int sum = stars.Sum();
-
-            int reviewsCount = reviewRequest.Reviews.Count();
-
-            var hotel = _context.Hotels.FirstOrDefault(h => h.Id == reviewRequest.HotelId);
-           
-            if (sum >= 0)
+            if (request.Stars < 0 || request.Stars > 5)
             {
-                return hotel.ReviewStars = 0;
+                throw new BadRequestException("Stars should be from 0 to 5");
             }
 
-            hotel.ReviewStars = (sum / reviewsCount);
+            ClientReview review = new()
+            {
+                UserId = userId.ToString(),
+                HotelId = request.HotelId,
+                Stars = request.Stars,
+                Comment = request.Comment,
+                UpdatedDate = DateTime.UtcNow,
+                CreatedDate = DateTime.UtcNow
+            };
 
+            var created = await _repository.AddAsync(review);
 
-            return hotel.ReviewStars;
+            return created.Id;
+        }
+
+        public async Task Delete(int id)
+        {
+            await _repository.DeleteByIdAsync(id);
+        }
+
+        public async Task<int> HotelStars(int hotelId)
+        {
+            var reviews = await _repository.GetByPredicate(x => x.HotelId == hotelId);
+
+            var sumOfStars = reviews.Select(x => x.Stars).Sum();
+            var reviewsCount = reviews.Count;
+
+            var average = sumOfStars / reviewsCount;
+            return average;
         }
     }
 }

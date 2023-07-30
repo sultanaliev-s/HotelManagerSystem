@@ -3,12 +3,12 @@ using HotelManagerSystem.Models.EntityDto;
 
 namespace HotelManagerSystem.Models.DTOs
 {
-    public class ReviewsDto : EntityDto<int>
+    public class ReviewDto : EntityDto<int>
     {
-        public ReviewsDto(ClientReview entity) : base(entity)
+        public ReviewDto(ClientReview entity) : base(entity)
         {
             Stars = entity.Stars;
-            Comment= entity.Comment;
+            Comment = entity.Comment;
         }
 
         public int Stars { get; set; }
