@@ -27,12 +27,6 @@ public class EmailController : ControllerBase
         await _mediator.Send(new SendEmailCommand(emailRequest));
     }
 
-    [HttpPost("CheckCode")]
-    public async Task<Response> CheckCodeAsync(CheckCodeRequest checkCodeRequest)
-    {
-        return await _mediator.Send(checkCodeRequest);
-    }
-
     [HttpGet("getCurrentUserEmail")]
     public async Task<CurrentUserEmailResponse> GetCurrentUserEmailAsync()
     {

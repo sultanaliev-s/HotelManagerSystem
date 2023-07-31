@@ -1,19 +1,21 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using HotelManagerSystem.DAL.Responses;
+﻿using HotelManagerSystem.DAL.Responses;
 
 
 namespace HotelManagerSystem.API.Responses
 {
     public class AuthResponse : Response
     {
-        public AuthResponse(int statusCode, bool success, string message, string fullName, string accessToken, string refreshToken) : base(statusCode, success, message)
+        public TokenResponse TokenResponse { get; set; }
+
+        public AuthResponse(
+            int statusCode,
+            bool success,
+            string message,
+            string fullName,
+            string accessToken,
+            string refreshToken) : base(statusCode, success, message)
         {
-            FullName = fullName;
-            AccessToken = accessToken;
-            RefreshToken = refreshToken;
+            TokenResponse = new TokenResponse(fullName, accessToken, refreshToken);
         }
-        public string FullName { get; set; }
-        public string AccessToken { get; set; }
-        public string RefreshToken { get; set; }
     }
 }

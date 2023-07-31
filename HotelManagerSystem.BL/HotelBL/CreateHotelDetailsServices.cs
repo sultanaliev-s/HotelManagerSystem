@@ -2,13 +2,8 @@
 using HotelManagerSystem.DAL;
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
-using HotelManagerSystem.Models.Data;
 using HotelManagerSystem.Models.Entities;
-using HotelManagerSystem.Models.Request;
-using HotelManagerSystem.Models.Request.CreateRequest;
 using HotelManagerSystem.Models.Request.CreateRequest.HotelRequest;
-using System.Collections.Generic;
-using System.Xml.Linq;
 
 namespace HotelManagerSystem.BL.HotelBL
 {
@@ -21,7 +16,7 @@ namespace HotelManagerSystem.BL.HotelBL
         private readonly HotelContext _context;
 
         public CreateHotelDetailsServices(IRepository<Hotel, int> hotelReporitory,
-            IRepository<Room, int> roomReporitory, IRepository<Address, int> addressReporitory, 
+            IRepository<Room, int> roomReporitory, IRepository<Address, int> addressReporitory,
             UserReviewsServices reviewsServices, HotelContext context)
         {
             _hotelReporitory = hotelReporitory;
@@ -40,7 +35,7 @@ namespace HotelManagerSystem.BL.HotelBL
             return await _hotelReporitory.GetByIdAsync(id);
         }
 
-        public async Task<Response> CreateHotel(CreateHotelRequest request, ReviewRequest request1)
+        public async Task<Response> CreateHotel(CreateHotelRequest request /*, ReviewRequest request1*/)
         {
             Hotel hotel = new Hotel()
             {
@@ -51,7 +46,7 @@ namespace HotelManagerSystem.BL.HotelBL
                 CheckingAccount = request.CheckingAccount,
                 HotelTypeId = request.HotelTypeId,
                 HotelCategoryId = request.HotelCategoryId,
-                ReviewStars = request.ReviewStars = await _reviewsServices.HotelStars(request1),
+                //ReviewStars = request.ReviewStars = await _reviewsServices.HotelStars(request1),
                 CreatedDate = request.CreateDate
             };
 

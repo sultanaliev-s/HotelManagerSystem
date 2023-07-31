@@ -60,12 +60,12 @@ namespace HotelManagerSystem.API.AuthBL.Managers
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
             {
-                throw new DException("User not found");
+                return new AuthResponse(404, false, "User not found", "", "", "");
             }
 
             if (!user.IsEmailConfirmed)
             {
-                throw new DException("User's email isn't confirmed");
+                return new AuthResponse(400, false, "User's email isn't confirmed", "", "", "");
             }
 
             var result = await _signInManager.PasswordSignInAsync(request.Email,
@@ -91,11 +91,11 @@ namespace HotelManagerSystem.API.AuthBL.Managers
             }
             else if (result.IsLockedOut)
             {
-                throw new DException("User account locked out");
+                return new AuthResponse(400, false, "User account locked out", "", "", "");
             }
             else
             {
-                throw new DException("Login Error");
+                return new AuthResponse(500, false, "Login error", "", "", "");
             }
         }
 
@@ -103,11 +103,6 @@ namespace HotelManagerSystem.API.AuthBL.Managers
         public async Task<Response> RegisterUser(RegisterUserRequest request,
             CancellationToken cancellationToken)
         {
-            if (!await _emailManager.SendEmailAsync(request.Email))
-            {
-                return new Response(400, false, "We've already sent the code to your email. Please chek it");
-            }
-
             var result = await RegisterUser(request);
 
             if (!result.Succeeded)
@@ -115,10 +110,36 @@ namespace HotelManagerSystem.API.AuthBL.Managers
                 string aggregatedErrorMessages = string.Join("\n", result.Errors
                     .Select(e => e.Description));
 
-                throw new DException(aggregatedErrorMessages);
+                return new Response(400, false, aggregatedErrorMessages);
             }
 
             return new Response(200, true, "Initial user created");
+        }
+
+        private async Task<IdentityResult> RegisterUser(RegisterUserRequest request)
+        {
+            var user = new User()
+            {
+                FullName = request.FullName,
+                Email = request.Email,
+                UserName = request.Email,
+                CheckingAccount = "",
+                IsEmailConfirmed = true,
+            };
+
+            var result = await _userManager.CreateAsync(user, request.Password);
+            if (!result.Succeeded)
+            {
+                return result;
+            }
+            var addToRoleRes = await _userManager.AddToRoleAsync(user, "User");
+            if (!addToRoleRes.Succeeded)
+            {
+                await _userManager.DeleteAsync(user);
+                return addToRoleRes;
+            }
+
+            return result;
         }
 
         public async Task<CurrentUserResponse> GetCurrentUser(ClaimsPrincipal currentUserClaims)
@@ -150,24 +171,6 @@ namespace HotelManagerSystem.API.AuthBL.Managers
                 EmailConfirmed = user.IsEmailConfirmed,
                 PhoneNumber = user.PhoneNumber,
             };
-        }
-
-        private void SetUserProperties(User user, string fullName, string email)
-        {
-            user.FullName = fullName;
-            user.Email = email;
-            user.UserName = email;
-            user.CheckingAccount = "";
-        }
-
-        private async Task<IdentityResult> RegisterUser(RegisterUserRequest request)
-        {
-            var user = new User();
-            SetUserProperties(user, request.FullName, request.Email);
-
-            var result = await _userManager.CreateAsync(user, request.Password);
-
-            return result;
         }
 
         public async Task<AuthResponse> RefreshToken(TokenModel? tokenModel)

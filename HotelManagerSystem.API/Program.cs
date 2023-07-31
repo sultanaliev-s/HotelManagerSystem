@@ -165,11 +165,15 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
-    string role = "Admin";
-    if (!(await roleManager.RoleExistsAsync(role)))
+    try
     {
-        await roleManager.CreateAsync(new IdentityRole(role));
+        await DataSeeder.SeedRoles(roleManager, userManager);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Error while seeding roles: " + ex.Message);
     }
 }
 

@@ -1,6 +1,6 @@
 ﻿using HotelManagerSystem.API.AuthBL.Managers;
 using HotelManagerSystem.API.Request;
-using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.Common;
 using HotelManagerSystem.DAL.Responses;
 using MediatR;
 
@@ -18,7 +18,15 @@ namespace HotelManagerSystem.API.Handlers
 
         public async Task<Response> Handle(RegisterUserRequest request, CancellationToken cancellationToken)
         {
-            var response = await _manager.RegisterUser(request, cancellationToken);
+            Response response;
+            try
+            {
+                response = await _manager.RegisterUser(request, cancellationToken);
+            }
+            catch (DException ex)
+            {
+                return new Response(400, false, ex.Message);
+            }
             return response;
         }
     }
