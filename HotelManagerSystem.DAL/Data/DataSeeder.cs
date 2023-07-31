@@ -24,7 +24,7 @@ namespace HotelManagerSystem.API.AuthBL.Data
 
             if (existingRoles == 0)
             {
-                var email = Environment.GetEnvironmentVariable("AdminEmail");
+                var email = Environment.GetEnvironmentVariable("ADMIN_EMAIL");
                 var admin = new User()
                 {
                     FullName = "Admin",
