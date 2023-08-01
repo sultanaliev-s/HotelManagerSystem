@@ -2,13 +2,8 @@
 using HotelManagerSystem.DAL;
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
-using HotelManagerSystem.Models.Data;
 using HotelManagerSystem.Models.Entities;
-using HotelManagerSystem.Models.Request;
-using HotelManagerSystem.Models.Request.CreateRequest;
 using HotelManagerSystem.Models.Request.CreateRequest.HotelRequest;
-using System.Collections.Generic;
-using System.Xml.Linq;
 
 namespace HotelManagerSystem.BL.HotelBL
 {
@@ -21,7 +16,7 @@ namespace HotelManagerSystem.BL.HotelBL
         private readonly HotelContext _context;
 
         public CreateHotelDetailsServices(IRepository<Hotel, int> hotelReporitory,
-            IRepository<Room, int> roomReporitory, IRepository<Address, int> addressReporitory, 
+            IRepository<Room, int> roomReporitory, IRepository<Address, int> addressReporitory,
             UserReviewsServices reviewsServices, HotelContext context)
         {
             _hotelReporitory = hotelReporitory;

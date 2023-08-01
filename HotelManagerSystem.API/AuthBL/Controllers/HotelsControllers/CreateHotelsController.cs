@@ -1,21 +1,14 @@
-﻿using HotelManagerSystem.BL.HotelBL;
-using HotelManagerSystem.BL.Review;
-using HotelManagerSystem.DAL.Data;
+﻿using HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController;
+using HotelManagerSystem.BL.HotelBL;
 using HotelManagerSystem.DAL;
-using HotelManagerSystem.Models.Entities;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using HotelManagerSystem.DAL.Responses;
-using NuGet.Protocol.Core.Types;
-using HotelManagerSystem.Models.Request;
-using MediatR;
-using System.Xml.Linq;
 using HotelManagerSystem.Models.Request.CreateRequest.HotelRequest;
 using System.Runtime.CompilerServices;
 using HotelManagerSystem.Models.DTOs;
 using HotelManagerSystem.Models.Entities.Relations;
 using HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController;
 using HotelManagerSystem.API.Responses;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
 {

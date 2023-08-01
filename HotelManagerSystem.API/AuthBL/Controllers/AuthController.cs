@@ -1,10 +1,8 @@
 ﻿using System.Security.Claims;
-using HotelManagerSystem.API.AuthBL.CurrentModels;
 using HotelManagerSystem.API.AuthBL.Managers;
 using HotelManagerSystem.API.Request;
 using HotelManagerSystem.API.Responses;
 using HotelManagerSystem.DAL.AuthBL.Data;
-using HotelManagerSystem.DAL.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,30 +22,53 @@ namespace HotelManagerSystem.API.AuthBL.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<Response> Register(RegisterUserRequest request)
+        public async Task<IActionResult> Register(RegisterUserRequest request)
         {
             var response = await _mediator.Send(request);
-            return response;
+            return response.StatusCode switch
+            {
+                200 => Created("", null),
+                400 => BadRequest(new ErrorResponse(response.Message)),
+                _ => StatusCode(response.StatusCode, new ErrorResponse(response.Message))
+            };
         }
 
         [HttpPost("login")]
-        public async Task<AuthResponse> Login(LoginUserRequest request)
+        public async Task<IActionResult> Login(LoginUserRequest request)
         {
             var response = await _mediator.Send(request);
-            return response;
+            return response.StatusCode switch
+            {
+                200 => Ok(response.TokenResponse),
+                400 => BadRequest(new ErrorResponse(response.Message)),
+                404 => NotFound(new ErrorResponse(response.Message)),
+                _ => StatusCode(response.StatusCode, new ErrorResponse(response.Message))
+            };
         }
-        [HttpPost("refresh-token")]
-        public async Task<AuthResponse> RefreshToken(TokenModel tokenModel)
+        [HttpPost("refreshToken")]
+        public async Task<IActionResult> RefreshToken(TokenModel tokenModel)
         {
             var response = await _authManager.RefreshToken(tokenModel);
-            return response;
+            return response.StatusCode switch
+            {
+                200 => Ok(response.TokenResponse),
+                400 => BadRequest(new ErrorResponse(response.Message)),
+                _ => StatusCode(response.StatusCode, response.Message)
+
+            };
         }
 
         [HttpGet("getCurrentUser")]
-        public async Task<CurrentUserResponse> GetCurrentUser()
+        public async Task<IActionResult> GetCurrentUser()
         {
             ClaimsPrincipal currentUserClaims = User;
-            return await _authManager.GetCurrentUser(currentUserClaims);
+            var response = await _authManager.GetCurrentUser(currentUserClaims);
+            return response.StatusCode switch
+            {
+                200 => Ok(response.CurrentUser),
+                404 => NotFound(new ErrorResponse(response.Message)),
+                _ => StatusCode(response.StatusCode, response.Message)
+            };
         }
 
     }

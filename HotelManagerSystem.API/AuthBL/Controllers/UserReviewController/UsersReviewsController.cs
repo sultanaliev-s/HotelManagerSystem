@@ -1,11 +1,11 @@
-﻿using HotelManagerSystem.BL.Directories;
+﻿using System.Security.Claims;
+using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.BL.Exceptions;
 using HotelManagerSystem.BL.Review;
 using HotelManagerSystem.DAL.Data;
-using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Entities;
-using HotelManagerSystem.Models.Request;
+using HotelManagerSystem.Models.Request.UserReview;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers.UserReviewController
@@ -26,57 +26,76 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.UserReviewController
 
         [HttpPost]
         [Route("create")]
-        public async Task<Response> Create([FromBody] int stars, string comment)
+        public async Task<IActionResult> Create([FromBody] CreateUserReviewRequest req)
         {
-            ClientReview review = new ClientReview()
+            try
             {
-                Stars = stars,
-                Comment = comment,
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now
-            };
-
-            review = await _repository.AddAsync(review);
-
-            return new Response(200, true, null);
+                var review = await _service.Create(req, User.FindFirstValue(ClaimTypes.NameIdentifier));
+                return Created("", review);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(new ErrorResponse(ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ErrorResponse(ex.Message));
+            }
         }
 
         [HttpGet]
         [Route("GetById")]
         [Authorize]
-        public async Task<UserReviewsResponse> GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            ClientReview review = await _service.GetByIdAsync(id);
-
-            return new UserReviewsResponse(200, true, null, review);
+            try
+            {
+                var review = await _service.GetByIdAsync(id);
+                return Ok(review);
+            }
+            catch (EntityNotFoundException<ClientReview> ex)
+            {
+                return NotFound(new ErrorResponse(ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ErrorResponse(ex.Message));
+            }
         }
 
 
         [HttpGet]
-        [Route("GetAll")]
+        [Route("GetAllForHotel")]
         [Authorize]
-        public async Task<UserReviewsListResponse> GetAll()
+        public async Task<IActionResult> GetAllForHotel([FromQuery] int hotelId)
         {
-            var list = await _repository.GetAllAsync();
+            var list = await _service.GetAllForHotel(hotelId);
 
-            return new UserReviewsListResponse(200, true, null , list);
+            return Ok(list);
         }
 
         [HttpDelete]
         [Route("deleteById")]
-        public async Task<Response> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _repository.DeleteByIdAsync(id);
-
-            return new Response(200, true, null);
+            try
+            {
+                await _service.GetByIdAsync(id);
+                await _service.Delete(id);
+                return NoContent();
+            }
+            catch (EntityNotFoundException<ClientReview> ex)
+            {
+                return NotFound(new ErrorResponse(ex.Message));
+            }
         }
 
         [HttpPost]
-        [Route("addStars")]
+        [Route("HotelStars")]
         [Authorize]
-        public async Task<int> HotelStars([FromBody] ReviewRequest request)
+        public async Task<int> HotelStars([FromQuery] int hotelId)
         {
-            int result = await _service.HotelStars(request);
+            int result = await _service.HotelStars(hotelId);
 
             return result;
         }

@@ -8,6 +8,8 @@ using HotelManagerSystem.API.Handlers;
 using HotelManagerSystem.API.Repositories;
 using HotelManagerSystem.API.Service;
 using HotelManagerSystem.BL.Directories;
+using HotelManagerSystem.BL.Filter;
+using HotelManagerSystem.BL.Review;
 using HotelManagerSystem.BL.HotelBL;
 using HotelManagerSystem.BL.Review;
 using HotelManagerSystem.DAL;
@@ -48,6 +50,8 @@ builder.Services.AddTransient<IRepository<HotelType, int>, Repository<HotelType,
 builder.Services.AddTransient<IRepository<HotelCategory, int>, Repository<HotelCategory, int>>();
 builder.Services.AddTransient<IRepository<HotelServices, int>, Repository<HotelServices, int>>();
 builder.Services.AddTransient<IRepository<RoomType, int>, Repository<RoomType, int>>();
+builder.Services.AddTransient<IRepository<Hotel, int>, Repository<Hotel, int>>();
+builder.Services.AddTransient<IRepository<ClientReview, int>, Repository<ClientReview, int>>();
 builder.Services.AddTransient<IRepository<Ñouchette, int>, Repository<Ñouchette, int>>();
 builder.Services.AddTransient<IRepository<Hotel, int>, Repository<Hotel, int>>();
 builder.Services.AddTransient<IRepository<Room, int>, Repository<Room, int>>();
@@ -78,6 +82,8 @@ builder.Services.AddTransient<HotelTypeServices>();
 builder.Services.AddTransient<HotelCategoryServices>();
 builder.Services.AddTransient<HotelServicesServices>();
 builder.Services.AddTransient<RoomTypeServices>();
+builder.Services.AddTransient<RoomReservationFilter>();
+builder.Services.AddTransient<UserReviewsServices>();
 builder.Services.AddTransient<ÑouchetteServices>();
 builder.Services.AddTransient<CreateHotelDetailsServices>();
 builder.Services.AddTransient<DaleteHotelDetailsServices>();
@@ -175,11 +181,15 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
-    string role = "Admin";
-    if (!(await roleManager.RoleExistsAsync(role)))
+    try
     {
-        await roleManager.CreateAsync(new IdentityRole(role));
+        await DataSeeder.SeedRoles(roleManager, userManager);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Error while seeding roles: " + ex.Message);
     }
 }
 
