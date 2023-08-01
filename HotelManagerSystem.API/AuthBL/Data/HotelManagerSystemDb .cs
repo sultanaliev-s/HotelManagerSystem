@@ -19,11 +19,12 @@ public class HotelManagerSystemDb : IdentityDbContext<User>
 
         IConfiguration config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
+            .AddEnvironmentVariables()
             .Build();
 
-        var connectionString = config.GetConnectionString("HotelManagerSystemDbConnection")
+        var connectionString = config.GetConnectionString("DbConnection")
                                ?? throw new InvalidOperationException(
-                                   "Connection string 'HotelManagerSystemDbConnection' not found.");
+                                   "Connection string 'DbConnection' not found.");
 
         optionsBuilder.UseNpgsql(connectionString, builder =>
         {

@@ -1,20 +1,9 @@
-﻿using HotelManagerSystem.BL.HotelBL;
-using HotelManagerSystem.BL.Review;
-using HotelManagerSystem.DAL.Data;
+﻿using HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController;
+using HotelManagerSystem.BL.HotelBL;
 using HotelManagerSystem.DAL;
-using HotelManagerSystem.Models.Entities;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using HotelManagerSystem.DAL.Responses;
-using NuGet.Protocol.Core.Types;
-using HotelManagerSystem.Models.Request;
-using MediatR;
-using System.Xml.Linq;
 using HotelManagerSystem.Models.Request.CreateRequest.HotelRequest;
-using System.Runtime.CompilerServices;
-using HotelManagerSystem.Models.DTOs;
-using HotelManagerSystem.Models.Entities.Relations;
-using HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
 {
@@ -37,11 +26,11 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
 
         [HttpPost]
         [Route("createHotel")]
-        public async Task<Response> CreateHotel([FromBody] CreateHotelRequest request,[FromQuery] ReviewRequest request1)
+        public async Task<Response> CreateHotel([FromBody] CreateHotelRequest request /*,[FromQuery] ReviewRequest request1*/)
         {
             try
             {
-                await _services.CreateHotel(request, request1);
+                await _services.CreateHotel(request/*, request1*/);
             }
             catch (Exception ex)
             {
@@ -74,7 +63,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
                 }
             }
 
-            return new Response(200, true, null); ;
+            return new Response(200, true, null);
         }
 
         [HttpPost]

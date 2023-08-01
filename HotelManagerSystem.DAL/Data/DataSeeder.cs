@@ -10,7 +10,7 @@ namespace HotelManagerSystem.API.AuthBL.Data
         {
             var rolesToSeed = new[] { "Admin", "User" };
 
-            var existingRoles = rolesToSeed.Count();
+            var existingRoles = rolesToSeed.Length;
 
             foreach (var roleName in rolesToSeed)
             {

@@ -32,10 +32,14 @@ namespace HotelManagerSystem.DAL
             base.OnConfiguring(optionsBuilder);
             IConfiguration config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables()
                 .Build();
 
-            var connectionString = config.GetConnectionString("HotelManagerSystemDbConnection")
-                ?? throw new InvalidOperationException("Connection string 'HotelManagerSystemDbConnection' not found.");
+            var connectionString = config.GetConnectionString("DbConnection");
+            if (connectionString == null)
+            {
+                throw new InvalidOperationException("Connection string 'DbConnection' not found.");
+            }
 
             optionsBuilder.UseNpgsql(connectionString, builder =>
             {
