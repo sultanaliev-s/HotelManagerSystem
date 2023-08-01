@@ -132,9 +132,6 @@ namespace HotelManagerSystem.DAL
                 .HasForeignKey(a => a.HotelId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            modelBuilder.Entity<HotelsServices>()
-                .HasKey(hs => new { hs.HotelId, hs.ServiceId });
-
             modelBuilder.Entity<HotelType>()
                 .HasMany(y => y.Hotels)
                 .WithOne(a => a.Type)

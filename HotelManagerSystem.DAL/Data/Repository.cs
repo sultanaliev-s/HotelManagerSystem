@@ -1,5 +1,7 @@
 ﻿using HotelManagerSystem.Models.Common;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace HotelManagerSystem.DAL.Data
 {
@@ -103,7 +105,7 @@ namespace HotelManagerSystem.DAL.Data
             if (dbSet == default(DbSet<T>))
                 return null;
 
-            return dbSet.Where(item => predicate(item));
+            return dbSet.ToList().Where(item => predicate(item));
         }
 
         public async Task UpdateAsync(T item)
@@ -129,6 +131,15 @@ namespace HotelManagerSystem.DAL.Data
         public IQueryable<T> GetQuery()
         {
             return _dbSet.AsQueryable();
+        }
+
+        public IQueryable<T> GetAllIncluding(int id, params Expression<Func<T, object>>[] includes)
+        {
+            var query = _dbSet.AsNoTracking();
+
+            query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+
+            return query;
         }
     }
 }

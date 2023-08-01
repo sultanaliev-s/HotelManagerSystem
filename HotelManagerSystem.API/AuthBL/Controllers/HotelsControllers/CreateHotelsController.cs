@@ -15,6 +15,7 @@ using System.Runtime.CompilerServices;
 using HotelManagerSystem.Models.DTOs;
 using HotelManagerSystem.Models.Entities.Relations;
 using HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController;
+using HotelManagerSystem.API.Responses;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
 {
@@ -37,69 +38,68 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
 
         [HttpPost]
         [Route("createHotel")]
-        public async Task<Response> CreateHotel([FromBody] CreateHotelRequest request,[FromQuery] ReviewRequest request1)
+        public async Task<IActionResult> CreateHotel([FromBody] CreateHotelRequest request)
         {
             try
             {
-                await _services.CreateHotel(request, request1);
+                var hotel = await _services.CreateHotel(request);
+                return Created("", hotel);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while processing request from {Hotel create}", request);
-
+                _logger.LogError(ex, "Error while processing request from {Create Hotel}", request);
+                return BadRequest(new ErrorResponse(ex.Message));
             }
-
-            return new Response(200, true, null);
         }
 
         [HttpPost]
         [Route("createAddress")]
-        public async Task<Response> CreateAddress([FromBody] CreateAddressRequest request)
+        public async Task<IActionResult> CreateAddress([FromBody] CreateAddressRequest request)
         {
             var hotel = _context.Hotels.FirstOrDefault(h => h.Id == request.Hotel);
 
             if (hotel == null || hotel.Id == 0)
             {
-                throw new ArgumentNullException(nameof(request.Hotel), "Request cannot be null");
+                return BadRequest(new ErrorResponse("Hotel not Found"));
             }
             else
             {
                 try
                 {
-                    await _services.AddAddress(request);
+                    var address = await _services.AddAddress(request);
+                    return Created("", address);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error while processing request from {Address create}", request);
+                    _logger.LogError(ex, "Error while processing request from {CreateAdress}", request);
+                    return BadRequest(new ErrorResponse(ex.Message));
                 }
             }
-
-            return new Response(200, true, null); ;
         }
 
         [HttpPost]
         [Route("createRoom")]
-        public async Task<Response> CreateRoom([FromBody] CreateRoomRequest request)
+        public async Task<IActionResult> CreateRoom([FromBody] CreateRoomRequest request)
         {
-            var hotel = _context.Hotels.FirstOrDefault(h => h.Id == request.hotelId);
+            var hotel = _context.Hotels.FirstOrDefault(h => h.Id == request.HotelId);
 
             if (hotel == null || hotel.Id == 0)
             {
-                throw new ArgumentNullException(nameof(request.hotelId), "Request cannot be null");
+                return BadRequest(new ErrorResponse("Hotel not Found"));
             }
             else
             {
                 try
                 {
-                    await _services.AddRoom(request);
+                    var room = await _services.AddRoom(request);
+                    return Created("", room);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error while processing request from {Room create}", request);
+                    _logger.LogError(ex, "Error while processing request from {CreateAdress}", request);
+                    return BadRequest(new ErrorResponse(ex.Message));
                 }
             }
-
-            return new Response(200, true, null);
         }
 
     }

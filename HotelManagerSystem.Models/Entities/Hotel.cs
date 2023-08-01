@@ -1,5 +1,6 @@
 ﻿using HotelManagerSystem.Models.Common;
 using HotelManagerSystem.Models.Data;
+using HotelManagerSystem.Models.Entities.Relations;
 
 namespace HotelManagerSystem.Models.Entities
 {
@@ -25,6 +26,6 @@ namespace HotelManagerSystem.Models.Entities
         public List<Room> Rooms { get; set; }
         public List<ClientReview>? ClientReviews { get; set; }
         public List<HotelFoto>? Fotos { get; set; }
-        public List<HotelServices> Services { get; set; }
+        public List<HotelsServices> Services { get; set; }
     }
 }

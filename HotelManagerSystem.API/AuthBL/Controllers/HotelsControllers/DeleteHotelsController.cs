@@ -7,6 +7,10 @@ using HotelManagerSystem.Models.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.BL.Exceptions;
+using MediatR;
+using HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
 {
@@ -15,42 +19,78 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
     public class DeleteHotelsController : ControllerBase
     {
         private readonly DaleteHotelDetailsServices _services;
+        private readonly ILogger<CitiesController> _logger;
 
-        public DeleteHotelsController(DaleteHotelDetailsServices services)
+        public DeleteHotelsController(DaleteHotelDetailsServices services, ILogger<CitiesController> logger)
         {
             _services = services;
+            _logger = logger;
         }
 
 
         [HttpDelete]
         [Route("deleteHotelById")]
         [Authorize(Roles = "Admin")]
-        public async Task<Response> DeleteHotel(int id)
+        public async Task<IActionResult> DeleteHotel([FromQuery] int id)
         {
-            await _services.DeleteHotel(id);
-
-            return new Response(200, true, null);
+            
+            try
+            {
+                await _services.DeleteHotel(id);
+            }
+            catch (EntityNotFoundException<Hotel> ex)
+            {
+                return NotFound(new ErrorResponse("Hotel not found"));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing request from {Delete Hotel}", id);
+                return BadRequest(new ErrorResponse(ex.Message));
+            }
+            return NoContent();
         }
 
 
         [HttpDelete]
         [Route("deleteRoomById")]
-        [Authorize(Roles = "Owner")]
-        public async Task<Response> DeleteRoom(int id)
+        public async Task<IActionResult> DeleteRoom([FromQuery] int id)
         {
-            await _services.DeleteRoom(id);
 
-            return new Response(200, true, null);
+            try
+            {
+                await _services.DeleteRoom(id);
+            }
+            catch (EntityNotFoundException<Room> ex)
+            {
+                return NotFound(new ErrorResponse("Room not found"));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing request from {Delete Room}", id);
+                return BadRequest(new ErrorResponse(ex.Message));
+            }
+            return NoContent();
         }
 
         [HttpDelete]
         [Route("deleteAddressById")]
-        [Authorize(Roles = "Owner")]
-        public async Task<Response> DeleteAddress(int id)
+        public async Task<IActionResult> DeleteAddress([FromQuery]int id)
         {
-            await _services.DeleteAddress(id);
+            try
+            {
+                await _services.DeleteAddress(id);
+            }
+            catch(EntityNotFoundException<Address> ex)
+            {
+                return NotFound(new ErrorResponse("Address not found"));
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing request from {Delete Address}", id);
+                return BadRequest(new ErrorResponse(ex.Message));
+            }
 
-            return new Response(200, true, null);
+            return NoContent();
         }
     }
 }

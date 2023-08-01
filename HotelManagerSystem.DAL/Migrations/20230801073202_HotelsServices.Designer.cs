@@ -3,6 +3,7 @@ using System;
 using HotelManagerSystem.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HotelManagerSystem.DAL.Migrations
 {
     [DbContext(typeof(HotelContext))]
-    partial class HotelContextModelSnapshot : ModelSnapshot
+    [Migration("20230801073202_HotelsServices")]
+    partial class HotelsServices
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -399,11 +401,11 @@ namespace HotelManagerSystem.DAL.Migrations
 
             modelBuilder.Entity("HotelManagerSystem.Models.Entities.Relations.HotelsServices", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("HotelId")
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -411,22 +413,20 @@ namespace HotelManagerSystem.DAL.Migrations
                     b.Property<DateTime?>("DeletedUtc")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("HotelId")
+                    b.Property<int>("HotelServiceId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("HotelServiceId")
+                    b.Property<int>("Id")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("HotelId");
+                    b.HasKey("HotelId", "ServiceId");
 
                     b.HasIndex("HotelServiceId");
 
-                    b.ToTable("HotelsServicesRelation");
+                    b.ToTable("HotelsServices2");
                 });
 
             modelBuilder.Entity("HotelManagerSystem.Models.Entities.Room", b =>

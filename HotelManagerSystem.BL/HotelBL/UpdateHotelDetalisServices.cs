@@ -7,6 +7,9 @@ using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Entities.Relations;
 using HotelManagerSystem.Models.Request.CreateRequest.HotelRequest;
 using System.Xml.Linq;
+using HotelManagerSystem.Models.Request.UpdateRequest;
+using System.Linq;
+using HotelManagerSystem.BL.Exceptions;
 
 namespace HotelManagerSystem.BL.HotelBL
 {
@@ -22,33 +25,35 @@ namespace HotelManagerSystem.BL.HotelBL
             _hotelsServicesReporitory = hotelsServicesReporitory;
         }
 
-        public async Task<Response> UpdateHotel(CreateHotelRequest request)
+        public async Task<Response> UpdateHotel(UpdateHotelRequest request)
         {
             Hotel hotel = await _hotelReporitory.GetByIdAsync(request.Id);
+            if (hotel == null)
+                throw new EntityNotFoundException<Hotel>();
            
-            hotel.UserId = request.UserId;
             hotel.Name = request.Name;
             hotel.Description = request.Description;
             hotel.IsOne = request.IsOne;
             hotel.CheckingAccount = request.CheckingAccount;
             hotel.HotelTypeId = request.HotelTypeId;
             hotel.HotelCategoryId = request.HotelCategoryId;
-            hotel.ReviewStars = request.ReviewStars;
 
-            _hotelReporitory.UpdateAsync(hotel);
+            await _hotelReporitory.UpdateAsync(hotel);
 
             return new Response(200, true, null);
         }
 
-        public async Task<Response> UpdateHotelServices(int id, HotelDto dto)
+        public async Task<Response> UpdateHotelServices(UpdateHotelServicesRequest request)
         {
-            var hotel = await _hotelReporitory.GetByIdAsync(id);
+            var hotel = await _hotelReporitory.GetByIdAsync(request.Id);
+            if (hotel == null)
+                throw new EntityNotFoundException<Hotel>();
 
-            var oldServicesIds = hotel.Services.Select(x => x.Id);
+            var oldServicesIds = (await _hotelsServicesReporitory.GetByPredicate(x => x.HotelId == request.Id)).ToList().Select(x => x.HotelServiceId);
 
-            var onCreateServicesIds = dto.ServicesIds.Except(oldServicesIds);
+            var onCreateServicesIds = request.HotelServicesId.Except(oldServicesIds);
 
-            var onDeleteServiceIds = oldServicesIds.Except(dto.ServicesIds);
+            var onDeleteServiceIds = oldServicesIds.Except(request.HotelServicesId);
 
             foreach (var onDeleteServicesId in onDeleteServiceIds)
             {
@@ -60,7 +65,7 @@ namespace HotelManagerSystem.BL.HotelBL
                 var newService = new HotelsServices
                 {
                     HotelId = hotel.Id,
-                    ServiceId = serviceId
+                    HotelServiceId = serviceId
                 };
 
                 await _hotelsServicesReporitory.AddAsync(newService);

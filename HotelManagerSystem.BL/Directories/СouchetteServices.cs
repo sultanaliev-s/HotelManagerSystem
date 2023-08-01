@@ -1,4 +1,5 @@
-﻿using HotelManagerSystem.DAL.Data;
+﻿using HotelManagerSystem.BL.Exceptions;
+using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Request.CreateRequest;
@@ -24,35 +25,34 @@ namespace HotelManagerSystem.BL.Directories
         {
             return await _repository.GetByIdAsync(id);
         }
-        public async Task<Response> Update(UpdateNameDirectoryRequest request)
+        public async Task Update(UpdateNameDirectoryRequest request)
         {
             Сouchette couchette = await _repository.GetByIdAsync(request.Id);
+            if (couchette == null)
+                throw new EntityNotFoundException<Сouchette>();
             couchette.Name = request.Name;
-            _repository.UpdateAsync(couchette);
-
-            return new Response(200, true, null);
+            await _repository.UpdateAsync(couchette);
         }
 
-        public async Task<Response> Create(CreateNameDirectoryRequest request)
-        {   
+        public async Task<int> Create(CreateCouchetteRequest request)
+        {
             Сouchette сouchette = new Сouchette()
             {
                 Name = request.Name,
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow,
+                RoomId = request.RoomId,
 
             };
 
-            _repository.AddAsync(сouchette);
+            var createdCouchette = await _repository.AddAsync(сouchette);
 
-            return new Response(200, true, null);
+            return createdCouchette.Id;
         }
 
-        public async Task<Response> Delete(int id)
+        public async Task Delete(int id)
         {
-            _repository.DeleteByIdAsync(id);
-
-            return new Response(200, true, null);
+            await _repository.DeleteByIdAsync(id);
         }
     }
 }

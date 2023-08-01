@@ -40,7 +40,7 @@ namespace HotelManagerSystem.BL.HotelBL
             return await _hotelReporitory.GetByIdAsync(id);
         }
 
-        public async Task<Response> CreateHotel(CreateHotelRequest request, ReviewRequest request1)
+        public async Task<int> CreateHotel(CreateHotelRequest request)
         {
             Hotel hotel = new Hotel()
             {
@@ -51,16 +51,17 @@ namespace HotelManagerSystem.BL.HotelBL
                 CheckingAccount = request.CheckingAccount,
                 HotelTypeId = request.HotelTypeId,
                 HotelCategoryId = request.HotelCategoryId,
-                ReviewStars = request.ReviewStars = await _reviewsServices.HotelStars(request1),
-                CreatedDate = request.CreateDate
+                ReviewStars = 0,
+                CreatedDate = request.CreateDate,
+                cityId = request.CityId,
             };
 
-            await _hotelReporitory.AddAsync(hotel);
+            var createdHotel = await _hotelReporitory.AddAsync(hotel);
 
-            return new Response(200, true, null);
+            return createdHotel.Id;
         }
 
-        public async Task<List<Address>> AddAddress(CreateAddressRequest request)
+        public async Task<int> AddAddress(CreateAddressRequest request)
         {
             Address address = new Address()
             {
@@ -68,19 +69,17 @@ namespace HotelManagerSystem.BL.HotelBL
                 CityId = request.CityId,
                 Street = request.Street,
                 StreetNumber = request.StreetNumber,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.UtcNow,
+                HotelId = request.Hotel,
+               
             };
 
-            List<Address> HotelAddress = new List<Address>();
+            var createdAddress = await _addressReporitory.AddAsync(address);
 
-            HotelAddress.Add(address);
-
-            await _addressReporitory.AddAsync(address);
-
-            return HotelAddress;
+            return createdAddress.Id;
         }
 
-        public async Task<List<Room>> AddRoom(CreateRoomRequest request)
+        public async Task<int> AddRoom(CreateRoomRequest request)
         {
             Room room = new Room()
             {
@@ -90,16 +89,13 @@ namespace HotelManagerSystem.BL.HotelBL
                 Price = request.Price,
                 BasePerson = request.BasePerson,
                 RoomTypeId = request.RoomTypeId,
-                CouchetteId = request.CouchetteId,
                 CreatedDate = DateTime.UtcNow,
+                HotelId = request.HotelId,
             };
 
-            List<Room> rooms = new List<Room>();
-            rooms.Add(room);
+            var createdRoom = await _roomReporitory.AddAsync(room);
 
-            await _roomReporitory.AddAsync(room);
-
-            return rooms;
+            return createdRoom.Id;
         }
     }
 }

@@ -8,10 +8,13 @@ using HotelManagerSystem.API.Handlers;
 using HotelManagerSystem.API.Repositories;
 using HotelManagerSystem.API.Service;
 using HotelManagerSystem.BL.Directories;
+using HotelManagerSystem.BL.HotelBL;
+using HotelManagerSystem.BL.Review;
 using HotelManagerSystem.DAL;
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.Models.Data;
 using HotelManagerSystem.Models.Entities;
+using HotelManagerSystem.Models.Entities.Relations;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -45,6 +48,13 @@ builder.Services.AddTransient<IRepository<HotelType, int>, Repository<HotelType,
 builder.Services.AddTransient<IRepository<HotelCategory, int>, Repository<HotelCategory, int>>();
 builder.Services.AddTransient<IRepository<HotelServices, int>, Repository<HotelServices, int>>();
 builder.Services.AddTransient<IRepository<RoomType, int>, Repository<RoomType, int>>();
+builder.Services.AddTransient<IRepository<Ñouchette, int>, Repository<Ñouchette, int>>();
+builder.Services.AddTransient<IRepository<Hotel, int>, Repository<Hotel, int>>();
+builder.Services.AddTransient<IRepository<Room, int>, Repository<Room, int>>();
+builder.Services.AddTransient<IRepository<Address, int>, Repository<Address, int>>();
+builder.Services.AddTransient<IRepository<HotelsServices, int>, Repository<HotelsServices, int>>();
+builder.Services.AddTransient<IRepository<ClientReview, int>, Repository<ClientReview, int>>();
+
 
 // Add services to the container.
 
@@ -68,6 +78,12 @@ builder.Services.AddTransient<HotelTypeServices>();
 builder.Services.AddTransient<HotelCategoryServices>();
 builder.Services.AddTransient<HotelServicesServices>();
 builder.Services.AddTransient<RoomTypeServices>();
+builder.Services.AddTransient<ÑouchetteServices>();
+builder.Services.AddTransient<CreateHotelDetailsServices>();
+builder.Services.AddTransient<DaleteHotelDetailsServices>();
+builder.Services.AddTransient<UpdateHotelDetalisServices>();
+builder.Services.AddTransient<UserReviewsServices>();
+
 
 builder.Logging.AddDbLogger(options =>
 {

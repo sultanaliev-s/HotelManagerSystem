@@ -1,8 +1,11 @@
 ﻿using HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController;
+using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.BL.Exceptions;
 using HotelManagerSystem.BL.HotelBL;
 using HotelManagerSystem.DAL;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.DTOs;
+using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Request.CreateRequest.HotelRequest;
 using HotelManagerSystem.Models.Request.UpdateRequest;
 using Microsoft.AspNetCore.Http;
@@ -27,34 +30,44 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
 
         [HttpPut]
         [Route("updateHotel")]
-        public async Task<Response> Update(CreateHotelRequest request)
+        public async Task<IActionResult> Update(UpdateHotelRequest request)
         {
             try
             {
                 await _services.UpdateHotel(request);
             }
+            catch (EntityNotFoundException<Hotel> ex)
+            {
+                return NotFound(new ErrorResponse("Hotel not found"));
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while processing request from {Room Type}", request);
+                _logger.LogError(ex, "Error while processing request from {Update Hotel}");
+                return BadRequest(new ErrorResponse(ex.Message));
             }
 
-            return new Response(200, true, null);
+            return Ok();
         }
         
         [HttpPut]
         [Route("updateHotelsServices")]
-        public async Task<Response> UpdateHotelsServices(int id, HotelDto dto)
+        public async Task<IActionResult> UpdateHotelsServices(UpdateHotelServicesRequest request)
         {
             try
             {
-                await _services.UpdateHotelServices(id, dto);
+                await _services.UpdateHotelServices(request);
+            }
+            catch (EntityNotFoundException<Hotel> ex)
+            {
+                return NotFound(new ErrorResponse("Hotel not found"));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while processing request from {Room Type}");
+                _logger.LogError(ex, "Error while processing request from {Update Hotels Service}");
+                return BadRequest(new ErrorResponse(ex.Message));
             }
 
-            return new Response(200, true, null);
+            return Ok();
         }
 
     }

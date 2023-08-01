@@ -9,7 +9,9 @@ namespace HotelManagerSystem.Models.DTOs
         public СouchetteDto(Сouchette entity) : base(entity)
         {
             Name = entity.Name;
+            RoomId = entity.RoomId;
         }
         public string Name { get; set; }
+        public int RoomId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using HotelManagerSystem.DAL.Data;
+﻿using HotelManagerSystem.BL.Exceptions;
+using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Entities;
 
@@ -26,23 +27,27 @@ namespace HotelManagerSystem.BL.HotelBL
         {
             return await _hotelReporitory.GetByIdAsync(id);
         }
-        public async Task<Response> DeleteHotel(int id)
+        public async Task DeleteHotel(int id)
         {
-            _hotelReporitory.DeleteByIdAsync(id);
-
-            return new Response(200, true, null);
+            var hotel = await _hotelReporitory.GetByIdAsync(id);
+            if (hotel == null)
+                throw new EntityNotFoundException<Hotel>();
+            await _hotelReporitory.DeleteByIdAsync(id);
         }
-        public async Task<Response> DeleteAddress(int id)
+        public async Task DeleteAddress(int id)
         {
-            _addressReporitory.DeleteByIdAsync(id);
+            var addres = await _addressReporitory.GetByIdAsync(id);
+            if (addres == null)
+                throw new EntityNotFoundException<Address>();
+            await _addressReporitory.DeleteByIdAsync(id);
 
-            return new Response(200, true, null);
         }
-        public async Task<Response> DeleteRoom(int id)
+        public async Task DeleteRoom(int id)
         {
-            _roomReporitory.DeleteByIdAsync(id);
-
-            return new Response(200, true, null);
+            var room = await _roomReporitory.GetByIdAsync(id);
+            if (room == null)
+                throw new EntityNotFoundException<Room>();
+            await _roomReporitory.DeleteByIdAsync(id);
         }
     }
 }

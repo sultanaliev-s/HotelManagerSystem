@@ -1,12 +1,18 @@
-﻿using HotelManagerSystem.BL.Directories;
+﻿using HotelManagerSystem.API.Responses;
+using HotelManagerSystem.BL.Directories;
+using HotelManagerSystem.BL.Exceptions;
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
+using HotelManagerSystem.Models.Data;
+using HotelManagerSystem.Models.DTOs;
 using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Request.CreateRequest;
 using HotelManagerSystem.Models.Request.UpdateRequest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.Metrics;
+using System.Linq;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 {
@@ -27,63 +33,73 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 
         [HttpPost]
         [Route("create")]
-        public async Task<Response> Create([FromBody] CreateNameDirectoryRequest request)
+        public async Task<ActionResult> Create([FromBody] CreateCouchetteRequest request)
         {
             try
             {
-                await _service.Create(request);
+                var country = await _service.Create(request);
+                return Created("", country);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while processing request from {Сouchette}", request);
+                return BadRequest(new ErrorResponse(ex.Message));
             }
-
-            return new Response(200, true, null);
         }
 
         [HttpPut]
         [Route("update")]
-        public async Task<Response> Update(UpdateNameDirectoryRequest request)
+        public async Task<ActionResult> Update(UpdateNameDirectoryRequest request)
         {
             try
             {
                 await _service.Update(request);
             }
+            catch (EntityNotFoundException<Сouchette> ex)
+            {
+                return NotFound(new ErrorResponse(ex.Message));
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while processing request from {Сouchette}", request);
+                return BadRequest(new ErrorResponse(ex.Message));
             }
 
-            return new Response(200, true, null);
+            return Ok();
         }
 
         [HttpDelete]
         [Route("deleteById")]
-        public async Task<Response> Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
+            Сouchette couchette = await _service.GetByIdAsync(id);
+            if (couchette == null)
+                return NotFound(new ErrorResponse("Сouchette not found"));
             await _service.Delete(id);
 
-            return new Response(200, true, null);
+            return NoContent();
         }
 
         [HttpGet]
         [Route("GetById")]
         [Authorize]
-        public async Task<СouchetteResponse> GetById(int id)
+        public async Task<ActionResult<СouchetteDto>> GetById(int id)
         {
             Сouchette couchette = await _service.GetByIdAsync(id);
+            if (couchette == null)
+                return NotFound(new ErrorResponse("Сouchette not found"));
 
-            return new СouchetteResponse(200, true, null, couchette);
+            return Ok(new СouchetteDto(couchette));
         }
 
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<СouchetteListResponse> GetAll()
+        public async Task<ActionResult<List<СouchetteDto>>> GetAll()
         {
             var list = await _service.GetAll();
 
-            return new СouchetteListResponse(200, true, null, list);
+            return Ok(list.Select(dep => new СouchetteDto(dep)).ToList());
         }
     }
 }
