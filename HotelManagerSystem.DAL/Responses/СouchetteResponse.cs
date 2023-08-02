@@ -5,7 +5,7 @@ namespace HotelManagerSystem.DAL.Responses
 {
     public class СouchetteResponse : Response
     {
-        public СouchetteResponse(int statusCode, bool success, string message, Сouchette couchette)
+        public СouchetteResponse(int statusCode, bool success, string message, Couchette couchette)
           : base(statusCode, success, message)
         {
             Сouchette = new СouchetteDto(couchette);

@@ -3,7 +3,7 @@
 
 namespace HotelManagerSystem.Models.Entities
 {
-    public class Сouchette : BaseEntity<int>
+    public class Couchette : BaseEntity<int>
     {
         public string Name { get; set; }
         public int RoomId { get; set; }
