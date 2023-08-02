@@ -163,7 +163,6 @@ builder.Services.AddSwaggerGen(options =>
             new string[]{}
         }
     });
-
 });
 builder.Services.AddCors(options =>
 {
