@@ -22,6 +22,21 @@ namespace HotelManagerSystem.DAL.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("CouchetteRoom", b =>
+                {
+                    b.Property<int>("CouchettesId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RoomsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CouchettesId", "RoomsId");
+
+                    b.HasIndex("RoomsId");
+
+                    b.ToTable("CouchetteRoom");
+                });
+
             modelBuilder.Entity("HotelManagerSystem.Models.Data.City", b =>
                 {
                     b.Property<int>("Id")
@@ -162,6 +177,32 @@ namespace HotelManagerSystem.DAL.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ClientsReviews");
+                });
+
+            modelBuilder.Entity("HotelManagerSystem.Models.Entities.Couchette", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Couchettes");
                 });
 
             modelBuilder.Entity("HotelManagerSystem.Models.Entities.ErrorLog", b =>
@@ -629,32 +670,6 @@ namespace HotelManagerSystem.DAL.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("HotelManagerSystem.Models.Entities.Сouchette", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("DeletedUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Couchettes");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -793,26 +808,26 @@ namespace HotelManagerSystem.DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("RoomСouchette", b =>
-                {
-                    b.Property<int>("RoomsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("СouchettesId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("RoomsId", "СouchettesId");
-
-                    b.HasIndex("СouchettesId");
-
-                    b.ToTable("RoomСouchette");
-                });
-
             modelBuilder.Entity("HotelManagerSystem.Models.Entities.Role", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
 
                     b.HasDiscriminator().HasValue("Role");
+                });
+
+            modelBuilder.Entity("CouchetteRoom", b =>
+                {
+                    b.HasOne("HotelManagerSystem.Models.Entities.Couchette", null)
+                        .WithMany()
+                        .HasForeignKey("CouchettesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HotelManagerSystem.Models.Entities.Room", null)
+                        .WithMany()
+                        .HasForeignKey("RoomsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("HotelManagerSystem.Models.Data.City", b =>
@@ -1033,21 +1048,6 @@ namespace HotelManagerSystem.DAL.Migrations
                     b.HasOne("HotelManagerSystem.Models.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("RoomСouchette", b =>
-                {
-                    b.HasOne("HotelManagerSystem.Models.Entities.Room", null)
-                        .WithMany()
-                        .HasForeignKey("RoomsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HotelManagerSystem.Models.Entities.Сouchette", null)
-                        .WithMany()
-                        .HasForeignKey("СouchettesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

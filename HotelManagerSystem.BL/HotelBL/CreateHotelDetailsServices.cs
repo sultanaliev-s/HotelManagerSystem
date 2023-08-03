@@ -2,7 +2,6 @@
 using HotelManagerSystem.BL.Review;
 using HotelManagerSystem.DAL;
 using HotelManagerSystem.DAL.Data;
-using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.DTOs;
 using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Request.CreateRequest.HotelRequest;
@@ -70,7 +69,7 @@ namespace HotelManagerSystem.BL.HotelBL
                 StreetNumber = request.StreetNumber,
                 CreatedDate = DateTime.UtcNow,
                 HotelId = request.Hotel,
-               
+
             };
 
             var createdAddress = await _addressReporitory.AddAsync(address);
@@ -90,14 +89,14 @@ namespace HotelManagerSystem.BL.HotelBL
                 RoomTypeId = request.RoomTypeId,
                 CreatedDate = DateTime.UtcNow,
                 HotelId = request.HotelId,
-                Сouchettes = new List<Сouchette>()
+                Couchettes = new List<Couchette>()
             };
-            foreach(var id in request.CouchettesIds)
+            foreach (var id in request.CouchettesIds)
             {
                 var couchette = await _context.Couchettes.FindAsync(id);
                 if (couchette == null)
-                    throw new EntityNotFoundException<Сouchette>();
-                room.Сouchettes.Add(couchette);
+                    throw new EntityNotFoundException<Couchette>();
+                room.Couchettes.Add(couchette);
             }
             var createdRoom = await _roomReporitory.AddAsync(room);
 
@@ -115,7 +114,7 @@ namespace HotelManagerSystem.BL.HotelBL
                     .ThenInclude(x => x.Countries)
                 .Include(x => x.Addresses)
                     .ThenInclude(x => x.Cities);
-            var result = hotels.Adapt<List<ListHotelsDto>>();   
+            var result = hotels.Adapt<List<ListHotelsDto>>();
 
             return result;
         }
@@ -127,14 +126,14 @@ namespace HotelManagerSystem.BL.HotelBL
                 .Include(x => x.Category)
                 .Include(x => x.city)
                 .Include(x => x.Fotos)
-                .Include( x=> x.User)
+                .Include(x => x.User)
                 .Include(x => x.Rooms)
                     .ThenInclude(x => x.RoomType)
                 .Include(x => x.Rooms)
-                    .ThenInclude(x => x.Сouchettes)
+                    .ThenInclude(x => x.Couchettes)
                 .Include(x => x.Rooms)
                     .ThenInclude(x => x.Reservations)
-                .Include( x=> x.ClientReviews)
+                .Include(x => x.ClientReviews)
                     .ThenInclude(x => x.User)
                 .Include(x => x.Services)
                     .ThenInclude(x => x.HotelService)

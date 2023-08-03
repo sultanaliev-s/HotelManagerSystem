@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace HotelManagerSystem.DAL.Migrations
 {
-    public partial class addfirst : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -56,6 +55,22 @@ namespace HotelManagerSystem.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Couchettes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    DeletedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Couchettes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Countries",
                 columns: table => new
                 {
@@ -63,8 +78,8 @@ namespace HotelManagerSystem.DAL.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     DeletedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -72,16 +87,26 @@ namespace HotelManagerSystem.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "HotelsServices2",
+                name: "ErrorLogs",
                 columns: table => new
                 {
-                    ServiceId = table.Column<int>(type: "integer", nullable: false),
-                    HotelId = table.Column<int>(type: "integer", nullable: false),
                     Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    LogLevel = table.Column<string>(type: "text", nullable: false),
+                    ThreadId = table.Column<int>(type: "integer", nullable: true),
+                    EventId = table.Column<int>(type: "integer", nullable: true),
+                    EventName = table.Column<string>(type: "text", nullable: true),
+                    Message = table.Column<string>(type: "text", nullable: true),
+                    ExceptionMessage = table.Column<string>(type: "text", nullable: true),
+                    ExceptionStackTrace = table.Column<string>(type: "text", nullable: true),
+                    ExceptionSource = table.Column<string>(type: "text", nullable: true),
+                    DeletedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HotelsServices2", x => new { x.HotelId, x.ServiceId });
+                    table.PrimaryKey("PK_ErrorLogs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -93,8 +118,8 @@ namespace HotelManagerSystem.DAL.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
                     DeletedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -109,8 +134,8 @@ namespace HotelManagerSystem.DAL.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     DeletedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -125,8 +150,8 @@ namespace HotelManagerSystem.DAL.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     DeletedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -248,8 +273,8 @@ namespace HotelManagerSystem.DAL.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     CountryId = table.Column<int>(type: "integer", nullable: false),
                     DeletedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -272,8 +297,8 @@ namespace HotelManagerSystem.DAL.Migrations
                     Description = table.Column<string>(type: "text", nullable: false),
                     HotelTypeId = table.Column<int>(type: "integer", nullable: false),
                     DeletedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -295,15 +320,16 @@ namespace HotelManagerSystem.DAL.Migrations
                     UserId = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    ReviewStars = table.Column<int>(type: "integer", nullable: false),
+                    ReviewStars = table.Column<decimal>(type: "numeric", nullable: false),
                     IsOne = table.Column<bool>(type: "boolean", nullable: false),
                     CheckingAccount = table.Column<string>(type: "text", nullable: false),
                     FilialCount = table.Column<int>(type: "integer", nullable: false),
+                    cityId = table.Column<int>(type: "integer", nullable: false),
                     HotelTypeId = table.Column<int>(type: "integer", nullable: false),
                     HotelCategoryId = table.Column<int>(type: "integer", nullable: false),
                     DeletedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -314,6 +340,12 @@ namespace HotelManagerSystem.DAL.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Hotels_Cities_cityId",
+                        column: x => x.cityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Hotels_HotelsCategories_HotelCategoryId",
                         column: x => x.HotelCategoryId,
@@ -340,8 +372,8 @@ namespace HotelManagerSystem.DAL.Migrations
                     StreetNumber = table.Column<string>(type: "text", nullable: false),
                     HotelId = table.Column<int>(type: "integer", nullable: false),
                     DeletedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -377,8 +409,8 @@ namespace HotelManagerSystem.DAL.Migrations
                     Comment = table.Column<string>(type: "text", nullable: false),
                     HotelId = table.Column<int>(type: "integer", nullable: false),
                     DeletedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -406,8 +438,8 @@ namespace HotelManagerSystem.DAL.Migrations
                     Foto = table.Column<string>(type: "text", nullable: false),
                     HotelId = table.Column<int>(type: "integer", nullable: false),
                     DeletedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -418,6 +450,35 @@ namespace HotelManagerSystem.DAL.Migrations
                         principalTable: "Hotels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HotelsServicesRelation",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    HotelServiceId = table.Column<int>(type: "integer", nullable: false),
+                    HotelId = table.Column<int>(type: "integer", nullable: false),
+                    DeletedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HotelsServicesRelation", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_HotelsServicesRelation_Hotels_HotelId",
+                        column: x => x.HotelId,
+                        principalTable: "Hotels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_HotelsServicesRelation_HotelsServises_HotelServiceId",
+                        column: x => x.HotelServiceId,
+                        principalTable: "HotelsServises",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -433,11 +494,9 @@ namespace HotelManagerSystem.DAL.Migrations
                     BasePerson = table.Column<int>(type: "integer", nullable: false),
                     RoomTypeId = table.Column<int>(type: "integer", nullable: false),
                     HotelId = table.Column<int>(type: "integer", nullable: false),
-                    CouchetteId = table.Column<int>(type: "integer", nullable: false),
-                    RoomReservationId = table.Column<int>(type: "integer", nullable: false),
                     DeletedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -457,23 +516,24 @@ namespace HotelManagerSystem.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Couchettes",
+                name: "CouchetteRoom",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    RoomId = table.Column<int>(type: "integer", nullable: false),
-                    DeletedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    CouchettesId = table.Column<int>(type: "integer", nullable: false),
+                    RoomsId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Couchettes", x => x.Id);
+                    table.PrimaryKey("PK_CouchetteRoom", x => new { x.CouchettesId, x.RoomsId });
                     table.ForeignKey(
-                        name: "FK_Couchettes_Rooms_RoomId",
-                        column: x => x.RoomId,
+                        name: "FK_CouchetteRoom_Couchettes_CouchettesId",
+                        column: x => x.CouchettesId,
+                        principalTable: "Couchettes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CouchetteRoom_Rooms_RoomsId",
+                        column: x => x.RoomsId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -492,8 +552,8 @@ namespace HotelManagerSystem.DAL.Migrations
                     Person = table.Column<int>(type: "integer", nullable: false),
                     RoomId = table.Column<int>(type: "integer", nullable: false),
                     DeletedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -580,10 +640,14 @@ namespace HotelManagerSystem.DAL.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Couchettes_RoomId",
-                table: "Couchettes",
-                column: "RoomId",
-                unique: true);
+                name: "IX_CouchetteRoom_RoomsId",
+                table: "CouchetteRoom",
+                column: "RoomsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Hotels_cityId",
+                table: "Hotels",
+                column: "cityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Hotels_HotelCategoryId",
@@ -611,6 +675,16 @@ namespace HotelManagerSystem.DAL.Migrations
                 column: "HotelId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_HotelsServicesRelation_HotelId",
+                table: "HotelsServicesRelation",
+                column: "HotelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HotelsServicesRelation_HotelServiceId",
+                table: "HotelsServicesRelation",
+                column: "HotelServiceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Rooms_HotelId",
                 table: "Rooms",
                 column: "HotelId");
@@ -623,8 +697,7 @@ namespace HotelManagerSystem.DAL.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_RoomsReservations_RoomId",
                 table: "RoomsReservations",
-                column: "RoomId",
-                unique: true);
+                column: "RoomId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoomsReservations_UserId",
@@ -656,31 +729,31 @@ namespace HotelManagerSystem.DAL.Migrations
                 name: "ClientsReviews");
 
             migrationBuilder.DropTable(
-                name: "Couchettes");
+                name: "CouchetteRoom");
+
+            migrationBuilder.DropTable(
+                name: "ErrorLogs");
 
             migrationBuilder.DropTable(
                 name: "HotelsFotos");
 
             migrationBuilder.DropTable(
-                name: "HotelsServices2");
-
-            migrationBuilder.DropTable(
-                name: "HotelsServises");
+                name: "HotelsServicesRelation");
 
             migrationBuilder.DropTable(
                 name: "RoomsReservations");
 
             migrationBuilder.DropTable(
-                name: "Cities");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Rooms");
+                name: "Couchettes");
 
             migrationBuilder.DropTable(
-                name: "Countries");
+                name: "HotelsServises");
+
+            migrationBuilder.DropTable(
+                name: "Rooms");
 
             migrationBuilder.DropTable(
                 name: "Hotels");
@@ -692,7 +765,13 @@ namespace HotelManagerSystem.DAL.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
+                name: "Cities");
+
+            migrationBuilder.DropTable(
                 name: "HotelsCategories");
+
+            migrationBuilder.DropTable(
+                name: "Countries");
 
             migrationBuilder.DropTable(
                 name: "HotelsTypes");

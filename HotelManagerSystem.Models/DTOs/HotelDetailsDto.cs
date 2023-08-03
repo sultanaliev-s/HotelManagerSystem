@@ -1,13 +1,4 @@
-﻿using HotelManagerSystem.Models.Entities;
-using HotelManagerSystem.Models.Entities.Relations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static HotelManagerSystem.Models.DTOs.RoomDto.RoomReservationDto;
-
-namespace HotelManagerSystem.Models.DTOs;
+﻿namespace HotelManagerSystem.Models.DTOs;
 
 public class HotelDetailsDto
 {
@@ -38,7 +29,7 @@ public class RoomDto
     public decimal Price { get; set; }
     public int BasePerson { get; set; }
     public RoomHotelTypeDto RoomType { get; set; }
-    public List<CouchetteDto> Сouchettes { get; set; }
+    public List<CouchetteShortDto> Couchettes { get; set; }
     public List<RoomReservationDto>? Reservations { get; set; }
 
     public class RoomHotelTypeDto
@@ -46,7 +37,7 @@ public class RoomDto
         public int Id { get; set; }
         public string Name { get; set; }
     }
-    public class CouchetteDto
+    public class CouchetteShortDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -73,7 +64,7 @@ public class ClientReviewDto
 public class HotelServiceDto
 {
     public int Id { get; set; }
-    public ServiceDto HotelService { get; set;}
+    public ServiceDto HotelService { get; set; }
     public class ServiceDto
     {
         public int Id { get; set; }

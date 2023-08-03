@@ -1,31 +1,25 @@
 ﻿using HotelManagerSystem.API.Responses;
 using HotelManagerSystem.BL.Directories;
 using HotelManagerSystem.BL.Exceptions;
-using HotelManagerSystem.DAL.Data;
-using HotelManagerSystem.DAL.Responses;
-using HotelManagerSystem.Models.Data;
 using HotelManagerSystem.Models.DTOs;
 using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Request.CreateRequest;
 using HotelManagerSystem.Models.Request.UpdateRequest;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics.Metrics;
-using System.Linq;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
 {
     [Route("api/[controller]")]
     [Authorize(Roles = "Admin")]
     [ApiController]
-    public class СouchettesController : ControllerBase
+    public class CouchettesController : ControllerBase
     {
 
         private readonly ILogger<CitiesController> _logger;
         private readonly CouchetteServices _service;
 
-        public СouchettesController( CouchetteServices service, ILogger<CitiesController> logger)
+        public CouchettesController(CouchetteServices service, ILogger<CitiesController> logger)
         {
             _service = service;
             _logger = logger;
@@ -42,7 +36,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while processing request from {Сouchette}", request);
+                _logger.LogError(ex, "Error while processing request from {Couchette}", request);
                 return BadRequest(new ErrorResponse(ex.Message));
             }
         }
@@ -61,7 +55,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while processing request from {Сouchette}", request);
+                _logger.LogError(ex, "Error while processing request from {Couchette}", request);
                 return BadRequest(new ErrorResponse(ex.Message));
             }
 
@@ -74,7 +68,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         {
             Couchette couchette = await _service.GetByIdAsync(id);
             if (couchette == null)
-                return NotFound(new ErrorResponse("Сouchette not found"));
+                return NotFound(new ErrorResponse("Couchette not found"));
             await _service.Delete(id);
 
             return NoContent();
@@ -83,23 +77,23 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [HttpGet]
         [Route("GetById")]
         [Authorize]
-        public async Task<ActionResult<СouchetteDto>> GetById(int id)
+        public async Task<ActionResult<CouchetteDto>> GetById(int id)
         {
             Couchette couchette = await _service.GetByIdAsync(id);
             if (couchette == null)
-                return NotFound(new ErrorResponse("Сouchette not found"));
+                return NotFound(new ErrorResponse("Couchette not found"));
 
-            return Ok(new СouchetteDto(couchette));
+            return Ok(new CouchetteDto(couchette));
         }
 
         [HttpGet]
         [Route("GetAll")]
         [Authorize]
-        public async Task<ActionResult<List<СouchetteDto>>> GetAll()
+        public async Task<ActionResult<List<CouchetteDto>>> GetAll()
         {
             var list = await _service.GetAll();
 
-            return Ok(list.Select(dep => new СouchetteDto(dep)).ToList());
+            return Ok(list.Select(dep => new CouchetteDto(dep)).ToList());
         }
     }
 }

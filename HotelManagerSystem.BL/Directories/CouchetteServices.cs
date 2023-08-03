@@ -35,7 +35,7 @@ namespace HotelManagerSystem.BL.Directories
 
         public async Task<int> Create(CreateCouchetteRequest request)
         {
-            Couchette сouchette = new Couchette()
+            Couchette couchette = new Couchette()
             {
                 Name = request.Name,
                 CreatedDate = DateTime.UtcNow,
@@ -43,7 +43,7 @@ namespace HotelManagerSystem.BL.Directories
 
             };
 
-            var createdCouchette = await _repository.AddAsync(сouchette);
+            var createdCouchette = await _repository.AddAsync(couchette);
 
             return createdCouchette.Id;
         }

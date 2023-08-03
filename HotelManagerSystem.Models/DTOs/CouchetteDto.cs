@@ -4,9 +4,9 @@ using HotelManagerSystem.Models.EntityDto;
 
 namespace HotelManagerSystem.Models.DTOs
 {
-    public class СouchetteDto : EntityDto<int>
+    public class CouchetteDto : EntityDto<int>
     {
-        public СouchetteDto(Couchette entity) : base(entity)
+        public CouchetteDto(Couchette entity) : base(entity)
         {
             Name = entity.Name;
         }
