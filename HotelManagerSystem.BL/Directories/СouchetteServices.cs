@@ -41,7 +41,6 @@ namespace HotelManagerSystem.BL.Directories
                 Name = request.Name,
                 CreatedDate = DateTime.UtcNow,
                 UpdatedDate = DateTime.UtcNow,
-                RoomId = request.RoomId,
 
             };
 

@@ -1,9 +1,13 @@
-﻿using HotelManagerSystem.BL.Review;
+﻿using HotelManagerSystem.BL.Exceptions;
+using HotelManagerSystem.BL.Review;
 using HotelManagerSystem.DAL;
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.DAL.Responses;
+using HotelManagerSystem.Models.DTOs;
 using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Request.CreateRequest.HotelRequest;
+using Mapster;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagerSystem.BL.HotelBL
 {
@@ -86,11 +90,68 @@ namespace HotelManagerSystem.BL.HotelBL
                 RoomTypeId = request.RoomTypeId,
                 CreatedDate = DateTime.UtcNow,
                 HotelId = request.HotelId,
+                Сouchettes = new List<Сouchette>()
             };
-
+            foreach(var id in request.CouchettesIds)
+            {
+                var couchette = await _context.Couchettes.FindAsync(id);
+                if (couchette == null)
+                    throw new EntityNotFoundException<Сouchette>();
+                room.Сouchettes.Add(couchette);
+            }
             var createdRoom = await _roomReporitory.AddAsync(room);
 
             return createdRoom.Id;
+        }
+
+        public async Task<List<ListHotelsDto>> GettAllHotels()
+        {
+            var hotels = _context.Hotels
+                .Include(x => x.Type)
+                .Include(x => x.Category)
+                .Include(x => x.city)
+                .Include(x => x.Fotos)
+                .Include(x => x.Addresses)
+                    .ThenInclude(x => x.Countries)
+                .Include(x => x.Addresses)
+                    .ThenInclude(x => x.Cities);
+            var result = hotels.Adapt<List<ListHotelsDto>>();   
+
+            return result;
+        }
+
+        public async Task<HotelDetailsDto> GetHotelById(int id)
+        {
+            var hotel = await _context.Hotels.Where(x => x.Id == id)
+                .Include(x => x.Type)
+                .Include(x => x.Category)
+                .Include(x => x.city)
+                .Include(x => x.Fotos)
+                .Include( x=> x.User)
+                .Include(x => x.Rooms)
+                    .ThenInclude(x => x.RoomType)
+                .Include(x => x.Rooms)
+                    .ThenInclude(x => x.Сouchettes)
+                .Include(x => x.Rooms)
+                    .ThenInclude(x => x.Reservations)
+                .Include( x=> x.ClientReviews)
+                    .ThenInclude(x => x.User)
+                .Include(x => x.Services)
+                    .ThenInclude(x => x.HotelService)
+                .Include(x => x.Addresses)
+                    .ThenInclude(x => x.Countries)
+                .Include(x => x.Addresses)
+                    .ThenInclude(x => x.Cities)
+                .AsSplitQuery()
+                .FirstOrDefaultAsync();
+
+
+            if (hotel == null)
+                throw new EntityNotFoundException<Hotel>();
+
+            var result = hotel.Adapt<HotelDetailsDto>();
+
+            return result;
         }
     }
 }

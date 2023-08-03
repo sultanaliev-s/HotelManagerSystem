@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace HotelManagerSystem.API.AuthBL.Controllers.UserReviewController
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = "User")]
     [ApiController]
     public class UsersReviewsController : ControllerBase
     {
@@ -93,9 +92,9 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.UserReviewController
         [HttpPost]
         [Route("HotelStars")]
         [Authorize]
-        public async Task<int> HotelStars([FromQuery] int hotelId)
+        public async Task<decimal> HotelStars([FromQuery] int hotelId)
         {
-            int result = await _service.HotelStars(hotelId);
+            decimal result = await _service.HotelStars(hotelId);
 
             return result;
         }

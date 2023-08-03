@@ -11,5 +11,7 @@ namespace HotelManagerSystem.Models.Request.CreateRequest.HotelRequest
         public decimal Price { get; set; }
         public int BasePerson { get; set; }
         public int RoomTypeId { get; set; }
+
+        public List<int> CouchettesIds { get; set; }
     }
 }

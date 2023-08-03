@@ -14,8 +14,7 @@ namespace HotelManagerSystem.Models.Entities
         public RoomType RoomType { get; set; }
         public int HotelId { get; set; }
         public Hotel Hotel { get; set; }
-        public int CouchetteId { get; set; }
-        public Сouchette Сouchette { get; set; }
+        public List<Сouchette> Сouchettes { get; set; }
         public List<RoomReservation>? Reservations { get; set; }
 
     }

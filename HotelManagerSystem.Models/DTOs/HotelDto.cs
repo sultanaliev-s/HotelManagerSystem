@@ -18,7 +18,7 @@ namespace HotelManagerSystem.Models.DTOs
 
         public string Name { get; set; }
         public string Description { get; set; }
-        public int ReviewStars { get; set; }
+        public decimal ReviewStars { get; set; }
         public bool IsOne { get; set; }
         public string CheckingAccount { get; set; }
         public int FilialCount { get; set; }

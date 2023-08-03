@@ -9,9 +9,11 @@ namespace HotelManagerSystem.BL.Review
     public class UserReviewsServices
     {
         private readonly IRepository<ClientReview, int> _repository;
-        public UserReviewsServices(IRepository<ClientReview, int> userReviewRepository)
+        private readonly IRepository<Hotel, int> _hotelRepository;
+        public UserReviewsServices(IRepository<ClientReview, int> userReviewRepository, IRepository<Hotel, int> hotelRepository)
         {
             _repository = userReviewRepository;
+            _hotelRepository = hotelRepository;
         }
 
         public async Task<List<ReviewDto>> GetAllForHotel(int hotelId)
@@ -34,14 +36,14 @@ namespace HotelManagerSystem.BL.Review
 
         public async Task<int> Create(CreateUserReviewRequest request, string userId)
         {
-            if (request.Stars < 0 || request.Stars > 5)
+            if (request.Stars < 0 || request.Stars > 10)
             {
-                throw new BadRequestException("Stars should be from 0 to 5");
+                throw new BadRequestException("Stars should be from 0 to 10");
             }
 
             ClientReview review = new()
             {
-                UserId = userId.ToString(),
+                UserId = userId,
                 HotelId = request.HotelId,
                 Stars = request.Stars,
                 Comment = request.Comment,
@@ -51,22 +53,37 @@ namespace HotelManagerSystem.BL.Review
 
             var created = await _repository.AddAsync(review);
 
+            var rating = await HotelStars(request.HotelId);
+
+            var hotel = await _hotelRepository.GetByIdAsync(request.HotelId);
+            hotel.ReviewStars = rating;
+
+            await _hotelRepository.UpdateAsync(hotel);
             return created.Id;
         }
 
         public async Task Delete(int id)
         {
+            var hotelId = (await _repository.GetByIdAsync(id)).HotelId;
+            var hotel = await _hotelRepository.GetByIdAsync(hotelId);
+
             await _repository.DeleteByIdAsync(id);
+
+            var rating = await HotelStars(hotelId);
+            hotel.ReviewStars = rating;
+
+            await _hotelRepository.UpdateAsync(hotel);
+
         }
 
-        public async Task<int> HotelStars(int hotelId)
+        public async Task<decimal> HotelStars(int hotelId)
         {
             var reviews = await _repository.GetByPredicate(x => x.HotelId == hotelId);
 
             var sumOfStars = reviews.Select(x => x.Stars).Sum();
-            var reviewsCount = reviews.Count;
+            var reviewsCount = (decimal)reviews.Count;
 
-            var average = sumOfStars / reviewsCount;
+            var average = Math.Round((decimal)(sumOfStars / reviewsCount), 2);
             return average;
         }
     }

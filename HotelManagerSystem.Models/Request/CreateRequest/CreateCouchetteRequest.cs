@@ -9,5 +9,4 @@ namespace HotelManagerSystem.Models.Request.CreateRequest;
 public class CreateCouchetteRequest
 {
     public string Name { get; set; }
-    public int RoomId { get; set; }
 }

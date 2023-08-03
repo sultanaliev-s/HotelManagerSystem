@@ -9,6 +9,8 @@ using HotelManagerSystem.Models.Entities.Relations;
 using HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController;
 using HotelManagerSystem.API.Responses;
 using Microsoft.AspNetCore.Mvc;
+using HotelManagerSystem.BL.Exceptions;
+using HotelManagerSystem.Models.Entities;
 
 namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
 {
@@ -92,6 +94,40 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
                     _logger.LogError(ex, "Error while processing request from {CreateAdress}", request);
                     return BadRequest(new ErrorResponse(ex.Message));
                 }
+            }
+        }
+
+        [HttpGet]
+        [Route("listHotel")]
+        public async Task<ActionResult<List<ListHotelsDto>>> ListHotels()
+        {
+            try
+            {
+                return Ok(await _services.GettAllHotels());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing request from {List Hotel}");
+                return BadRequest(new ErrorResponse(ex.Message));
+            }
+        }
+
+        [HttpGet]
+        [Route("hotelById/{id}")]
+        public async Task<ActionResult<HotelDetailsDto>> ListHotels([FromRoute]int id)
+        {
+            try
+            {
+                return Ok(await _services.GetHotelById(id));
+            }
+            catch (EntityNotFoundException<Hotel> ex)
+            {
+                return NotFound(new ErrorResponse(ex.Message));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing request from {List Hotel}");
+                return BadRequest(new ErrorResponse(ex.Message));
             }
         }
 

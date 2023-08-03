@@ -152,10 +152,7 @@ namespace HotelManagerSystem.DAL
                 .HasForeignKey(c => c.RoomTypeId)
                 .OnDelete(DeleteBehavior.SetNull);
             modelBuilder.Entity<Room>()
-                .HasOne(c => c.Сouchette)
-                .WithOne(c => c.Room)
-                .HasForeignKey<Сouchette>(c => c.RoomId)
-                .IsRequired();
+                .HasMany(c => c.Сouchettes);
 
             modelBuilder.Entity<RoomReservation>()
                 .HasOne(a => a.User)
