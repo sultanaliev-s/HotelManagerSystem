@@ -1,42 +1,41 @@
 ﻿using HotelManagerSystem.BL.Exceptions;
 using HotelManagerSystem.DAL.Data;
-using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Request.CreateRequest;
 using HotelManagerSystem.Models.Request.UpdateRequest;
 
 namespace HotelManagerSystem.BL.Directories
 {
-    public class СouchetteServices
+    public class CouchetteServices
     {
-        private readonly IRepository<Сouchette, int> _repository;
+        private readonly IRepository<Couchette, int> _repository;
 
-        public СouchetteServices(IRepository<Сouchette, int> couchetteRepository)
+        public CouchetteServices(IRepository<Couchette, int> couchetteRepository)
         {
             _repository = couchetteRepository;
         }
 
-        public async Task<List<Сouchette>> GetAll()
+        public async Task<List<Couchette>> GetAll()
         {
             return await _repository.GetAllAsync();
         }
 
-        public async Task<Сouchette> GetByIdAsync(int id)
+        public async Task<Couchette> GetByIdAsync(int id)
         {
             return await _repository.GetByIdAsync(id);
         }
         public async Task Update(UpdateNameDirectoryRequest request)
         {
-            Сouchette couchette = await _repository.GetByIdAsync(request.Id);
+            Couchette couchette = await _repository.GetByIdAsync(request.Id);
             if (couchette == null)
-                throw new EntityNotFoundException<Сouchette>();
+                throw new EntityNotFoundException<Couchette>();
             couchette.Name = request.Name;
             await _repository.UpdateAsync(couchette);
         }
 
         public async Task<int> Create(CreateCouchetteRequest request)
         {
-            Сouchette сouchette = new Сouchette()
+            Couchette сouchette = new Couchette()
             {
                 Name = request.Name,
                 CreatedDate = DateTime.UtcNow,

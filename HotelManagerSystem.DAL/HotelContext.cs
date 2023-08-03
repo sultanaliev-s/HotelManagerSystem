@@ -21,7 +21,7 @@ namespace HotelManagerSystem.DAL
         public DbSet<Room> Rooms { get; set; }
         public DbSet<RoomReservation> RoomsReservations { get; set; }
         public DbSet<RoomType> RoomsTypes { get; set; }
-        public DbSet<Сouchette> Couchettes { get; set; }
+        public DbSet<Couchette> Couchettes { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Address> Addresses { get; set; }

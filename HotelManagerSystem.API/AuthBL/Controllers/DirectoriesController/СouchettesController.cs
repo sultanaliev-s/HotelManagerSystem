@@ -23,9 +23,9 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
     {
 
         private readonly ILogger<CitiesController> _logger;
-        private readonly СouchetteServices _service;
+        private readonly CouchetteServices _service;
 
-        public СouchettesController( СouchetteServices service, ILogger<CitiesController> logger)
+        public СouchettesController( CouchetteServices service, ILogger<CitiesController> logger)
         {
             _service = service;
             _logger = logger;
@@ -55,7 +55,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
             {
                 await _service.Update(request);
             }
-            catch (EntityNotFoundException<Сouchette> ex)
+            catch (EntityNotFoundException<Couchette> ex)
             {
                 return NotFound(new ErrorResponse(ex.Message));
             }
@@ -72,7 +72,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Route("deleteById")]
         public async Task<ActionResult> Delete(int id)
         {
-            Сouchette couchette = await _service.GetByIdAsync(id);
+            Couchette couchette = await _service.GetByIdAsync(id);
             if (couchette == null)
                 return NotFound(new ErrorResponse("Сouchette not found"));
             await _service.Delete(id);
@@ -85,7 +85,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.DirectoriesController
         [Authorize]
         public async Task<ActionResult<СouchetteDto>> GetById(int id)
         {
-            Сouchette couchette = await _service.GetByIdAsync(id);
+            Couchette couchette = await _service.GetByIdAsync(id);
             if (couchette == null)
                 return NotFound(new ErrorResponse("Сouchette not found"));
 

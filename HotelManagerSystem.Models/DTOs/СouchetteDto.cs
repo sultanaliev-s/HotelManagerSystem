@@ -6,7 +6,7 @@ namespace HotelManagerSystem.Models.DTOs
 {
     public class СouchetteDto : EntityDto<int>
     {
-        public СouchetteDto(Сouchette entity) : base(entity)
+        public СouchetteDto(Couchette entity) : base(entity)
         {
             Name = entity.Name;
         }
