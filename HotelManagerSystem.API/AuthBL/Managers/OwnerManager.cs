@@ -42,7 +42,14 @@ namespace HotelManagerSystem.API.AuthBL.Managers
             if (!addToRoleRes.Succeeded)
             {
                 await _userManager.DeleteAsync(user);
-                string aggregatedErrorMessages = string.Join("\n", result.Errors.Select(e => e.Description));
+                string aggregatedErrorMessages = string.Join("\n", addToRoleRes.Errors.Select(e => e.Description));
+                return new Response(400, false, aggregatedErrorMessages);
+            }
+            var addToUserRoleRes = await _userManager.AddToRoleAsync(user, "User");
+            if (!addToUserRoleRes.Succeeded)
+            {
+                await _userManager.DeleteAsync(user);
+                string aggregatedErrorMessages = string.Join("\n", addToUserRoleRes.Errors.Select(e => e.Description));
                 return new Response(400, false, aggregatedErrorMessages);
             }
             return new Response(200, false, "Owner created successfully");
