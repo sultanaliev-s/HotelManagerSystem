@@ -69,6 +69,7 @@ builder.Services.AddTransient<EmailService>();
 builder.Services.AddTransient<EmailManager>();
 builder.Services.AddTransient<AuthManager>();
 builder.Services.AddTransient<ChangePasswordManager>();
+builder.Services.AddTransient<OwnerManager>();
 builder.Services.AddMediatR(typeof(Program));
 
 builder.Services.AddTransient<RegisterUserHandler>();

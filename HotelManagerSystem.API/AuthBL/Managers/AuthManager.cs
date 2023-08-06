@@ -60,7 +60,7 @@ namespace HotelManagerSystem.API.AuthBL.Managers
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
             {
-                return new AuthResponse(404, false, "User not found", "", "", "");
+                return new AuthResponse(400, false, "Wrong credentials", "", "", "");
             }
 
             if (!user.IsEmailConfirmed)
@@ -95,7 +95,7 @@ namespace HotelManagerSystem.API.AuthBL.Managers
             }
             else
             {
-                return new AuthResponse(500, false, "Login error", "", "", "");
+                return new AuthResponse(400, false, "Wrong credentials", "", "", "");
             }
         }
 
@@ -103,6 +103,10 @@ namespace HotelManagerSystem.API.AuthBL.Managers
         public async Task<Response> RegisterUser(RegisterUserRequest request,
             CancellationToken cancellationToken)
         {
+            if (request.Password != request.PasswordConfirmation)
+            {
+                return new Response(200, false, "Passwords do not match");
+            }
             var result = await RegisterUser(request);
 
             if (!result.Succeeded)
