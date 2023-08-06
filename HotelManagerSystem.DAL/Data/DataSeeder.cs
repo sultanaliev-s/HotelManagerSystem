@@ -8,7 +8,7 @@ namespace HotelManagerSystem.API.AuthBL.Data
     {
         public static async Task SeedRoles(RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
         {
-            var rolesToSeed = new[] { "Admin", "User" };
+            var rolesToSeed = new[] { "Admin", "User", "Owner" };
 
             var existingRoles = rolesToSeed.Length;
 
@@ -36,7 +36,7 @@ namespace HotelManagerSystem.API.AuthBL.Data
 
                 await userManager.CreateAsync(admin,
                     "Hello1!" + Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)));
-                await userManager.AddToRolesAsync(admin, new[] { "Admin", "User" });
+                await userManager.AddToRolesAsync(admin, rolesToSeed);
             }
         }
     }

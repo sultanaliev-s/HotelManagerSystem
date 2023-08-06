@@ -3,6 +3,7 @@ using System;
 using HotelManagerSystem.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HotelManagerSystem.DAL.Migrations
 {
     [DbContext(typeof(HotelContext))]
-    partial class HotelContextModelSnapshot : ModelSnapshot
+    [Migration("20230806082556_RoomPhoto")]
+    partial class RoomPhoto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -252,30 +254,6 @@ namespace HotelManagerSystem.DAL.Migrations
                     b.ToTable("ErrorLogs");
                 });
 
-            modelBuilder.Entity("HotelManagerSystem.Models.Entities.FavoritesHotels", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("HotelId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HotelId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("FavoritesHotels");
-                });
-
             modelBuilder.Entity("HotelManagerSystem.Models.Entities.Hotel", b =>
                 {
                     b.Property<int>("Id")
@@ -393,7 +371,7 @@ namespace HotelManagerSystem.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("HotelId")
+                    b.Property<int>("HotelId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -916,25 +894,6 @@ namespace HotelManagerSystem.DAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("HotelManagerSystem.Models.Entities.FavoritesHotels", b =>
-                {
-                    b.HasOne("HotelManagerSystem.Models.Entities.Hotel", "Hotel")
-                        .WithMany()
-                        .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HotelManagerSystem.Models.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Hotel");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("HotelManagerSystem.Models.Entities.Hotel", b =>
                 {
                     b.HasOne("HotelManagerSystem.Models.Entities.HotelCategory", "Category")
@@ -986,7 +945,8 @@ namespace HotelManagerSystem.DAL.Migrations
                     b.HasOne("HotelManagerSystem.Models.Entities.Hotel", "Hotel")
                         .WithMany("Fotos")
                         .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.Navigation("Hotel");
                 });

@@ -9,7 +9,8 @@ namespace HotelManagerSystem.Models.Entities
         public bool Smoke { get; set; }
         public decimal Price { get; set; }
         public int BasePerson { get; set; }
-
+        public int PhotoId { get; set; }
+        public HotelFoto? Photo { get; set; }
         public int RoomTypeId { get; set; }
         public RoomType RoomType { get; set; }
         public int HotelId { get; set; }

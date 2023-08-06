@@ -11,8 +11,10 @@ using HotelManagerSystem.DAL;
 using HotelManagerSystem.DAL.AuthBL.CurrentModels;
 using HotelManagerSystem.DAL.AuthBL.Data;
 using HotelManagerSystem.DAL.Responses;
+using HotelManagerSystem.Models.DTOs;
 using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Request.ReservationRequest;
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -60,7 +62,7 @@ namespace HotelManagerSystem.API.AuthBL.Managers
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
             {
-                return new AuthResponse(404, false, "User not found", "", "", "");
+                return new AuthResponse(400, false, "Wrong credentials", "", "", "");
             }
 
             if (!user.IsEmailConfirmed)
@@ -95,7 +97,7 @@ namespace HotelManagerSystem.API.AuthBL.Managers
             }
             else
             {
-                return new AuthResponse(500, false, "Login error", "", "", "");
+                return new AuthResponse(400, false, "Wrong credentials", "", "", "");
             }
         }
 
@@ -103,6 +105,10 @@ namespace HotelManagerSystem.API.AuthBL.Managers
         public async Task<Response> RegisterUser(RegisterUserRequest request,
             CancellationToken cancellationToken)
         {
+            if (request.Password != request.PasswordConfirmation)
+            {
+                return new Response(200, false, "Passwords do not match");
+            }
             var result = await RegisterUser(request);
 
             if (!result.Succeeded)
@@ -207,9 +213,9 @@ namespace HotelManagerSystem.API.AuthBL.Managers
                 new JwtSecurityTokenHandler().WriteToken(newAccessToken), newRefreshToken);
         }
 
-        public async Task<Response> MakeReservation(RoomReservationRequest request)
+        public async Task<Response> MakeReservation(RoomReservationRequest request, string userId)
         {
-            var user = await _userManager.FindByIdAsync(request.UserId);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 throw new DException("User not found");
@@ -282,6 +288,13 @@ namespace HotelManagerSystem.API.AuthBL.Managers
             int numDays = (int)(endDate - startDate).TotalDays;
             decimal totalPrice = numDays * room.Price;
             return totalPrice;
+        }
+
+        public async Task<List<ReservationDto>> GetMyReservation(string userId)
+        {
+            var reservations = _dbContext.RoomsReservations.Where(x => x.UserId == userId).Include(x => x.Room).ThenInclude(x => x.Hotel);
+            var result = reservations.Adapt<List<ReservationDto>>();
+            return result;
         }
     }
 }

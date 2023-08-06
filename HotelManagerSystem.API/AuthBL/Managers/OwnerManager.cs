@@ -1,9 +1,5 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using HotelManagerSystem.API.Extensions;
 using HotelManagerSystem.API.Request;
-using HotelManagerSystem.Common;
-using HotelManagerSystem.DAL;
 using HotelManagerSystem.DAL.Responses;
 using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Entities.ModelOwner;
@@ -14,103 +10,58 @@ namespace HotelManagerSystem.API.AuthBL.Managers
     public class OwnerManager
     {
         private readonly UserManager<User> _userManager;
-        private readonly HotelContext _dbContext;
-        private readonly IConfiguration _configuration;
 
-        public OwnerManager(UserManager<User> userManager, HotelContext dbContext, IConfiguration configuration)
+        public OwnerManager(UserManager<User> userManager)
         {
             _userManager = userManager;
-            _dbContext = dbContext;
-            _configuration = configuration;
         }
 
-        public async Task<Response> RegisterOwner(RegisterOwnerRequest request, CancellationToken cancellationToken)
+        public async Task<Response> RegisterOwner(RegisterOwnerRequest request)
         {
+            if (request.Password != request.PasswordConfirmation)
+            {
+                return new Response(400, false, "Passwords do not match");
+            }
             var user = new User
             {
                 FullName = request.FullName,
                 Email = request.Email,
-                UserName = request.Email
+                UserName = request.Email,
+                CheckingAccount = "",
+                IsEmailConfirmed = true,
             };
 
             var result = await _userManager.CreateAsync(user, request.Password);
 
-            if (result.Succeeded)
-            {
-                await _userManager.AddToRoleAsync(user, Role.Owner);
-
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Role, Role.Owner)
-                };
-
-                var token = claims.CreateJwtToken(_configuration);
-                var refreshToken = _configuration.GenerateRefreshToken();
-
-                var registrationResponse = new RegistrationResponse
-                {
-                    Token = new JwtSecurityTokenHandler().WriteToken(token),
-                    RefreshToken = refreshToken
-                };
-
-                return new Response(200, true, "Owner registered successfully");
-            }
-            else
+            if (!result.Succeeded)
             {
                 string aggregatedErrorMessages = string.Join("\n", result.Errors.Select(e => e.Description));
-                throw new DException(aggregatedErrorMessages);
+                return new Response(400, false, aggregatedErrorMessages);
             }
-        }
-
-        public async Task<OwnerViewModel> GetOwnerById(string ownerId)
-        {
-            var owner = await _userManager.FindByIdAsync(ownerId);
-
-            if (owner == null)
+            var addToRoleRes = await _userManager.AddToRoleAsync(user, "Owner");
+            if (!addToRoleRes.Succeeded)
             {
-                return null;
+                await _userManager.DeleteAsync(user);
+                string aggregatedErrorMessages = string.Join("\n", addToRoleRes.Errors.Select(e => e.Description));
+                return new Response(400, false, aggregatedErrorMessages);
             }
-
-            var ownerViewModel = new OwnerViewModel
+            var addToUserRoleRes = await _userManager.AddToRoleAsync(user, "User");
+            if (!addToUserRoleRes.Succeeded)
             {
-                Id = int.Parse(owner.Id),
-                FullName = owner.FullName,
-                Email = owner.Email,
-            };
-
-            return ownerViewModel;
-        }
-
-        public async Task<OwnerViewModel> GetCurrentOwner(ClaimsPrincipal userClaims)
-        {
-            var user = await _userManager.GetUserAsync(userClaims);
-
-            if (user == null)
-            {
-                return null;
+                await _userManager.DeleteAsync(user);
+                string aggregatedErrorMessages = string.Join("\n", addToUserRoleRes.Errors.Select(e => e.Description));
+                return new Response(400, false, aggregatedErrorMessages);
             }
-
-            var ownerViewModel = new OwnerViewModel
-            {
-                Id = int.Parse(user.Id),
-                FullName = user.FullName,
-                Email = user.Email
-            };
-
-            return ownerViewModel;
+            return new Response(200, false, "Owner created successfully");
         }
 
         public async Task<Response> UpdateOwner(UpdateOwnerRequest request)
         {
-            var ownerId = request.Id.ToString();
-            var owner = await _userManager.FindByIdAsync(ownerId);
+            var owner = await _userManager.FindByIdAsync(request.Id);
 
             if (owner == null)
             {
-                throw new DException("Owner not found");
+                return new Response(404, false, "Owner not found");
             }
 
             owner.FullName = request.FullName;
@@ -123,7 +74,7 @@ namespace HotelManagerSystem.API.AuthBL.Managers
                 string aggregatedErrorMessages = string.Join("\n", result.Errors
                     .Select(e => e.Description));
 
-                throw new DException(aggregatedErrorMessages);
+                return new Response(400, false, aggregatedErrorMessages);
             }
 
             return new Response(200, true, "Owner updated successfully");
@@ -142,19 +93,57 @@ namespace HotelManagerSystem.API.AuthBL.Managers
 
             return true;
         }
-        
+
         public async Task<List<OwnerViewModel>> GetAllOwners()
         {
-            var owners = await _userManager.GetUsersInRoleAsync(Role.Owner);
+            var owners = await _userManager.GetUsersInRoleAsync("Owner");
 
             var ownerViewModels = owners.Select(owner => new OwnerViewModel
             {
-                Id = (int.Parse(owner.Id)),
+                Id = owner.Id,
                 FullName = owner.FullName,
                 Email = owner.Email
             }).ToList();
 
             return ownerViewModels;
+        }
+
+        public async Task<OwnerViewModel> GetOwnerById(string ownerId)
+        {
+            var owner = await _userManager.FindByIdAsync(ownerId);
+
+            if (owner == null)
+            {
+                return null;
+            }
+
+            var ownerViewModel = new OwnerViewModel
+            {
+                Id = owner.Id,
+                FullName = owner.FullName,
+                Email = owner.Email,
+            };
+
+            return ownerViewModel;
+        }
+
+        public async Task<OwnerViewModel> GetCurrentOwner(ClaimsPrincipal userClaims)
+        {
+            var user = await _userManager.GetUserAsync(userClaims);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            var ownerViewModel = new OwnerViewModel
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email
+            };
+
+            return ownerViewModel;
         }
     }
 }

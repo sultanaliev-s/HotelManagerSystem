@@ -2,7 +2,7 @@ namespace HotelManagerSystem.Models.Entities.ModelOwner;
 
 public class OwnerViewModel
 {
-    public int Id { get; set; }
+    public string Id { get; set; }
     public string Email { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }

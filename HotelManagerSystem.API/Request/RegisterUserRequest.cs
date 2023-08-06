@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
-using HotelManagerSystem.API.Responses;
 using HotelManagerSystem.DAL.Responses;
 using MediatR;
 
@@ -13,6 +12,7 @@ public class RegisterUserRequest : IRequest<Response>
     [Required] public string FullName { get; set; }
 
     [Required] public string Password { get; set; }
+    [Required] public string PasswordConfirmation { get; set; }
 
     public override string ToString()
     {
