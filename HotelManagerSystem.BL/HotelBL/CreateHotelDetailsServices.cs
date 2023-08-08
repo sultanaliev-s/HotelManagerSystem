@@ -237,6 +237,10 @@ namespace HotelManagerSystem.BL.HotelBL
             if (hotel == null)
                 throw new EntityNotFoundException<Hotel>();
 
+            var favorites = await _context.FavoritesHotels.Where(x => x.UserId == userId && x.HotelId == hotelId).ToListAsync();
+            if (favorites.Any())
+                throw new Exception("You have been already added this hotel to favorites");
+
             var favorite = new FavoritesHotels()
             {
                 Hotel = hotel,
