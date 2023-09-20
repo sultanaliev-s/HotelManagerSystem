@@ -26,6 +26,7 @@ namespace HotelManagerSystem.DAL
         public DbSet<City> Cities { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<ErrorLog> ErrorLogs { get; set; }
+        public DbSet<FavoritesHotels> FavoritesHotels { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -182,6 +183,7 @@ namespace HotelManagerSystem.DAL
                 .HasMany(y => y.roomReservations)
                 .WithOne(a => a.User)
                 .OnDelete(DeleteBehavior.SetNull);
+;
         }
     }
 }

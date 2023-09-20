@@ -1,6 +1,7 @@
 ﻿using HotelManagerSystem.API.Responses;
 using HotelManagerSystem.BL.Exceptions;
 using HotelManagerSystem.BL.Filter;
+using HotelManagerSystem.Models.DTOs;
 using HotelManagerSystem.Models.Entities;
 using HotelManagerSystem.Models.Request.Search;
 using Microsoft.AspNetCore.Mvc;
@@ -22,9 +23,9 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.FiltersController
 
         [HttpGet]
         [Route("Search")]
-        public async Task<IActionResult> HotelFilter([FromQuery] FilterRequest? request)
+        public async Task<ActionResult<List<AvailableHotels>>> HotelFilter([FromQuery] FilterRequest? request)
         {
-            List<Hotel> result = new();
+            List<AvailableHotels> result = new();
             try
             {
                 result = await _service.Filter(request);

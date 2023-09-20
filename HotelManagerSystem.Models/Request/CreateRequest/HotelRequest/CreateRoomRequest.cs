@@ -1,4 +1,5 @@
 ﻿using HotelManagerSystem.Models.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace HotelManagerSystem.Models.Request.CreateRequest.HotelRequest
 {
@@ -11,7 +12,7 @@ namespace HotelManagerSystem.Models.Request.CreateRequest.HotelRequest
         public decimal Price { get; set; }
         public int BasePerson { get; set; }
         public int RoomTypeId { get; set; }
-
-        public List<int> CouchettesIds { get; set; }
+        public IFormFile Photo { get; set; }
+        public List<int> CouchettesIds { get; set; } = new List<int>();
     }
 }

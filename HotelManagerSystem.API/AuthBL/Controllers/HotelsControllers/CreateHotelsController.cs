@@ -74,7 +74,7 @@ namespace HotelManagerSystem.API.AuthBL.Controllers.HotelsControllers
 
         [HttpPost]
         [Route("createRoom")]
-        public async Task<IActionResult> CreateRoom([FromBody] CreateRoomRequest request)
+        public async Task<IActionResult> CreateRoom([FromForm] CreateRoomRequest request)
         {
             var hotel = _context.Hotels.FirstOrDefault(h => h.Id == request.HotelId);
 

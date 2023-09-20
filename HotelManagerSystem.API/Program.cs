@@ -20,6 +20,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -201,6 +202,19 @@ app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "HotelManagerSystem API v1");
+});
+
+var dir = Path.Combine(Directory.GetCurrentDirectory(), builder.Configuration.GetSection("FileSettings:PhysicalPath").Value);
+var requestPath = builder.Configuration.GetSection("FileSettings:RequestPath").Value;
+if (!Directory.Exists(dir))
+{
+    Directory.CreateDirectory(dir);
+}
+
+app.UseFileServer(new FileServerOptions
+{
+    FileProvider = new PhysicalFileProvider(dir),
+    RequestPath = new PathString(requestPath),
 });
 
 app.ConfigureExceptionHandler();

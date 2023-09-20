@@ -28,6 +28,7 @@ public class RoomDto
     public bool Smoke { get; set; }
     public decimal Price { get; set; }
     public int BasePerson { get; set; }
+    public FotoDto? Photo { get; set; }
     public RoomHotelTypeDto RoomType { get; set; }
     public List<CouchetteShortDto> Couchettes { get; set; }
     public List<RoomReservationDto>? Reservations { get; set; }
@@ -60,6 +61,9 @@ public class ClientReviewDto
 
     public int Stars { get; set; }
     public string Comment { get; set; }
+    public DateTime? DeletedUtc { get; set; }
+    public DateTime UpdatedDate { get; set; }
+    public DateTime CreatedDate { get; set; }
 }
 public class HotelServiceDto
 {

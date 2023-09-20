@@ -4,9 +4,12 @@ using HotelManagerSystem.DAL;
 using HotelManagerSystem.DAL.Data;
 using HotelManagerSystem.Models.DTOs;
 using HotelManagerSystem.Models.Entities;
+using HotelManagerSystem.Models.Request.CreateRequest;
 using HotelManagerSystem.Models.Request.CreateRequest.HotelRequest;
 using Mapster;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic.FileIO;
 
 namespace HotelManagerSystem.BL.HotelBL
 {
@@ -79,6 +82,27 @@ namespace HotelManagerSystem.BL.HotelBL
 
         public async Task<int> AddRoom(CreateRoomRequest request)
         {
+
+            string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "staticfiles");
+            string fileName = Guid.NewGuid().ToString() + "." + request.Photo.FileName;
+            string filePath = Path.Combine(directoryPath, fileName);
+            bool folderExists = Directory.Exists(directoryPath);
+            if (!folderExists)
+                Directory.CreateDirectory(directoryPath);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await request.Photo.CopyToAsync(stream);
+            }
+            string databasePath = Path.Combine("staticfiles", fileName);
+            var dbFile = new HotelFoto()
+            {
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow,
+                Foto = databasePath,
+            };
+            _context.HotelsFotos.Add(dbFile);
+            _context.SaveChanges();
+
             Room room = new Room()
             {
                 Name = request.Name,
@@ -89,6 +113,8 @@ namespace HotelManagerSystem.BL.HotelBL
                 RoomTypeId = request.RoomTypeId,
                 CreatedDate = DateTime.UtcNow,
                 HotelId = request.HotelId,
+                Photo = dbFile,
+                PhotoId = dbFile.Id,
                 Couchettes = new List<Couchette>()
             };
             foreach (var id in request.CouchettesIds)
@@ -99,6 +125,7 @@ namespace HotelManagerSystem.BL.HotelBL
                 room.Couchettes.Add(couchette);
             }
             var createdRoom = await _roomReporitory.AddAsync(room);
+
 
             return createdRoom.Id;
         }
@@ -132,6 +159,8 @@ namespace HotelManagerSystem.BL.HotelBL
                 .Include(x => x.Rooms)
                     .ThenInclude(x => x.Couchettes)
                 .Include(x => x.Rooms)
+                    .ThenInclude(x => x.Photo)
+                .Include(x => x.Rooms)
                     .ThenInclude(x => x.Reservations)
                 .Include(x => x.ClientReviews)
                     .ThenInclude(x => x.User)
@@ -151,6 +180,90 @@ namespace HotelManagerSystem.BL.HotelBL
             var result = hotel.Adapt<HotelDetailsDto>();
 
             return result;
+        }
+
+        public async Task AddPhotos(AddHotelPhotoRequest request)
+        {
+            var hotel = await _hotelReporitory.GetByIdAsync(request.HotelId);
+            if(hotel == null)
+                throw new EntityNotFoundException<Hotel>();
+
+            foreach(var photo in request.Photos)
+            {
+                string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "staticfiles");
+                string fileName = Guid.NewGuid().ToString() + "." + photo.FileName;
+                string filePath = Path.Combine(directoryPath, fileName);
+                bool folderExists = Directory.Exists(directoryPath);
+                if (!folderExists)
+                    Directory.CreateDirectory(directoryPath);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await photo.CopyToAsync(stream);
+                }
+                string databasePath = Path.Combine("staticfiles", fileName);
+                var dbFile = new HotelFoto()
+                {
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow,
+                    Foto = databasePath,
+                    Hotel = hotel,
+                    HotelId = hotel.Id
+                };
+                _context.HotelsFotos.Add(dbFile);
+            }
+            _context.SaveChanges();
+        }
+
+        public async Task DeletePhoto(int id)
+        {
+            var photo = await _context.HotelsFotos.FirstOrDefaultAsync(x => x.Id == id);
+            if(photo == null)
+                throw new EntityNotFoundException<HotelFoto>();
+
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), photo.Foto);
+            if (File.Exists(filePath))
+                File.Delete(filePath);
+            _context.HotelsFotos.Remove(photo);
+            _context.SaveChanges();
+        }
+
+        public async Task<int> AddToFavorities(int hotelId, string userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            var hotel = await _context.Hotels.FirstOrDefaultAsync(x => x.Id == hotelId);
+
+            if (user == null)
+                throw new EntityNotFoundException<User>();
+            if (hotel == null)
+                throw new EntityNotFoundException<Hotel>();
+
+            var favorites = await _context.FavoritesHotels.Where(x => x.UserId == userId && x.HotelId == hotelId).ToListAsync();
+            if (favorites.Any())
+                throw new Exception("You have been already added this hotel to favorites");
+
+            var favorite = new FavoritesHotels()
+            {
+                Hotel = hotel,
+                User = user,
+                HotelId = hotel.Id,
+                UserId = user.Id,
+            };
+            _context.FavoritesHotels.Add(favorite);
+            _context.SaveChanges();
+
+            return favorite.Id;
+
+        }
+
+        public async Task DeleteFavorities(int id, string userId)
+        {
+            var favorite = await _context.FavoritesHotels.FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
+
+            if (favorite == null)
+                throw new EntityNotFoundException<FavoritesHotels>();
+
+            _context.FavoritesHotels.Remove(favorite);
+            _context.SaveChanges();
         }
     }
 }
